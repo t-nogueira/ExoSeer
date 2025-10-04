@@ -40,17 +40,16 @@ class NASAExoplanetClient:
         # Try multiple search strategies
         candidates = []
         
-        # Strategy 1: Direct name match
+        # Strategy 1: Direct name match - Fix SQL syntax
         query1 = f"""
         SELECT pl_name, hostname, discoverymethod, disc_year, pl_rade, pl_masse, 
                pl_orbper, pl_orbsmax, pl_tranmid, pl_trandep, pl_trandur,
                st_teff, st_rad, st_mass, ra, dec, sy_dist
         FROM ps 
-        WHERE UPPER(pl_name) LIKE UPPER('%{clean_target}%') 
-        OR UPPER(hostname) LIKE UPPER('%{clean_target}%')
+        WHERE (UPPER(pl_name) LIKE UPPER('%{clean_target}%') 
+        OR UPPER(hostname) LIKE UPPER('%{clean_target}%'))
         AND default_flag = 1
         ORDER BY disc_year DESC
-        LIMIT 50
         """
         
         df1 = await self._execute_tap_query(query1)
