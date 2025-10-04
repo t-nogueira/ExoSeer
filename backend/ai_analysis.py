@@ -4,7 +4,7 @@ from typing import Dict, List, Optional, Any, Tuple
 import logging
 from datetime import datetime
 import json
-from emergentintegrations.client import EmergentClient
+from emergentintegrations.chat.chat import ChatClient
 
 logger = logging.getLogger(__name__)
 
