@@ -10,7 +10,7 @@ import { Progress } from "./components/ui/progress";
 import { 
   Search, Upload, Download, BarChart3, Telescope, Target, 
   Zap, Activity, Globe, Orbit, TrendingUp, Database, Settings,
-  Star, PlanetIcon as Planet, Atom, Gauge
+  Star, Globe as Planet, Atom, Gauge
 } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip, ScatterChart, Scatter } from 'recharts';
 import "./App.css";
