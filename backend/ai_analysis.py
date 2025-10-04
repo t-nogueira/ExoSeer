@@ -322,7 +322,7 @@ class AIExoplanetAnalyzer:
             Use standard astrophysical relationships and realistic uncertainties.
             """
             
-            response = await self.ai_client.chat_completion(
+            response = self.ai_client.chat_completion(
                 messages=[{"role": "user", "content": estimation_prompt}],
                 model="gpt-4",
                 temperature=0.3
