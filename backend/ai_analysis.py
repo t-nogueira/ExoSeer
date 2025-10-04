@@ -196,7 +196,7 @@ class AIExoplanetAnalyzer:
             Consider standard exoplanet validation criteria and astrophysical plausibility.
             """
             
-            response = await self.ai_client.chat_completion(
+            response = self.ai_client.chat_completion(
                 messages=[{"role": "user", "content": ensemble_prompt}],
                 model="gpt-4",
                 temperature=0.2
