@@ -14,7 +14,11 @@ class AIExoplanetAnalyzer:
     def __init__(self, settings):
         self.settings = settings
         self.emergent_key = settings.EMERGENT_LLM_KEY
-        self.ai_client = LlmChat(api_key=self.emergent_key)
+        self.ai_client = LlmChat(
+            api_key=self.emergent_key,
+            session_id="exoseer_analysis",
+            system_message="You are an expert exoplanet analysis AI assistant specializing in physics-informed analysis and uncertainty quantification."
+        )
         
     async def analyze_transit_physics(
         self, 
