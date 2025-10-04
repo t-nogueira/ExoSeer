@@ -92,7 +92,6 @@ class NASAExoplanetClient:
             WHERE UPPER(hostname) LIKE UPPER('%{clean_target.split()[0]}%')
             AND default_flag = 1
             ORDER BY disc_year DESC
-            LIMIT 10
             """
             
             df3 = await self._execute_tap_query(stellar_query)
