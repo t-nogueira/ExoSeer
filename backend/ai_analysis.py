@@ -131,7 +131,7 @@ class AIExoplanetAnalyzer:
             Focus on astrophysical realism and detection reliability.
             """
             
-            response = self.ai_client.chat_completion(
+            response = self.ai_client.chat(
                 messages=[{"role": "user", "content": uncertainty_prompt}],
                 model="gpt-4",
                 temperature=0.3
