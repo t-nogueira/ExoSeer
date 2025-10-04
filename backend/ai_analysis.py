@@ -329,7 +329,7 @@ class AIExoplanetAnalyzer:
             )
             
             try:
-                return json.loads(response['choices'][0]['message']['content'])
+                return json.loads(response.choices[0].message.content)
             except:
                 return self._get_default_parameter_estimates()
                 
