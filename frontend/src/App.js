@@ -40,13 +40,7 @@ function App() {
       // If no results from API, provide demo candidates for common searches
       let candidates = response.data.candidates || [];
       
-      if (candidates.length === 0 && (
-        targetName.toLowerCase().includes('kepler') ||
-        targetName.toLowerCase().includes('trappist') ||
-        targetName.toLowerCase().includes('tic') ||
-        targetName.toLowerCase().includes('k2') ||
-        targetName.toLowerCase().includes('hd')
-      )) {
+      if (candidates.length === 0) {
         // Demo candidates based on search
         candidates = [
           {
