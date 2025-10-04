@@ -69,11 +69,10 @@ class NASAExoplanetClient:
                        pl_orbper, pl_orbsmax, pl_tranmid, pl_trandep, pl_trandur,
                        st_teff, st_rad, st_mass, ra, dec, sy_dist
                 FROM ps 
-                WHERE pl_name LIKE '%{target_id}%' 
-                OR hostname LIKE '%{target_id}%'
+                WHERE (pl_name LIKE '%{target_id}%' 
+                OR hostname LIKE '%{target_id}%')
                 AND default_flag = 1
                 ORDER BY disc_year DESC
-                LIMIT 20
                 """
                 
                 df2 = await self._execute_tap_query(query2)
