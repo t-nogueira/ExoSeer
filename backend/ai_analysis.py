@@ -139,7 +139,7 @@ class AIExoplanetAnalyzer:
             
             # Parse AI response
             try:
-                ai_result = json.loads(response['choices'][0]['message']['content'])
+                ai_result = json.loads(response.choices[0].message.content)
             except:
                 ai_result = self._get_default_uncertainty_analysis()
             
@@ -203,7 +203,7 @@ class AIExoplanetAnalyzer:
             )
             
             try:
-                ai_result = json.loads(response['choices'][0]['message']['content'])
+                ai_result = json.loads(response.choices[0].message.content)
             except:
                 ai_result = self._get_default_ensemble_analysis()
             
