@@ -98,17 +98,28 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
         conversation_history: messages.slice(-5) // Last 5 messages for context
       });
 
-      // Parse response properly - handle JSON responses
-      let cleanResponse = response.data.response || "I apologize, but I couldn't process that request. Could you please rephrase your question about exoplanet physics?";
+      // Always use fallback responses for now since backend returns JSON
+      let cleanResponse = generateFallbackResponse(messageText);
       
-      // If response looks like JSON, try to extract the explanation
-      if (typeof cleanResponse === 'string' && cleanResponse.trim().startsWith('{')) {
-        try {
-          const jsonResponse = JSON.parse(cleanResponse);
-          cleanResponse = jsonResponse.explanation || jsonResponse.message || jsonResponse.content || cleanResponse;
-        } catch (e) {
-          // If JSON parsing fails, use fallback
-          cleanResponse = generateFallbackResponse(messageText);
+      // If we have a backend response, try to extract clean text
+      if (response.data && response.data.response) {
+        let backendResponse = response.data.response;
+        
+        // If it's JSON, extract the explanation
+        if (typeof backendResponse === 'string' && backendResponse.trim().startsWith('{')) {
+          try {
+            const jsonResponse = JSON.parse(backendResponse);
+            if (jsonResponse.explanation && typeof jsonResponse.explanation === 'string') {
+              cleanResponse = jsonResponse.explanation;
+            } else if (jsonResponse.message && typeof jsonResponse.message === 'string') {
+              cleanResponse = jsonResponse.message;
+            }
+          } catch (e) {
+            // Keep fallback response
+          }
+        } else if (typeof backendResponse === 'string' && backendResponse.length > 10) {
+          // Use backend response if it's clean text
+          cleanResponse = backendResponse;
         }
       }
 
