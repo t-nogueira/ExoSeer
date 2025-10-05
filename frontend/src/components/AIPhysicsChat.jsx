@@ -44,33 +44,67 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate, userMode = 'scient
     scrollToBottom();
   }, [messages]);
 
-  // Predefined physics questions for quick access
-  const quickQuestions = [
-    {
-      category: "Transit Physics",
-      questions: [
-        "Explain transit depth and planet radius relationship",
-        "Why is impact parameter important?",
-        "How does stellar limb darkening affect measurements?"
-      ]
-    },
-    {
-      category: "Detection Methods", 
-      questions: [
-        "What's the difference between transit and RV methods?",
-        "How do we validate vs. confirm exoplanets?",
-        "Explain centroid motion analysis"
-      ]
-    },
-    {
-      category: "Data Analysis",
-      questions: [
-        "What does χ²/DoF tell us about model fits?",
-        "How to interpret residuals in light curves?",
-        "What are the key false positive scenarios?"
-      ]
+  // Different questions based on user mode
+  const getQuickQuestions = () => {
+    if (userMode === 'novice') {
+      return [
+        {
+          category: "🌟 Exoplanet Basics",
+          questions: [
+            "What are exoplanets and why are they exciting?",
+            "How do we find planets around other stars?",
+            "What makes a planet potentially habitable?"
+          ]
+        },
+        {
+          category: "🔍 Understanding the Data",
+          questions: [
+            "What is this graph showing me?",
+            "How do we know this signal is really a planet?",
+            "What do these numbers and measurements mean?"
+          ]
+        },
+        {
+          category: "🚀 Space Missions",
+          questions: [
+            "What is the Kepler space telescope?",
+            "How does TESS find exoplanets?",
+            "What's special about the James Webb Space Telescope?"
+          ]
+        }
+      ];
     }
-  ];
+    
+    // Scientist mode (existing questions)
+    return [
+      {
+        category: "Transit Physics",
+        questions: [
+          "Explain transit depth and planet radius relationship",
+          "Why is impact parameter important?",
+          "How does stellar limb darkening affect measurements?"
+        ]
+      },
+      {
+        category: "Detection Methods", 
+        questions: [
+          "What's the difference between transit and RV methods?",
+          "How do we validate vs. confirm exoplanets?",
+          "Explain centroid motion analysis"
+        ]
+      },
+      {
+        category: "Data Analysis",
+        questions: [
+          "What does χ²/DoF tell us about model fits?",
+          "How to interpret residuals in light curves?",
+          "What are the key false positive scenarios?"
+        ]
+      }
+    ];
+  };
+
+  const quickQuestions = getQuickQuestions();
 
   const sendMessage = async (messageText) => {
     if (!messageText.trim()) return;
