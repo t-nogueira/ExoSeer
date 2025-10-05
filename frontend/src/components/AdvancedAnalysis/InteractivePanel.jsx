@@ -177,12 +177,22 @@ const InteractivePanel = ({ data, candidate, onParametersChange }) => {
     };
   }, [params]);
 
-  // Generate chart data based on current parameters - force recalculation
+  // Generate chart data with forced updates - ensures sliders work
   const chartData = useMemo(() => {
     const newData = generateLightCurveData(params);
-    // Add timestamp to force chart re-render
-    return newData.map((d, i) => ({ ...d, id: `${params.period}-${params.rpOverRs}-${i}` }));
-  }, [params.period, params.rpOverRs, params.impactParam, params.inclination, params.eccentricity]);
+    // Force React to recognize this as new data by adding unique keys
+    return newData.map((d, i) => ({ 
+      ...d, 
+      key: `${params.period.toFixed(4)}-${params.rpOverRs.toFixed(4)}-${params.impactParam.toFixed(3)}-${i}`
+    }));
+  }, [
+    params.period, 
+    params.rpOverRs, 
+    params.impactParam, 
+    params.inclination, 
+    params.eccentricity,
+    params.limbDarkening
+  ]);
 
   // Debounced parameter update with immediate visual feedback
   const debouncedUpdateParams = useCallback((newParams) => {
