@@ -18,8 +18,8 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
       id: 1,
       type: 'assistant',
       content: 'Hello! I\'m your NASA-level Physics AI Assistant. I can help explain exoplanet detection physics, interpret analysis results, clarify terminology, and assist with complex calculations. What would you like to explore?',
-      timestamp: new Date(),
-      confidence: 0.95
+      timestamp: new Date()
+      // No confidence for initial greeting
     }
   ]);
   const [input, setInput] = useState('');
