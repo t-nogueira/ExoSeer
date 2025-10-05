@@ -162,6 +162,7 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult, userMode = '
   const [uploadMode, setUploadMode] = useState(false);
   const [selectedView, setSelectedView] = useState('folded');
   const [isLoadingArchive, setIsLoadingArchive] = useState(false);
+  const [transitSubmissionExpanded, setTransitSubmissionExpanded] = useState(false);
 
   // Generate candidate-specific light curve data
   const generateCandidateSpecificLightCurve = (candidate, data) => {
