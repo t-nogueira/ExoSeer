@@ -550,11 +550,16 @@ function App() {
                 <div className="p-3 rounded-lg bg-emerald-900/20 border border-emerald-500/30">
                   <div className="flex items-center gap-2 mb-1">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span className="text-sm font-medium text-emerald-300">Search Complete</span>
+                    <span className="text-sm font-medium text-emerald-300">NASA Archive Search Complete</span>
                   </div>
                   <p className="text-xs text-emerald-200">
-                    Found {searchResults.total_found} candidates for "{searchResults.target_name}"
+                    Found {searchResults.total_found.toLocaleString()} candidates for "{searchResults.target_name}"
                   </p>
+                  {searchResults.note && (
+                    <p className="text-xs text-yellow-300 mt-1">
+                      {searchResults.note}
+                    </p>
+                  )}
                 </div>
               )}
               
