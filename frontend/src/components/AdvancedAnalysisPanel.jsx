@@ -378,8 +378,9 @@ const PhysicsAnalysisPanel = ({ data, candidate }) => {
 
             <TabsContent value="model">
               <ModelFitPanel 
-                data={data} 
-                candidate={candidate}
+                data={analysisResult?.analyses} 
+                candidate={selectedCandidate || analysisResult?.candidate}
+                analysisData={analysisResult?.analyses?.physics_analysis}
               />
             </TabsContent>
 
