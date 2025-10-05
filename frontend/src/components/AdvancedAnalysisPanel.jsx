@@ -384,8 +384,8 @@ const PhysicsAnalysisPanel = ({ data, candidate }) => {
 
             <TabsContent value="interactive">
               <InteractivePanel 
-                data={data} 
-                candidate={candidate}
+                data={analysisResult?.analyses} 
+                candidate={selectedCandidate || analysisResult?.candidate}
                 onParametersChange={(params) => {
                   // Handle parameter changes if needed
                   console.log('Parameters updated:', params);
