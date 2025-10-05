@@ -213,6 +213,7 @@ function App() {
   const [error, setError] = useState(null);
   const [demoData, setDemoData] = useState(null);
   const [activeTab, setActiveTab] = useState("lightcurve");
+  const [aiChatOpen, setAiChatOpen] = useState(false);
 
   // Initialize with sophisticated demo data
   useEffect(() => {
