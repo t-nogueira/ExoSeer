@@ -89,6 +89,74 @@ const generateFullTimeSeries = (candidate, data) => {
   return points;
 };
 
+const generateResidualsData = (candidate, data) => {
+  if (!candidate || !data?.light_curve?.folded_data) {
+    return [];
+  }
+  
+  // Generate residuals data (observed - model)
+  const points = [];
+  const numPoints = 100;
+  const transitDepth = candidate.transit_depth || 0.02;
+  const transitDuration = candidate.transit_duration || 0.1;
+  
+  for (let i = 0; i < numPoints; i++) {
+    const phase = (i / numPoints - 0.5) * 0.1; // -0.05 to 0.05
+    let observedFlux = 1.0;
+    let modelFlux = 1.0;
+    
+    // Add transit signal to both observed and model
+    if (Math.abs(phase) < transitDuration / 2) {
+      const transitShape = Math.cos(Math.PI * phase / transitDuration);
+      observedFlux = 1.0 - transitDepth * Math.max(0, transitShape);
+      modelFlux = 1.0 - transitDepth * Math.max(0, transitShape);
+    }
+    
+    // Add noise only to observed
+    observedFlux += (Math.random() - 0.5) * 0.0005;
+    
+    // Calculate residual
+    const residual = observedFlux - modelFlux;
+    
+    points.push({
+      phase: phase,
+      residual: residual,
+      zero: 0 // Reference line at zero
+    });
+  }
+  
+  return points;
+};
+
+const calculateRMS = (residualsData) => {
+  if (!residualsData || residualsData.length === 0) return 0;
+  
+  const sumSquares = residualsData.reduce((sum, point) => {
+    return sum + (point.residual * point.residual);
+  }, 0);
+  
+  return Math.sqrt(sumSquares / residualsData.length) * 1e6; // Convert to ppm
+};
+
+const calculateChi2 = (residualsData) => {
+  if (!residualsData || residualsData.length === 0) return 0;
+  
+  const expectedError = 0.0005; // Expected noise level
+  const chi2 = residualsData.reduce((sum, point) => {
+    return sum + (point.residual * point.residual) / (expectedError * expectedError);
+  }, 0);
+  
+  const dof = residualsData.length - 3; // Degrees of freedom (data points - fitted parameters)
+  return chi2 / dof;
+};
+
+const calculateMean = (residualsData) => {
+  if (!residualsData || residualsData.length === 0) return 0;
+  
+  const sum = residualsData.reduce((sum, point) => sum + point.residual, 0);
+  return sum / residualsData.length;
+};
+
 const LightCurveAnalysisPanel = ({ data, candidate, analysisResult }) => {
   const [uploadMode, setUploadMode] = useState(false);
   const [selectedView, setSelectedView] = useState('folded');
