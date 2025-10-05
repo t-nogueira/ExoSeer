@@ -586,12 +586,11 @@ function App() {
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex-1 p-6 overflow-y-auto">
-            {activeTab === "analysis" && (
+            {(activeTab === "lightcurve" || activeTab === "centroid" || activeTab === "physics" || activeTab === "uncertainty") && (
               <AdvancedAnalysisPanel
                 analysisResult={analysisResult}
                 isAnalyzing={isAnalyzing || isProcessingCandidate}
-                activeTab={analysisTab}
-                onTabChange={setAnalysisTab}
+                activeTab={activeTab}
               />
             )}
             
@@ -601,25 +600,6 @@ function App() {
             
             {activeTab === "architecture" && (
               <ArchitecturePanel />
-            )}
-            
-            {activeTab === "passport" && (
-              <div className="flex items-center justify-center h-96">
-                <div className="text-center">
-                  <Download className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-400 mb-2">Candidate Passport</h3>
-                  <p className="exoseer-subtitle mb-4">
-                    {selectedCandidate ? 
-                      `Generate comprehensive analysis report for ${selectedCandidate.name}` : 
-                      'Select a candidate to generate passport'
-                    }
-                  </p>
-                  <Button variant="exoseer" disabled={!selectedCandidate}>
-                    <Download className="w-4 h-4 mr-2" />
-                    Generate PDF Report
-                  </Button>
-                </div>
-              </div>
             )}
           </div>
         </div>
