@@ -39,6 +39,22 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
         <!-- Emergent watermark removed -->
+        <style>
+            /* Hide any emergent watermarks */
+            #emergent-badge,
+            a[href*="emergent.sh"],
+            [id*="emergent"],
+            [class*="emergent"] {
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+            }
+            
+            /* Hide any elements containing "Made with Emergent" text */
+            *:contains("Made with Emergent") {
+                display: none !important;
+            }
+        </style>
         <script>
             !(function (t, e) {
                 var o, n, p, r;
