@@ -313,12 +313,7 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult, userMode = '
               <Activity className="w-5 h-5 text-cyan-400" />
               {userMode === 'novice' ? 'Planet Discovery Analysis' : 'Physics-Informed Transit Analysis'}
             </div>
-            <div className="flex items-center gap-2">
-              <Badge className="exoseer-badge exoseer-badge-confirmed">Compare</Badge>
-              <Switch />
-              <Badge className="exoseer-badge exoseer-badge-candidate">Uncertainty</Badge>
-              <Badge className="exoseer-badge exoseer-badge-candidate">Residuals</Badge>
-            </div>
+            {/* Removed non-functional Compare, Uncertainty, Residuals buttons */}
           </CardTitle>
         </CardHeader>
         <CardContent>
