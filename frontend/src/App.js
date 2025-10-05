@@ -380,34 +380,38 @@ function App() {
 
       {/* Sophisticated Navigation */}
       <nav className="border-b border-cyan-400/20 bg-slate-900/50 px-6 py-3">
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="bg-transparent space-x-1">
-            <TabsTrigger value="lightcurve" className="exoseer-tab">
-              <Activity className="w-4 h-4 mr-2" />
-              TESS Photometric Analysis
-            </TabsTrigger>
-            <TabsTrigger value="centroid" className="exoseer-tab">
-              <Eye className="w-4 h-4 mr-2" />
-              Centroid Motion Vetting
-            </TabsTrigger>
-            <TabsTrigger value="physics" className="exoseer-tab">
-              <Atom className="w-4 h-4 mr-2" />
-              Physics-Informed Modeling
-            </TabsTrigger>
-            <TabsTrigger value="uncertainty" className="exoseer-tab">
-              <Shield className="w-4 h-4 mr-2" />
-              Bayesian Uncertainty Quantification
-            </TabsTrigger>
-            <TabsTrigger value="missions" className="exoseer-tab">
-              <Satellite className="w-4 h-4 mr-2" />
-              Missions
-            </TabsTrigger>
-            <TabsTrigger value="architecture" className="exoseer-tab">
-              <Cpu className="w-4 h-4 mr-2" />
-              Architecture
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <div className="flex items-center justify-between mb-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="bg-transparent space-x-1">
+              <TabsTrigger value="lightcurve" className="exoseer-tab">
+                <Activity className="w-4 h-4 mr-2" />
+                Transit Photometry
+              </TabsTrigger>
+              <TabsTrigger value="centroid" className="exoseer-tab">
+                <Eye className="w-4 h-4 mr-2" />
+                Centroid Vetting
+              </TabsTrigger>
+              <TabsTrigger value="physics" className="exoseer-tab">
+                <Atom className="w-4 h-4 mr-2" />
+                Physics Analysis
+              </TabsTrigger>
+              <TabsTrigger value="uncertainty" className="exoseer-tab">
+                <Shield className="w-4 h-4 mr-2" />
+                Validation & Uncertainty
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowSystemInfo(!showSystemInfo)}
+            className="text-gray-400 hover:text-white"
+          >
+            <Settings className="w-4 h-4 mr-2" />
+            System Info
+          </Button>
+        </div>
       </nav>
 
       <div className="flex h-[calc(100vh-160px)]">
