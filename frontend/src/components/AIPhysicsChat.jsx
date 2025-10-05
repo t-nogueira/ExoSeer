@@ -251,15 +251,27 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
     }
     
     if (q.includes('chi') || q.includes('fit') || q.includes('residual')) {
-      return 'χ²/DoF (reduced chi-squared) measures goodness of fit. Values near 1.0 indicate good fits, while χ²/DoF >> 1 suggests systematic errors or poor models. χ²/DoF << 1 may indicate overestimated uncertainties. Residuals should be normally distributed and show no systematic trends if the model is correct.';
+      let response = 'χ²/DoF (reduced chi-squared) measures goodness of fit. Values near 1.0 indicate good fits, while χ²/DoF >> 1 suggests systematic errors or poor models. χ²/DoF << 1 may indicate overestimated uncertainties. Residuals should be normally distributed and show no systematic trends if the model is correct.';
+      if (selectedCandidate) {
+        response += `${contextInfo} With SNR of ${selectedCandidate.snr?.toFixed(1)}, we expect χ²/DoF close to 1.0 for a good transit model fit.`;
+      }
+      return response;
     }
     
     if (q.includes('false positive') || q.includes('fp')) {
-      return 'Common false positive scenarios include: (1) Eclipsing binaries (EB) - check for secondary eclipses and ellipsoidal variations, (2) Background EBs - look for centroid motion during transit, (3) Stellar activity - check for correlation with stellar rotation, (4) Instrumental effects - verify across different instruments/sectors.';
+      let response = 'Common false positive scenarios include: (1) Eclipsing binaries (EB) - check for secondary eclipses and ellipsoidal variations, (2) Background EBs - look for centroid motion during transit, (3) Stellar activity - check for correlation with stellar rotation, (4) Instrumental effects - verify across different instruments/sectors.';
+      if (selectedCandidate) {
+        response += `${contextInfo} As a ${selectedCandidate.status || 'candidate'} detected via ${selectedCandidate.discovery_method || 'transit'} method, it has already passed initial vetting.`;
+      }
+      return response;
     }
     
     if (q.includes('validation') || q.includes('confirmation')) {
-      return 'Validation uses statistical methods to show a signal is likely planetary (>99% confidence), while confirmation requires independent measurements (usually radial velocity) to determine the object\'s mass. TESS candidates typically undergo validation first through vetting metrics, centroid analysis, and statistical validation.';
+      let response = 'Validation uses statistical methods to show a signal is likely planetary (>99% confidence), while confirmation requires independent measurements (usually radial velocity) to determine the object\'s mass. TESS candidates typically undergo validation first through vetting metrics, centroid analysis, and statistical validation.';
+      if (selectedCandidate) {
+        response += `${contextInfo} This ${selectedCandidate.status} was discovered in ${selectedCandidate.discovery_year} and represents the ${selectedCandidate.status === 'confirmed' ? 'confirmed planet' : 'validated candidate'} class.`;
+      }
+      return response;
     }
     
     // Handle common general questions
