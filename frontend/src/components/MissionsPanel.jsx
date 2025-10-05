@@ -80,8 +80,14 @@ const MissionsPanel = ({ onMissionSearch }) => {
   };
 
   const handleMissionSearch = (missionId) => {
-    // TODO: Implement mission-specific search functionality
-    console.log(`Searching discoveries for mission: ${missionId}`);
+    if (onMissionSearch) {
+      const missionNames = {
+        'kepler': 'Kepler',
+        'k2': 'K2', 
+        'tess': 'TESS'
+      };
+      onMissionSearch(missionNames[missionId] || missionId);
+    }
   };
 
   return (
