@@ -199,7 +199,7 @@ class AIExoplanetAnalyzer:
             """
             
             from emergentintegrations.llm.chat import UserMessage
-            user_msg = UserMessage(content=ensemble_prompt)
+            user_msg = UserMessage(text=ensemble_prompt)
             response = await self.ai_client.send_message(user_msg)
             
             try:
