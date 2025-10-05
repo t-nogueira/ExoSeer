@@ -175,9 +175,12 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
 
       // If no clean response found, use fallback with context
       if (!cleanResponse || cleanResponse.length < 10) {
+        console.log('Using fallback response for:', messageText);
         cleanResponse = generateFallbackResponse(messageText);
-        confidence = 0.6;
+        confidence = 0.7;
       }
+      
+      console.log('Final response to display:', cleanResponse);
 
       const assistantMessage = {
         id: Date.now() + 1,
