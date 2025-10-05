@@ -236,8 +236,10 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       clearInterval(progressInterval);
-      setIsLoading(false);
-      setLoadingProgress(0);
+      setTimeout(() => {
+        setIsLoading(false);
+        setLoadingProgress(0);
+      }, 200); // Small delay to ensure UI updates
     }
   };
 
