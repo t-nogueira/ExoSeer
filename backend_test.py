@@ -323,6 +323,142 @@ class ExoSeerAPITester:
         
         return success
 
+    def test_ai_physics_chat(self) -> bool:
+        """Test AI Physics Chat endpoint with NASA-level physics questions"""
+        print("\n🤖 AI Physics Chat Tests")
+        
+        # Test basic physics question
+        success1, response1 = self.run_test(
+            "AI Chat - Transit Depth Physics",
+            "POST",
+            "ai-chat",
+            200,
+            data={
+                "message": "Explain transit depth calculations for exoplanets",
+                "context": {
+                    "candidate_name": "Kepler-452 b",
+                    "period": 384.843,
+                    "radius": 1.63,
+                    "transit_depth": 0.000084
+                },
+                "conversation_history": []
+            }
+        )
+        
+        if success1 and response1:
+            print(f"   Response length: {len(response1.get('response', ''))}")
+            print(f"   Confidence: {response1.get('confidence', 'N/A')}")
+            print(f"   References: {len(response1.get('references', []))}")
+            print(f"   Mode: {response1.get('mode', 'N/A')}")
+        
+        # Test impact parameter physics
+        success2, response2 = self.run_test(
+            "AI Chat - Impact Parameter Physics",
+            "POST",
+            "ai-chat",
+            200,
+            data={
+                "message": "What is impact parameter and how does it affect transit observations?",
+                "context": {
+                    "candidate_name": "TRAPPIST-1 e",
+                    "period": 6.099,
+                    "radius": 0.92
+                },
+                "conversation_history": []
+            }
+        )
+        
+        if success2 and response2:
+            print(f"   Impact parameter response confidence: {response2.get('confidence', 'N/A')}")
+        
+        # Test limb darkening effects
+        success3, response3 = self.run_test(
+            "AI Chat - Limb Darkening Effects",
+            "POST",
+            "ai-chat",
+            200,
+            data={
+                "message": "How does limb darkening affect transit photometry?",
+                "context": None,
+                "conversation_history": []
+            }
+        )
+        
+        if success3 and response3:
+            print(f"   Limb darkening response confidence: {response3.get('confidence', 'N/A')}")
+        
+        # Test chi-squared fit quality
+        success4, response4 = self.run_test(
+            "AI Chat - Chi-squared Fit Quality",
+            "POST",
+            "ai-chat",
+            200,
+            data={
+                "message": "Explain chi-squared values in exoplanet transit fitting",
+                "context": None,
+                "conversation_history": []
+            }
+        )
+        
+        if success4 and response4:
+            print(f"   Chi-squared response confidence: {response4.get('confidence', 'N/A')}")
+        
+        # Test false positive scenarios
+        success5, response5 = self.run_test(
+            "AI Chat - False Positive Scenarios",
+            "POST",
+            "ai-chat",
+            200,
+            data={
+                "message": "What are common false positive scenarios in exoplanet detection?",
+                "context": None,
+                "conversation_history": []
+            }
+        )
+        
+        if success5 and response5:
+            print(f"   False positive response confidence: {response5.get('confidence', 'N/A')}")
+        
+        # Test error handling - empty message
+        success6, response6 = self.run_test(
+            "AI Chat - Error Handling (Empty Message)",
+            "POST",
+            "ai-chat",
+            400,
+            data={
+                "message": "",
+                "context": None,
+                "conversation_history": []
+            }
+        )
+        
+        # Test conversation history
+        success7, response7 = self.run_test(
+            "AI Chat - Conversation History",
+            "POST",
+            "ai-chat",
+            200,
+            data={
+                "message": "Can you elaborate on that?",
+                "context": None,
+                "conversation_history": [
+                    {"role": "user", "content": "What is transit depth?"},
+                    {"role": "assistant", "content": "Transit depth is the fractional decrease in stellar flux..."}
+                ]
+            }
+        )
+        
+        if success7 and response7:
+            print(f"   Conversation history response confidence: {response7.get('confidence', 'N/A')}")
+        
+        # Calculate overall AI chat success
+        ai_chat_tests = [success1, success2, success3, success4, success5, success6, success7]
+        ai_chat_success = sum(ai_chat_tests) / len(ai_chat_tests)
+        
+        print(f"\n   AI Chat Overall Success: {ai_chat_success*100:.1f}% ({sum(ai_chat_tests)}/{len(ai_chat_tests)} tests passed)")
+        
+        return ai_chat_success >= 0.8  # 80% success rate required
+
     def run_comprehensive_test(self) -> Dict[str, Any]:
         """Run comprehensive API test suite"""
         print("🚀 Starting ExoSeer API Comprehensive Test Suite")
