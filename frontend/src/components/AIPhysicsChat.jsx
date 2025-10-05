@@ -357,8 +357,11 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate, userMode = 'scient
     }
     
     if (q.includes('false positive') || q.includes('fp')) {
-      let response = 'Common false positive scenarios include: (1) Eclipsing binaries (EB) - check for secondary eclipses and ellipsoidal variations, (2) Background EBs - look for centroid motion during transit, (3) Stellar activity - check for correlation with stellar rotation, (4) Instrumental effects - verify across different instruments/sectors.';
-      if (selectedCandidate) {
+      let response = isNovice
+        ? '🕵️ Sometimes we think we\'ve found a planet, but it turns out to be something else! This is called a "false positive." It could be two stars orbiting each other instead of a planet, or just a glitch in our instruments. That\'s why scientists do lots of follow-up observations to make sure they\'ve really found a planet!'
+        : 'Common false positive scenarios include: (1) Eclipsing binaries (EB) - check for secondary eclipses and ellipsoidal variations, (2) Background EBs - look for centroid motion during transit, (3) Stellar activity - check for correlation with stellar rotation, (4) Instrumental effects - verify across different instruments/sectors.';
+      
+      if (selectedCandidate && !isNovice) {
         response += `${contextInfo} As a ${selectedCandidate.status || 'candidate'} detected via ${selectedCandidate.discovery_method || 'transit'} method, it has already passed initial vetting.`;
       }
       return response;
