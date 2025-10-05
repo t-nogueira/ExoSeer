@@ -592,9 +592,9 @@ Provide a clear, accurate explanation suitable for professional astronomers. Inc
                 })
                 
                 return {
-                    "response": response.get("message", "I apologize, but I couldn't generate a response at this time."),
-                    "confidence": 0.9,
-                    "references": ["NASA Exoplanet Science Institute", "Exoplanet Detection Methods"],
+                    "response": response.get("explanation", "I apologize, but I couldn't generate a response at this time."),
+                    "confidence": response.get("confidence", 0.9),
+                    "references": response.get("references", ["NASA Exoplanet Science Institute", "Exoplanet Detection Methods"]),
                     "timestamp": datetime.utcnow().isoformat()
                 }
                 
