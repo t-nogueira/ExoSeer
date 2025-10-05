@@ -310,6 +310,21 @@ function App() {
   const handleCandidateClick = async (candidate) => {
     setIsProcessingCandidate(true);
     setSelectedCandidate(candidate);
+    setAnalysisProgress(0);
+    
+    // Estimate analysis time based on candidate complexity
+    const estimatedTime = 8 + Math.random() * 7; // 8-15 seconds
+    setAnalysisTimeRemaining(estimatedTime);
+    
+    // Simulate analysis progress
+    const progressInterval = setInterval(() => {
+      setAnalysisProgress(prev => {
+        const newProgress = prev + Math.random() * 15;
+        const remaining = Math.max(0, estimatedTime * (100 - newProgress) / 100);
+        setAnalysisTimeRemaining(remaining);
+        return Math.min(newProgress, 95); // Don't reach 100% until actual completion
+      });
+    }, 800);
     
     try {
       // Call backend to analyze this specific candidate
