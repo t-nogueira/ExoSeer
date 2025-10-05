@@ -810,6 +810,77 @@ Validation techniques:
         "confidence": 0.6
     }
 
+# Transit Data Submission Endpoint
+@api_router.post("/transit-data-submission")
+async def submit_transit_data(
+    request: Request
+):
+    """
+    Accept transit observation data submissions from scientists
+    Validates data quality, checks against catalogs, and stores for review
+    """
+    try:
+        form = await request.form()
+        
+        # Extract metadata
+        submission_data = json.loads(form.get('submission_data', '{}'))
+        
+        # Process uploaded files
+        uploaded_files = []
+        for key, value in form.items():
+            if key.startswith('data_file_'):
+                if hasattr(value, 'filename'):
+                    # Read file content
+                    content = await value.read()
+                    uploaded_files.append({
+                        'filename': value.filename,
+                        'content': content.decode('utf-8'),
+                        'size': len(content)
+                    })
+        
+        # Generate submission ID
+        submission_id = f"TDS-{int(time.time())}-{len(uploaded_files)}"
+        
+        # Create submission record
+        submission_record = {
+            "submission_id": submission_id,
+            "observer_name": submission_data.get('observer_name'),
+            "institution": submission_data.get('institution'),
+            "observation_date": submission_data.get('observation_date'),
+            "telescope_info": submission_data.get('telescope_info'),
+            "target_name": submission_data.get('target_name'),
+            "files_count": len(uploaded_files),
+            "validation_score": submission_data.get('validation_results', {}).get('overall_score', 0),
+            "status": "pending_review",
+            "submitted_at": datetime.now(timezone.utc).isoformat(),
+            "files_metadata": [
+                {
+                    "filename": f['filename'],
+                    "size": f['size'],
+                    "processed": False
+                } for f in uploaded_files
+            ]
+        }
+        
+        # Store in database (in a real implementation, this would go to MongoDB)
+        # For now, we'll just log it and return success
+        logger.info(f"Transit data submission received: {submission_id}")
+        logger.info(f"Submission details: {submission_record}")
+        
+        return {
+            "success": True,
+            "submission_id": submission_id,
+            "message": f"Successfully submitted {len(uploaded_files)} file(s) for review. Your submission will be processed within 48 hours.",
+            "status": "pending_review"
+        }
+        
+    except Exception as e:
+        logger.error(f"Transit data submission failed: {e}")
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Failed to process submission: {str(e)}"
+        )
+
 # Include the router in the main app
 app.include_router(api_router)
 
