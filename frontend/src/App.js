@@ -374,21 +374,21 @@ function App() {
       <nav className="border-b border-cyan-400/20 bg-slate-900/50 px-6 py-3">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="bg-transparent space-x-1">
-            <TabsTrigger value="lightcurve" className="exoseer-tab">
+            <TabsTrigger value="analysis" className="exoseer-tab">
               <Activity className="w-4 h-4 mr-2" />
-              TESS Photometric Analysis
+              Analysis
             </TabsTrigger>
-            <TabsTrigger value="centroid" className="exoseer-tab">
-              <Eye className="w-4 h-4 mr-2" />
-              Centroid Motion Vetting
+            <TabsTrigger value="missions" className="exoseer-tab">
+              <Satellite className="w-4 h-4 mr-2" />
+              Missions
             </TabsTrigger>
-            <TabsTrigger value="physics" className="exoseer-tab">
-              <Atom className="w-4 h-4 mr-2" />
-              Physics-Informed Modeling
+            <TabsTrigger value="architecture" className="exoseer-tab">
+              <Cpu className="w-4 h-4 mr-2" />
+              Architecture
             </TabsTrigger>
-            <TabsTrigger value="uncertainty" className="exoseer-tab">
-              <Shield className="w-4 h-4 mr-2" />
-              Bayesian Uncertainty Quantification
+            <TabsTrigger value="passport" className="exoseer-tab">
+              <Download className="w-4 h-4 mr-2" />
+              Passport
             </TabsTrigger>
           </TabsList>
         </Tabs>
