@@ -409,6 +409,7 @@ function App() {
   const loadMoreCandidates = async () => {
     if (!searchResults || candidates.length >= searchResults.total_found) return;
     
+    setIsSearching(true); // Show loading state
     try {
       const nextPage = currentPage + 1;
       const response = await axios.post(`${BACKEND_URL}/api/targets/search`, {
@@ -423,9 +424,19 @@ function App() {
         setCandidates(newCandidates);
         setAllCandidates(newCandidates);
         setCurrentPage(nextPage);
+        
+        // Update search results to reflect new state
+        setSearchResults(prev => ({
+          ...prev,
+          candidates: newCandidates,
+          has_more: response.data.has_more
+        }));
       }
     } catch (error) {
       console.error('Failed to load more candidates:', error);
+      setError(`Failed to load more candidates: ${error.message}`);
+    } finally {
+      setIsSearching(false);
     }
   };
 
