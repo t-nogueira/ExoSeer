@@ -1054,6 +1054,13 @@ const PhysicsAnalysisPanel = ({ data, candidate, analysisResult }) => {
                 }}
               />
             </TabsContent>
+
+            <TabsContent value="diagram">
+              <DataInformedDiagram 
+                candidate={candidate}
+                analysisResult={analysisResult}
+              />
+            </TabsContent>
           </Tabs>
         </CardContent>
       </Card>
