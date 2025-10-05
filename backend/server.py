@@ -585,11 +585,11 @@ Question: {message}
 
 Provide a clear, accurate explanation suitable for professional astronomers. Include relevant equations, physical principles, and typical values where appropriate. Keep it concise but thorough."""
 
-                response = await llm_client.send_message(
-                    messages=[{"role": "user", "content": physics_prompt}],
-                    model="gpt-4",
-                    max_tokens=500
-                )
+                response = await ai_analyzer.generate_physics_explanation({
+                    "user_question": message,
+                    "context": physics_prompt,
+                    "domain": "exoplanet_physics"
+                })
                 
                 return {
                     "response": response.get("message", "I apologize, but I couldn't generate a response at this time."),
