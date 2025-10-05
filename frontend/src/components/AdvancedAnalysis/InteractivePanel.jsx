@@ -314,6 +314,7 @@ const InteractivePanel = ({ data, candidate, onParametersChange }) => {
                   variant="exoseer_outline"
                   size="sm"
                   onClick={() => exportData('json')}
+                  title="Export analysis parameters and results as JSON"
                 >
                   <Download className="w-3 h-3 mr-1" />
                   JSON
@@ -322,6 +323,7 @@ const InteractivePanel = ({ data, candidate, onParametersChange }) => {
                   variant="exoseer_outline"
                   size="sm"
                   onClick={() => exportData('csv')}
+                  title="Export light curve data as CSV"
                 >
                   <Download className="w-3 h-3 mr-1" />
                   CSV
