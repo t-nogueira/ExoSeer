@@ -13,11 +13,18 @@ import axios from "axios";
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate, userMode = 'scientist' }) => {
+  const getInitialMessage = () => {
+    if (userMode === 'novice') {
+      return 'Hello! I\'m your friendly ExoSeer AI Assistant! 🌟 I\'m here to help you discover and understand exoplanets (planets outside our solar system). I can explain concepts in simple terms, help you interpret the data you see, and guide you through the exciting world of planet hunting. What would you like to learn about?';
+    }
+    return 'Hello! I\'m your NASA-level Physics AI Assistant. I can help explain exoplanet detection physics, interpret analysis results, clarify terminology, and assist with complex calculations. What would you like to explore?';
+  };
+
   const [messages, setMessages] = useState([
     {
       id: 1,
       type: 'assistant',
-      content: 'Hello! I\'m your NASA-level Physics AI Assistant. I can help explain exoplanet detection physics, interpret analysis results, clarify terminology, and assist with complex calculations. What would you like to explore?',
+      content: getInitialMessage(),
       timestamp: new Date()
       // No confidence for initial greeting
     }
