@@ -492,7 +492,7 @@ function App() {
 
       <div className="flex h-[calc(100vh-160px)]">
         {/* Advanced Sidebar */}
-        <div className="w-80 exoseer-sidebar flex flex-col">
+        <div className="w-72 exoseer-sidebar flex flex-col">
           {/* NASA-Level Target Search Interface */}
           <div className="p-6 border-b border-cyan-400/20">
             <div className="flex items-center space-x-2 mb-4">
