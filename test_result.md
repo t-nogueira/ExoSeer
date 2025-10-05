@@ -172,6 +172,18 @@ backend:
         comment: "AI PHYSICS CHAT COMPREHENSIVE TESTING COMPLETED: Fixed critical context window exceeded error in LLM integration by implementing fresh session creation for each request. RESULTS: ✅ Core Functionality (6/6 tests passed) - Simple physics questions (transit depth, limb darkening, chi-squared) return detailed scientific explanations with 0.8 confidence ✅ Response Processing - Clean, properly formatted JSON responses with scientific content, not raw JSON ✅ Context Integration - Candidate context properly integrated into physics explanations ✅ Error Handling - Correctly returns 400 for empty messages ✅ LLM Integration - ai_analyzer properly initialized and working with GPT-4o, no more context window errors ✅ Performance - All responses under 15 seconds (avg 6.2s), long messages handled efficiently. AI Physics Chat now fully operational with NASA-level physics explanations."
 
 frontend:
+  - task: "Enhanced DataInformedDiagram with multiple perspective views and 3D mode"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/components/AdvancedAnalysis/DataInformedDiagram.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "ENHANCED DATA-INFORMED DIAGRAM: Implemented multiple perspective views (Line-of-Sight, Orbital Plane, Side View) as default with tabbed interface. Added optional 3D mode for scientist users with lazy-loaded Three.js integration. Enhanced with priority annotations: transit chord, impact parameter, line-of-sight indicators, inclination, eccentricity, limb darkening, habitable zone boundaries, atmospheric indicators. Added interactivity with hover tooltips, click focus, parameter updates, and export functionality (JSON, PNG, SVG). Implemented proper props interface with mode, candidate, analysisResult, and onParamChange. Needs testing to verify all views render correctly and 3D mode works."
+
   - task: "Create InteractivePanel.jsx component"
     implemented: true
     working: true
