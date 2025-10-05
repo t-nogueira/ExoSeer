@@ -1003,10 +1003,16 @@ const CentroidMotionAnalysisPanel = ({ data, candidate, analysisResult }) => {
   );
 };
 
-const PhysicsAnalysisPanel = ({ data, candidate, analysisResult }) => {
+const PhysicsAnalysisPanel = ({ data, candidate, analysisResult, userMode = 'scientist' }) => {
   const [activePhysicsTab, setActivePhysicsTab] = useState('parameters');
   const [period, setPeriod] = useState(129.9000);
   const [planetRadius, setPlanetRadius] = useState(1.80);
+
+  // Handle parameter changes from diagram
+  const handleParamChange = (paramUpdates) => {
+    if (paramUpdates.period) setPeriod(paramUpdates.period);
+    if (paramUpdates.planetRadius) setPlanetRadius(paramUpdates.planetRadius);
+  };
 
   return (
     <div className="space-y-6">{/* Removed duplicate physics warning - it's in ParametersPanel */}
