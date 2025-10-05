@@ -1168,15 +1168,15 @@ const AdvancedAnalysisPanel = ({
   // Render appropriate panel based on active tab
   switch(activeTab) {
     case "lightcurve":
-      return <LightCurveAnalysisPanel data={analysisData} candidate={candidate} analysisResult={analysisResult} />;
+      return <LightCurveAnalysisPanel data={analysisData} candidate={candidate} analysisResult={analysisResult} userMode={userMode} />;
     case "centroid":
-      return <CentroidMotionAnalysisPanel data={analysisData} candidate={candidate} analysisResult={analysisResult} />;
+      return <CentroidMotionAnalysisPanel data={analysisData} candidate={candidate} analysisResult={analysisResult} userMode={userMode} />;
     case "physics":
-      return <PhysicsAnalysisPanel data={analysisData} candidate={candidate} analysisResult={analysisResult} />;
+      return <PhysicsAnalysisPanel data={analysisData} candidate={candidate} analysisResult={analysisResult} userMode={userMode} />;
     case "uncertainty":
-      return <UncertaintyQuantificationPanel data={analysisData} candidate={candidate} analysisResult={analysisResult} />;
+      return <UncertaintyQuantificationPanel data={analysisData} candidate={candidate} analysisResult={analysisResult} userMode={userMode} />;
     default:
-      return <LightCurveAnalysisPanel data={analysisData} candidate={candidate} analysisResult={analysisResult} />;
+      return <LightCurveAnalysisPanel data={analysisData} candidate={candidate} analysisResult={analysisResult} userMode={userMode} />;
   }
 };
 
