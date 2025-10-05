@@ -663,20 +663,18 @@ function App() {
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex-1 p-6 overflow-y-auto">
-            {(activeTab === "lightcurve" || activeTab === "centroid" || activeTab === "physics" || activeTab === "uncertainty") && (
+            {showSystemInfo ? (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <ArchitecturePanel />
+                <MissionsPanel />
+              </div>
+            ) : (
               <AdvancedAnalysisPanel
                 analysisResult={analysisResult}
                 isAnalyzing={isAnalyzing || isProcessingCandidate}
                 activeTab={activeTab}
+                selectedCandidate={selectedCandidate}
               />
-            )}
-            
-            {activeTab === "missions" && (
-              <MissionsPanel />
-            )}
-            
-            {activeTab === "architecture" && (
-              <ArchitecturePanel />
             )}
           </div>
         </div>
