@@ -212,6 +212,8 @@ function App() {
   const [analysisResult, setAnalysisResult] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisProgress, setAnalysisProgress] = useState(0);
+  const [analysisTimeRemaining, setAnalysisTimeRemaining] = useState(0);
   const [error, setError] = useState(null);
   const [demoData, setDemoData] = useState(null);
   const [activeTab, setActiveTab] = useState("lightcurve");
