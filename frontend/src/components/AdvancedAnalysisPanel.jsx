@@ -290,8 +290,14 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult }) => {
               size="sm" 
               className="text-xs"
               onClick={() => handleNASAArchiveAccess()}
+              disabled={isLoadingArchive}
             >
-              NASA Archive
+              {isLoadingArchive ? (
+                <div className="animate-spin w-3 h-3 border border-cyan-400 border-t-transparent rounded-full mr-1" />
+              ) : (
+                <Upload className="w-3 h-3 mr-1" />
+              )}
+              {isLoadingArchive ? 'Loading...' : 'NASA Archive'}
             </Button>
           </div>
         </div>
