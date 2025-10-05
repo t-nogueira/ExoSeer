@@ -572,14 +572,29 @@ function App() {
           </div>
 
           {/* Candidates Header with Stats */}
-          <div className="p-6 border-b border-cyan-400/20">
-            <div className="flex items-center space-x-2 mb-4">
-              <Planet className="w-5 h-5 text-purple-400" />
-              <h2 className="font-semibold text-white">Exoplanet Candidates</h2>
-              <Badge className="exoseer-badge exoseer-badge-candidate ml-auto">
-                {candidates.length} DETECTED
+          <div className="p-4 border-b border-cyan-400/20">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <Planet className="w-4 h-4 text-purple-400" />
+                <h2 className="font-medium text-white text-sm">Candidates</h2>
+              </div>
+              <Badge className="exoseer-badge exoseer-badge-candidate text-xs">
+                {candidates.length}
               </Badge>
             </div>
+            {searchResults && searchResults.total_found > candidates.length && (
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-gray-400">Showing {candidates.length} of {searchResults.total_found.toLocaleString()}</span>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-xs h-6 px-2"
+                  onClick={() => loadMoreCandidates()}
+                >
+                  Load More
+                </Button>
+              </div>
+            )}
           </div>
           
           {/* Enhanced Candidates List */}
