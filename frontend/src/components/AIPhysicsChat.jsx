@@ -284,13 +284,25 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
         <>
           <CardContent className="flex-1 p-4 overflow-y-auto">
             <div className="space-y-4">
-              {/* Quick Questions */}
-              {messages.length === 1 && (
-                <div className="mb-4">
-                  <h4 className="text-sm font-medium text-white mb-3 flex items-center gap-2">
+              {/* Quick Questions - Always show but collapsible */}
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-sm font-medium text-white flex items-center gap-2">
                     <Lightbulb className="w-4 h-4 text-yellow-400" />
                     Quick Physics Topics
                   </h4>
+                  {messages.length > 1 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setMessages([messages[0]])}
+                      className="text-xs h-6 px-2 text-cyan-400 hover:text-white"
+                    >
+                      Reset Chat
+                    </Button>
+                  )}
+                </div>
+                <div className={`${messages.length > 1 ? 'max-h-32 overflow-y-auto' : ''}`}>
                   {quickQuestions.map((category, idx) => (
                     <div key={idx} className="mb-3">
                       <p className="text-xs text-cyan-400 font-medium mb-1">{category.category}</p>
@@ -311,7 +323,7 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
                     </div>
                   ))}
                 </div>
-              )}
+              </div>
 
               {/* Messages */}
               {messages.map((message) => (
