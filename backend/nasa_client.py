@@ -31,6 +31,56 @@ class NASAExoplanetClient:
         if self.session:
             await self.session.close()
     
+    async def search_by_mission(self, mission: str) -> List[Dict[str, Any]]:
+        """Search for all exoplanets discovered by a specific mission"""
+        
+        if mission.upper() == 'KEPLER':
+            query = """
+            SELECT pl_name, hostname, discoverymethod, disc_year, pl_rade, pl_masse, 
+                   pl_orbper, pl_orbsmax, pl_tranmid, pl_trandep, pl_trandur,
+                   st_teff, st_rad, st_mass, ra, dec, sy_dist
+            FROM ps 
+            WHERE discoverymethod = 'Transit' 
+            AND disc_year >= 2009 AND disc_year <= 2017
+            AND (pl_name LIKE 'Kepler%' OR hostname LIKE 'Kepler%' OR pl_name LIKE 'KOI%')
+            AND default_flag = 1
+            ORDER BY disc_year ASC, pl_name ASC
+            """
+        elif mission.upper() == 'TESS':
+            query = """
+            SELECT pl_name, hostname, discoverymethod, disc_year, pl_rade, pl_masse, 
+                   pl_orbper, pl_orbsmax, pl_tranmid, pl_trandep, pl_trandur,
+                   st_teff, st_rad, st_mass, ra, dec, sy_dist
+            FROM ps 
+            WHERE discoverymethod = 'Transit' 
+            AND disc_year >= 2018
+            AND (pl_name LIKE 'TOI%' OR hostname LIKE 'TIC%' OR pl_name LIKE 'TIC%')
+            AND default_flag = 1
+            ORDER BY disc_year ASC, pl_name ASC
+            """
+        elif mission.upper() == 'K2':
+            query = """
+            SELECT pl_name, hostname, discoverymethod, disc_year, pl_rade, pl_masse, 
+                   pl_orbper, pl_orbsmax, pl_tranmid, pl_trandep, pl_trandur,
+                   st_teff, st_rad, st_mass, ra, dec, sy_dist
+            FROM ps 
+            WHERE discoverymethod = 'Transit' 
+            AND disc_year >= 2014 AND disc_year <= 2018
+            AND (pl_name LIKE 'K2%' OR hostname LIKE 'EPIC%')
+            AND default_flag = 1
+            ORDER BY disc_year ASC, pl_name ASC
+            """
+        else:
+            return []
+            
+        df = await self._execute_tap_query(query)
+        if df.empty:
+            return []
+            
+        candidates = self._process_planet_data(df)
+        logger.info(f"Found {len(candidates)} {mission} candidates from NASA Exoplanet Archive")
+        return candidates
+
     async def search_exoplanets(self, target_name: str) -> List[Dict[str, Any]]:
         """Search for exoplanets by target name"""
         
