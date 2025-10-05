@@ -366,8 +366,72 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult }) => {
 
             <TabsContent value="residuals">
               <div className="exoseer-chart-container mb-4">
-                <div className="h-80 w-full flex items-center justify-center text-gray-400">
-                  Residuals visualization would show model fit quality
+                <div className="h-80 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={generateResidualsData(candidate, data)}>
+                      <CartesianGrid strokeDasharray="2 2" stroke="rgba(0, 212, 255, 0.1)" />
+                      <XAxis 
+                        dataKey="phase" 
+                        stroke="#9CA3AF"
+                        fontSize={10}
+                        tickFormatter={(value) => value.toFixed(3)}
+                      />
+                      <YAxis 
+                        stroke="#9CA3AF"
+                        fontSize={10}
+                        domain={[-0.002, 0.002]}
+                        tickFormatter={(value) => (value * 1e6).toFixed(0) + ' ppm'}
+                      />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: 'rgba(0, 0, 0, 0.9)', 
+                          border: '1px solid #00d4ff',
+                          borderRadius: '6px'
+                        }}
+                        formatter={(value) => [
+                          (value * 1e6).toFixed(0) + ' ppm', 
+                          'Residual'
+                        ]}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="residual" 
+                        stroke="#ffd700" 
+                        strokeWidth={1}
+                        dot={false}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="zero" 
+                        stroke="#666666" 
+                        strokeWidth={1}
+                        strokeDasharray="2 2"
+                        dot={false}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+              
+              {/* Residuals Statistics */}
+              <div className="grid grid-cols-3 gap-4 mt-4">
+                <div className="exoseer-metric-card">
+                  <div className="text-lg font-bold text-yellow-400">
+                    {calculateRMS(generateResidualsData(candidate, data)).toFixed(0)}
+                  </div>
+                  <div className="exoseer-label">RMS (ppm)</div>
+                </div>
+                <div className="exoseer-metric-card">
+                  <div className="text-lg font-bold text-blue-400">
+                    {calculateChi2(generateResidualsData(candidate, data)).toFixed(2)}
+                  </div>
+                  <div className="exoseer-label">χ²/DoF</div>
+                </div>
+                <div className="exoseer-metric-card">
+                  <div className="text-lg font-bold text-emerald-400">
+                    {Math.abs(calculateMean(generateResidualsData(candidate, data)) * 1e6).toFixed(0)}
+                  </div>
+                  <div className="exoseer-label">Bias (ppm)</div>
                 </div>
               </div>
             </TabsContent>
