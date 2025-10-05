@@ -779,6 +779,7 @@ function App() {
                 isAnalyzing={isAnalyzing || isProcessingCandidate}
                 activeTab={activeTab}
                 selectedCandidate={selectedCandidate}
+                userMode={userMode}
               />
             )}
           </div>
