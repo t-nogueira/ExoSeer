@@ -142,11 +142,17 @@ async def search_targets(request: TargetSearchRequest):
                     seen_names.add(candidate['name']);
                     unique_candidates.append(candidate)
             
+            # Apply pagination to regular searches too
+            paginated_candidates = unique_candidates[offset:offset + limit]
+            
             return {
                 "target_name": request.target_name,
-                "candidates": unique_candidates[:20],  # Limit to 20 results
+                "candidates": paginated_candidates,
                 "total_found": len(unique_candidates),
                 "search_type": request.search_type,
+                "page": page,
+                "limit": limit,
+                "has_more": offset + limit < len(unique_candidates),
                 "timestamp": datetime.utcnow().isoformat()
             }
             
