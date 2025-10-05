@@ -376,19 +376,19 @@ function App() {
           <TabsList className="bg-transparent space-x-1">
             <TabsTrigger value="lightcurve" className="exoseer-tab">
               <Activity className="w-4 h-4 mr-2" />
-              Light Curve
+              TESS Photometric Analysis
             </TabsTrigger>
             <TabsTrigger value="centroid" className="exoseer-tab">
               <Eye className="w-4 h-4 mr-2" />
-              Centroid
+              Centroid Motion Vetting
             </TabsTrigger>
             <TabsTrigger value="physics" className="exoseer-tab">
               <Atom className="w-4 h-4 mr-2" />
-              Physics
+              Physics-Informed Modeling
             </TabsTrigger>
             <TabsTrigger value="uncertainty" className="exoseer-tab">
               <Shield className="w-4 h-4 mr-2" />
-              Uncertainty
+              Bayesian Uncertainty Quantification
             </TabsTrigger>
           </TabsList>
         </Tabs>
