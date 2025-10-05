@@ -4,7 +4,7 @@ import { Badge } from '../ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Button } from '../ui/button';
 import { 
-  Atom, Thermometer, Orbit, Eye, Info, Cube, RotateCcw, 
+  Atom, Thermometer, Orbit, Eye, Info, Box, RotateCcw, 
   ZoomIn, Move3D, MousePointer, ArrowRight, Target, Crosshair
 } from "lucide-react";
 
