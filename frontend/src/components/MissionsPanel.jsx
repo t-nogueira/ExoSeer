@@ -192,7 +192,11 @@ const MissionsPanel = ({ onMissionSearch }) => {
               </CardTitle>
               <p className="text-sm exoseer-subtitle mt-1">{domainAdaptationStatus.status}</p>
             </div>
-            <Button variant="exoseer_outline" className="ml-4">
+            <Button 
+              variant="exoseer_outline" 
+              className="ml-4"
+              onClick={() => setShowArchitectureDetails(!showArchitectureDetails)}
+            >
               View Architecture
             </Button>
           </div>
