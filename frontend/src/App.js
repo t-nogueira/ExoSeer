@@ -298,12 +298,15 @@ function App() {
     }
   }, [demoData]);
 
-  const handleCandidateClick = (candidate) => {
+  const handleCandidateClick = async (candidate) => {
+    setIsProcessingCandidate(true);
     setSelectedCandidate(candidate);
     
-    // Enhanced analysis result for selected candidate
-    if (demoData) {
-      setAnalysisResult({
+    // Simulate processing delay for NASA-level analysis
+    setTimeout(() => {
+      // Enhanced analysis result for selected candidate
+      if (demoData) {
+        setAnalysisResult({
         target_name: candidate.name,
         analysis_id: `exoseer-${candidate.id}`,
         candidate: candidate,
