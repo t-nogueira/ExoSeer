@@ -95,17 +95,25 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
     }, 200);
 
     try {
-      // Include candidate context if available
+      // Include comprehensive candidate context if available
       const context = selectedCandidate ? {
         candidate_name: selectedCandidate.name,
         period: selectedCandidate.orbital_period,
         radius: selectedCandidate.radius_earth,
         transit_depth: selectedCandidate.transit_depth,
         snr: selectedCandidate.snr,
+        discovery_method: selectedCandidate.discovery_method,
+        discovery_year: selectedCandidate.discovery_year,
+        status: selectedCandidate.status,
         stellar_params: {
           temperature: selectedCandidate.star_temperature,
           radius: selectedCandidate.star_radius,
-          mass: selectedCandidate.star_mass
+          mass: selectedCandidate.star_mass,
+          host_star: selectedCandidate.host_star
+        },
+        orbital_params: {
+          semi_major_axis: selectedCandidate.semi_major_axis,
+          duration: selectedCandidate.duration
         }
       } : null;
 
