@@ -118,10 +118,12 @@ const InteractivePanel = ({ data, candidate, onParametersChange }) => {
     durationModelHr: 4.3
   });
 
-  // Generate chart data based on current parameters
+  // Generate chart data based on current parameters - force recalculation
   const chartData = useMemo(() => {
-    return generateLightCurveData(params);
-  }, [params]);
+    const newData = generateLightCurveData(params);
+    // Add timestamp to force chart re-render
+    return newData.map((d, i) => ({ ...d, id: `${params.period}-${params.rpOverRs}-${i}` }));
+  }, [params.period, params.rpOverRs, params.impactParam, params.inclination, params.eccentricity]);
 
   // Debounced parameter update with immediate visual feedback
   const debouncedUpdateParams = useCallback((newParams) => {
