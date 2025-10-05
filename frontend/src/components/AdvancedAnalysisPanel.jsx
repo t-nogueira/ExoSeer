@@ -273,57 +273,7 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult, userMode = '
 
   return (
     <div className="space-y-6">
-      {/* Novice Mode: Simple Explanation */}
-      {userMode === 'novice' && (
-        <Card className="border-green-500/30 bg-green-900/10">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-green-400">
-              <Info className="w-5 h-5" />
-              What You're Looking At
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3 text-sm">
-              <p className="text-gray-300">
-                🌟 <strong>You're analyzing {candidate?.name || 'this exoplanet candidate'}!</strong> 
-                This graph shows how bright the star appears over time. When the planet passes in front of the star, 
-                the brightness drops slightly - that's the "transit" that tells us there's a planet there.
-              </p>
-              <div className="bg-slate-800/50 p-3 rounded-lg">
-                <h4 className="text-cyan-300 font-medium mb-2">Quick Facts:</h4>
-                <ul className="space-y-1 text-xs">
-                  <li>📏 <strong>Planet Size:</strong> {candidate?.radius_earth?.toFixed(1)} times Earth's radius</li>
-                  <li>🔄 <strong>Orbit Time:</strong> {candidate?.orbital_period?.toFixed(1)} days (Earth takes 365 days)</li>
-                  <li>📉 <strong>Transit Depth:</strong> Star dims by {(candidate?.transit_depth * 100)?.toFixed(3)}% when planet passes</li>
-                  <li>⭐ <strong>Host Star:</strong> {candidate?.host_star || 'Unknown star name'}</li>
-                </ul>
-              </div>
-              <Button 
-                className="w-full bg-green-600 hover:bg-green-700"
-                onClick={() => {
-                  const report = `Simple Report for ${candidate?.name}:\n\n` +
-                    `This is a planet ${candidate?.radius_earth?.toFixed(1)} times bigger than Earth, ` +
-                    `orbiting its star every ${candidate?.orbital_period?.toFixed(0)} days. ` +
-                    `When it passes in front of its star, the star appears ${(candidate?.transit_depth * 100)?.toFixed(3)}% dimmer. ` +
-                    `This tells us the planet is real and gives us information about its size and orbit.`;
-                  
-                  const blob = new Blob([report], { type: 'text/plain' });
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement('a');
-                  a.href = url;
-                  a.download = `${candidate?.name?.replace(/\s/g, '_') || 'exoplanet'}_simple_report.txt`;
-                  document.body.appendChild(a);
-                  a.click();
-                  document.body.removeChild(a);
-                  URL.revokeObjectURL(url);
-                }}
-              >
-                📄 Generate Simple Report
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      {/* Embedded novice explanations will be added to each section instead */}
       
       {/* Optional Data Upload */}
       <div className="p-4 rounded-lg bg-slate-800/30 border border-gray-600/50">
