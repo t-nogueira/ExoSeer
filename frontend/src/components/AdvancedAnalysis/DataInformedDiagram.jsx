@@ -1,11 +1,22 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useCallback, Suspense, lazy } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Button } from '../ui/button';
 import { 
-  Atom, Thermometer, Orbit, Eye, Info
+  Atom, Thermometer, Orbit, Eye, Info, Cube, RotateCcw, 
+  ZoomIn, Move3D, MousePointer, ArrowRight, Target, Crosshair
 } from "lucide-react";
 
-const DataInformedDiagram = ({ candidate, analysisResult }) => {
+// Lazy load Three.js component for scientist mode
+const ThreeDViewer = lazy(() => import('./ThreeDViewer'));
+
+const DataInformedDiagram = ({ 
+  mode = 'novice', 
+  candidate, 
+  analysisResult, 
+  onParamChange 
+}) => {
   // Calculate scientifically accurate parameters
   const systemData = useMemo(() => {
     if (!candidate) return null;
