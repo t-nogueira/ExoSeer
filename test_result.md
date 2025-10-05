@@ -264,10 +264,10 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Enhanced DataInformedDiagram with multiple perspective views and 3D mode"
     - "NASA Data Integration Testing"
     - "Candidate Analysis System Validation"
     - "Backend API Functionality"
-    - "Enhanced AI Physics Chat with Interactive Features"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
