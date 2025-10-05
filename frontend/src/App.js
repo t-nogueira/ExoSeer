@@ -478,7 +478,7 @@ function App() {
           
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-3 text-sm">
-              <span className="exoseer-label">Novice Mode</span>
+              <span className="text-white/60 text-xs font-medium">Novice Mode</span>
               <Switch 
                 checked={userMode === 'scientist'} 
                 onCheckedChange={(checked) => setUserMode(checked ? 'scientist' : 'novice')}
