@@ -378,43 +378,10 @@ const PhysicsAnalysisPanel = ({ data, candidate }) => {
             </TabsList>
 
             <TabsContent value="parameters">
-              <div className="grid grid-cols-2 gap-6">
-                <div>
-                  <h4 className="font-semibold text-white mb-4">Observed</h4>
-                  <div className="space-y-3 text-sm">
-                    <div className="flex justify-between">
-                      <span className="exoseer-label">Depth:</span>
-                      <span className="text-white">0.027%</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="exoseer-label">Duration:</span>
-                      <span className="text-white">4.20 hrs</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="exoseer-label">Period:</span>
-                      <span className="text-white">129.9000 days</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-white mb-4">Physics Model</h4>
-                  <div className="space-y-3 text-sm">
-                    <div className="flex justify-between">
-                      <span className="exoseer-label">Derived Rp:</span>
-                      <span className="text-cyan-400">1.50 Re</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="exoseer-label">Impact:</span>
-                      <span className="text-cyan-400">0.000</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="exoseer-label">a/R*:</span>
-                      <span className="text-cyan-400">167.95</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <ParametersPanel 
+                data={data} 
+                candidate={candidate}
+              />
             </TabsContent>
 
             <TabsContent value="model">
