@@ -204,7 +204,7 @@ class AIExoplanetAnalyzer:
             
             try:
                 ai_result = json.loads(response)
-            except:
+            except (json.JSONDecodeError, ValueError):
                 ai_result = self._get_default_ensemble_analysis()
             
             # Add quantitative metrics
