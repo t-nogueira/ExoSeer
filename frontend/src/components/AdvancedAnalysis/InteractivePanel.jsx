@@ -386,7 +386,7 @@ const InteractivePanel = ({ data, candidate, onParametersChange }) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Settings className="w-5 h-5 text-blue-400" />
-            Transit Parameters
+            Keplerian Orbital & Transit Parameters
           </CardTitle>
         </CardHeader>
         <CardContent>
