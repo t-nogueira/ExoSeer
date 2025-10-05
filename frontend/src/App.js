@@ -420,7 +420,13 @@ function App() {
       });
     }
     
-    setIsProcessingCandidate(false);
+    // Complete progress and cleanup
+    clearInterval(progressInterval);
+    setAnalysisProgress(100);
+    setAnalysisTimeRemaining(0);
+    setTimeout(() => {
+      setIsProcessingCandidate(false);
+    }, 500); // Brief delay to show 100% completion
   };
 
   const loadMoreCandidates = async () => {
