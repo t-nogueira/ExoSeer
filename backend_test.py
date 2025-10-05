@@ -500,6 +500,10 @@ class ExoSeerAPITester:
         self.test_recent_candidates()
         self.test_analysis_stats()
         
+        # AI Physics Chat tests
+        print("\n🤖 AI Physics Chat Tests")
+        self.test_ai_physics_chat()
+        
         # Alternative target tests
         print("\n🔄 Alternative Target Tests")
         self.test_target_search("TIC 100100827")
