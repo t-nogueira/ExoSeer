@@ -835,6 +835,7 @@ function App() {
         isOpen={aiChatOpen} 
         onToggle={() => setAiChatOpen(!aiChatOpen)}
         selectedCandidate={selectedCandidate}
+        userMode={userMode}
       />
       
       {/* AI Chat Toggle Button - Make it more visible */}
