@@ -159,6 +159,401 @@ const DataInformedDiagram = ({
     );
   }
 
+  // Render Line-of-Sight View
+  const LineOfSightView = () => {
+    const svgWidth = 600;
+    const svgHeight = 400;
+    const starRadius = 40;
+    const planetRadius = starRadius * systemData.rpRs;
+    const transitChordY = svgHeight / 2;
+    
+    return (
+      <div className="space-y-4">
+        <h4 className="text-sm font-medium text-white flex items-center gap-2">
+          <Target className="w-4 h-4" />
+          Transit Geometry & Line-of-Sight
+        </h4>
+        
+        <div className="bg-slate-900 rounded-lg p-4 border border-gray-700">
+          <svg width={svgWidth} height={svgHeight} className="w-full">
+            {/* Background stars */}
+            {Array.from({length: 50}, (_, i) => (
+              <circle
+                key={i}
+                cx={Math.random() * svgWidth}
+                cy={Math.random() * svgHeight}
+                r={0.5 + Math.random()}
+                fill="white"
+                opacity={0.3 + Math.random() * 0.4}
+              />
+            ))}
+            
+            {/* Line of sight ray */}
+            <line
+              x1={0}
+              y1={transitChordY}
+              x2={svgWidth}
+              y2={transitChordY}
+              stroke="orange"
+              strokeWidth="2"
+              opacity="0.8"
+              strokeDasharray="5,5"
+            />
+            
+            {/* Host star with limb darkening */}
+            <defs>
+              <radialGradient id="limbDarkening" cx="30%" cy="30%">
+                <stop offset="0%" stopColor="#FFF8DC" />
+                <stop offset="60%" stopColor="#FFE4B5" />
+                <stop offset="100%" stopColor="#DEB887" />
+              </radialGradient>
+            </defs>
+            
+            <circle
+              cx={svgWidth / 2}
+              cy={transitChordY}
+              r={starRadius}
+              fill="url(#limbDarkening)"
+              onClick={() => setFocusedElement('star')}
+              className="cursor-pointer"
+              onMouseEnter={() => setHoveredParam('stellar')}
+              onMouseLeave={() => setHoveredParam(null)}
+            />
+            
+            {/* Transit chord */}
+            <line
+              x1={svgWidth / 2 - starRadius}
+              y1={transitChordY + systemData.impactParam * starRadius}
+              x2={svgWidth / 2 + starRadius}
+              y2={transitChordY + systemData.impactParam * starRadius}
+              stroke="red"
+              strokeWidth="3"
+              opacity="0.8"
+            />
+            
+            {/* Planet during transit */}
+            <circle
+              cx={svgWidth / 2 - starRadius * 0.3}
+              cy={transitChordY + systemData.impactParam * starRadius}
+              r={planetRadius}
+              fill={systemData.planetColor}
+              onClick={() => setFocusedElement('planet')}
+              className="cursor-pointer"
+              onMouseEnter={() => setHoveredParam('planetary')}
+              onMouseLeave={() => setHoveredParam(null)}
+            />
+            
+            {/* Impact parameter annotation */}
+            <line
+              x1={svgWidth / 2}
+              y1={transitChordY}
+              x2={svgWidth / 2}
+              y2={transitChordY + systemData.impactParam * starRadius}
+              stroke="cyan"
+              strokeWidth="1"
+              strokeDasharray="2,2"
+            />
+            
+            {/* Labels */}
+            <text x={10} y={transitChordY - 5} fill="orange" fontSize="12">
+              Line of Sight to Earth
+            </text>
+            
+            <text x={svgWidth / 2 - 20} y={transitChordY - starRadius - 10} fill="yellow" fontSize="12">
+              Host Star
+            </text>
+            
+            <text x={svgWidth / 2 + 10} y={transitChordY + systemData.impactParam * starRadius / 2} fill="cyan" fontSize="10">
+              b = {systemData.impactParam.toFixed(3)}
+            </text>
+          </svg>
+          
+          {/* Interactive annotations */}
+          <div className="grid grid-cols-2 gap-4 mt-4 text-sm">
+            <div className="bg-slate-800/50 p-3 rounded-lg">
+              <h5 className="text-cyan-300 font-mono mb-2">Transit Chord</h5>
+              <div className="space-y-1 text-xs text-gray-300">
+                <div>Length: {(2 * starRadius * Math.sqrt(1 - systemData.impactParam**2) * systemData.stellarRadius * 696000 / 149.6e6).toFixed(3)} AU</div>
+                <div>Duration: {systemData.transitDuration.toFixed(2)} hours</div>
+                <div>Depth: {(systemData.transitDepth * 1000000).toFixed(0)} ppm</div>
+              </div>
+            </div>
+            
+            <div className="bg-slate-800/50 p-3 rounded-lg">
+              <h5 className="text-orange-300 font-mono mb-2">Detection Geometry</h5>
+              <div className="space-y-1 text-xs text-gray-300">
+                <div>Inclination: {systemData.inclination.toFixed(2)}°</div>
+                <div>Transit Probability: {(systemData.rpRs * 100).toFixed(3)}%</div>
+                <div>Angular Size: {(systemData.stellarRadius * 0.00464 / systemData.semiMajorAxis * 1000).toFixed(2)} mas</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Render Orbital Plane View
+  const OrbitalPlaneView = () => {
+    const svgSize = 500;
+    const center = svgSize / 2;
+    const orbitRadius = center * 0.7;
+    const starRadius = 15;
+    const planetRadius = starRadius * systemData.rpRs * 10; // Exaggerated for visibility
+    
+    return (
+      <div className="space-y-4">
+        <h4 className="text-sm font-medium text-white flex items-center gap-2">
+          <Orbit className="w-4 h-4" />
+          Orbital Plane & Mechanics
+        </h4>
+        
+        <div className="bg-slate-900 rounded-lg p-4 border border-gray-700">
+          <svg width={svgSize} height={svgSize} className="w-full">
+            {/* Orbital ellipse */}
+            <ellipse
+              cx={center}
+              cy={center}
+              rx={orbitRadius}
+              ry={orbitRadius * (1 - systemData.eccentricity)}
+              fill="none"
+              stroke="emerald"
+              strokeWidth="2"
+              strokeDasharray="3,3"
+              opacity="0.6"
+            />
+            
+            {/* Habitable zone if available */}
+            {systemData.habitableZone && (
+              <>
+                <circle
+                  cx={center}
+                  cy={center}
+                  r={orbitRadius * systemData.habitableZone.rinAu / systemData.semiMajorAxis}
+                  fill="none"
+                  stroke="green"
+                  strokeWidth="1"
+                  opacity="0.3"
+                />
+                <circle
+                  cx={center}
+                  cy={center}
+                  r={orbitRadius * systemData.habitableZone.routAu / systemData.semiMajorAxis}
+                  fill="none"
+                  stroke="green"
+                  strokeWidth="1"
+                  opacity="0.3"
+                />
+                <text x={center + orbitRadius * 0.8} y={center - 10} fill="green" fontSize="10">
+                  HZ
+                </text>
+              </>
+            )}
+            
+            {/* Host star */}
+            <circle
+              cx={center}
+              cy={center}
+              r={starRadius}
+              fill="yellow"
+              onClick={() => setFocusedElement('star')}
+              className="cursor-pointer"
+            />
+            
+            {/* Planet position */}
+            <circle
+              cx={center + orbitRadius * Math.cos(systemData.phase * 2 * Math.PI)}
+              cy={center + orbitRadius * Math.sin(systemData.phase * 2 * Math.PI)}
+              r={planetRadius}
+              fill={systemData.planetColor}
+              onClick={() => setFocusedElement('planet')}
+              className="cursor-pointer"
+            />
+            
+            {/* Periapsis and apoapsis markers */}
+            <circle cx={center + orbitRadius} cy={center} r="3" fill="red" />
+            <circle cx={center - orbitRadius} cy={center} r="3" fill="blue" />
+            <text x={center + orbitRadius + 5} y={center + 5} fill="red" fontSize="10">Periapsis</text>
+            <text x={center - orbitRadius - 30} y={center + 5} fill="blue" fontSize="10">Apoapsis</text>
+            
+            {/* Velocity vector */}
+            <line
+              x1={center + orbitRadius * Math.cos(systemData.phase * 2 * Math.PI)}
+              y1={center + orbitRadius * Math.sin(systemData.phase * 2 * Math.PI)}
+              x2={center + orbitRadius * Math.cos(systemData.phase * 2 * Math.PI) - 20 * Math.sin(systemData.phase * 2 * Math.PI)}
+              y2={center + orbitRadius * Math.sin(systemData.phase * 2 * Math.PI) + 20 * Math.cos(systemData.phase * 2 * Math.PI)}
+              stroke="green"
+              strokeWidth="2"
+            />
+            
+            {/* Eccentricity annotation */}
+            <text x={20} y={30} fill="white" fontSize="12">
+              e = {systemData.eccentricity.toFixed(3)}
+            </text>
+            <text x={20} y={45} fill="white" fontSize="12">
+              a = {systemData.semiMajorAxis.toFixed(3)} AU
+            </text>
+          </svg>
+          
+          {/* Orbital mechanics parameters */}
+          <div className="grid grid-cols-3 gap-4 mt-4 text-sm">
+            <div className="bg-slate-800/50 p-3 rounded-lg">
+              <h5 className="text-emerald-300 font-mono mb-2">Orbit</h5>
+              <div className="space-y-1 text-xs text-gray-300">
+                <div>Period: {systemData.orbitalPeriod.toFixed(2)} d</div>
+                <div>Eccentricity: {systemData.eccentricity.toFixed(3)}</div>
+                <div>Inclination: {systemData.inclination.toFixed(1)}°</div>
+              </div>
+            </div>
+            
+            <div className="bg-slate-800/50 p-3 rounded-lg">
+              <h5 className="text-green-300 font-mono mb-2">Dynamics</h5>
+              <div className="space-y-1 text-xs text-gray-300">
+                <div>Velocity: {(systemData.orbitalVelocity / 1000).toFixed(1)} km/s</div>
+                <div>ω: {systemData.omegaDeg.toFixed(1)}°</div>
+                <div>Phase: {(systemData.phase * 360).toFixed(1)}°</div>
+              </div>
+            </div>
+            
+            <div className="bg-slate-800/50 p-3 rounded-lg">
+              <h5 className="text-blue-300 font-mono mb-2">Habitable Zone</h5>
+              <div className="space-y-1 text-xs text-gray-300">
+                {systemData.habitableZone ? (
+                  <>
+                    <div>Inner: {systemData.habitableZone.rinAu.toFixed(3)} AU</div>
+                    <div>Outer: {systemData.habitableZone.routAu.toFixed(3)} AU</div>
+                    <div>Planet: {systemData.semiMajorAxis < systemData.habitableZone.routAu && systemData.semiMajorAxis > systemData.habitableZone.rinAu ? 'Inside' : 'Outside'}</div>
+                  </>
+                ) : (
+                  <div>Stellar data unavailable</div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Render Side View
+  const SideView = () => {
+    const svgWidth = 600;
+    const svgHeight = 300;
+    const starRadius = 30;
+    const planetRadius = starRadius * systemData.rpRs * 5; // Scale for visibility
+    const distance = 200;
+    
+    return (
+      <div className="space-y-4">
+        <h4 className="text-sm font-medium text-white flex items-center gap-2">
+          <Eye className="w-4 h-4" />
+          Side View & Scale Comparison
+        </h4>
+        
+        <div className="bg-slate-900 rounded-lg p-4 border border-gray-700">
+          <svg width={svgWidth} height={svgHeight} className="w-full">
+            {/* Host star */}
+            <circle
+              cx={100}
+              cy={svgHeight / 2}
+              r={starRadius}
+              fill="yellow"
+              onClick={() => setFocusedElement('star')}
+              className="cursor-pointer"
+            />
+            
+            {/* Planet */}
+            <circle
+              cx={100 + distance}
+              cy={svgHeight / 2}
+              r={planetRadius}
+              fill={systemData.planetColor}
+              onClick={() => setFocusedElement('planet')}
+              className="cursor-pointer"
+            />
+            
+            {/* Distance line */}
+            <line
+              x1={100 + starRadius}
+              y1={svgHeight / 2 - 40}
+              x2={100 + distance - planetRadius}
+              y2={svgHeight / 2 - 40}
+              stroke="cyan"
+              strokeWidth="1"
+              strokeDasharray="2,2"
+            />
+            
+            {/* Atmosphere representation */}
+            {systemData.atmosphereThickness > 0.2 && (
+              <circle
+                cx={100 + distance}
+                cy={svgHeight / 2}
+                r={planetRadius * (1 + systemData.atmosphereThickness)}
+                fill="none"
+                stroke="lightblue"
+                strokeWidth="2"
+                opacity="0.5"
+              />
+            )}
+            
+            {/* Labels */}
+            <text x={100 - 15} y={svgHeight / 2 + starRadius + 15} fill="yellow" fontSize="12" textAnchor="middle">
+              Host Star
+            </text>
+            <text x={100 + distance} y={svgHeight / 2 + planetRadius + 20} fill={systemData.planetColor} fontSize="12" textAnchor="middle">
+              {candidate?.name}
+            </text>
+            <text x={100 + distance / 2} y={svgHeight / 2 - 50} fill="cyan" fontSize="12" textAnchor="middle">
+              {systemData.semiMajorAxis.toFixed(3)} AU
+            </text>
+            
+            {/* Atmospheric escape indicator */}
+            {systemData.escapeParameter > 0.1 && (
+              <g>
+                {Array.from({length: 8}, (_, i) => (
+                  <circle
+                    key={i}
+                    cx={100 + distance + (Math.random() - 0.5) * planetRadius * 3}
+                    cy={svgHeight / 2 - planetRadius - i * 5}
+                    r="1"
+                    fill="lightblue"
+                    opacity="0.6"
+                  />
+                ))}
+                <text x={100 + distance + planetRadius + 10} y={svgHeight / 2 - planetRadius} fill="lightblue" fontSize="10">
+                  Atm. Escape
+                </text>
+              </g>
+            )}
+          </svg>
+          
+          {/* Scale and physical parameters */}
+          <div className="grid grid-cols-2 gap-4 mt-4 text-sm">
+            <div className="bg-slate-800/50 p-3 rounded-lg">
+              <h5 className="text-yellow-300 font-mono mb-2">Stellar Properties</h5>
+              <div className="space-y-1 text-xs text-gray-300">
+                <div>Radius: {systemData.stellarRadius.toFixed(2)} R☉</div>
+                <div>Mass: {systemData.stellarMass.toFixed(2)} M☉</div>
+                <div>Temperature: {systemData.stellarTemp} K</div>
+                <div>Luminosity: {systemData.stellarLuminosity.toFixed(2)} L☉</div>
+              </div>
+            </div>
+            
+            <div className="bg-slate-800/50 p-3 rounded-lg">
+              <h5 className="text-cyan-300 font-mono mb-2">Planetary Properties</h5>
+              <div className="space-y-1 text-xs text-gray-300">
+                <div>Radius: {systemData.planetRadius.toFixed(2)} R⊕</div>
+                <div>Mass: {systemData.planetMass.toFixed(2)} M⊕</div>
+                <div>Gravity: {(systemData.surfaceGravity / 9.81).toFixed(2)} g</div>
+                <div>T_eq: {Math.round(systemData.equilibriumTemp)} K</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Card className="border-cyan-500/30 bg-cyan-900/5">
       <CardHeader>
@@ -184,561 +579,187 @@ const DataInformedDiagram = ({
         </p>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Ultra-Detailed Scientific Visualization */}
-          <div className="relative">
-            <h4 className="text-sm font-medium text-white mb-3 flex items-center gap-2">
-              <Orbit className="w-4 h-4" />
-              Complete Transit Detection Geometry & System Analysis
-            </h4>
-            
-            {/* Main 3D Scientific Diagram */}
-            <div 
-              className="relative w-full h-[500px] bg-gradient-to-b from-slate-900 via-slate-800 to-black rounded-lg border border-gray-700 overflow-hidden"
-              style={{
-                perspective: '1200px',
-                transformStyle: 'preserve-3d'
-              }}
-            >
-              {/* Deep Space Background with Constellation */}
-              <div className="absolute inset-0 overflow-hidden">
-                {Array.from({length: 200}, (_, i) => {
-                  const x = Math.random() * 100;
-                  const y = Math.random() * 100;
-                  const z = Math.random() * 100;
-                  const brightness = Math.random();
-                  const delay = Math.random() * 6;
-                  const duration = 2 + Math.random() * 4;
-                  return (
-                    <div
-                      key={i}
-                      className="absolute rounded-full bg-white"
-                      style={{
-                        left: `${x}%`,
-                        top: `${y}%`,
-                        width: brightness > 0.8 ? '2px' : '1px',
-                        height: brightness > 0.8 ? '2px' : '1px',
-                        opacity: brightness,
-                        zIndex: Math.floor(z),
-                        animation: `twinkle ${duration}s ease-in-out ${delay}s infinite alternate`
-                      }}
-                    />
-                  );
-                })}
-              </div>
-
-              {/* Scientific Coordinate System */}
-              <div className="absolute inset-0">
-                {/* Distance Scale Rulers */}
-                <div className="absolute top-4 left-4">
-                  <div className="bg-black/60 backdrop-blur-sm rounded-lg px-2 py-1 border border-cyan-400/30">
-                    <div className="text-xs text-cyan-300 font-mono mb-1">Distance Scale:</div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-px bg-cyan-400"></div>
-                      <span className="text-xs text-white">= 0.1 AU</span>
-                    </div>
-                    <div className="text-xs text-gray-400 mt-1">
-                      1 AU = 149.6M km • Earth-Sun distance
-                    </div>
-                  </div>
-                </div>
-
-                {/* Angular Measurement Indicators */}
-                <div className="absolute top-4 right-4">
-                  <div className="bg-black/60 backdrop-blur-sm rounded-lg px-2 py-1 border border-orange-400/30">
-                    <div className="text-xs text-orange-300 font-mono mb-1">Detection Geometry:</div>
-                    <div className="text-xs text-white">
-                      Transit Probability: {((systemData.stellarRadius * 0.00464) / systemData.semiMajorAxis * 100).toFixed(2)}%
-                    </div>
-                    <div className="text-xs text-gray-400">
-                      Inclination: ~{(90 - Math.asin(0.1 + Math.random() * 0.3) * 180 / Math.PI).toFixed(1)}°
-                    </div>
-                  </div>
-                </div>
-
-                {/* Photometric Signal Indicator */}
-                <div className="absolute bottom-20 left-4">
-                  <div className="bg-black/60 backdrop-blur-sm rounded-lg px-2 py-1 border border-purple-400/30">
-                    <div className="text-xs text-purple-300 font-mono mb-1">Photometric Signal:</div>
-                    <div className="text-xs text-white">
-                      Transit Depth: {(systemData.transitDepth * 1000000).toFixed(0)} ppm
-                    </div>
-                    <div className="text-xs text-gray-400">
-                      Duration: {((systemData.orbitalPeriod * 0.1) * 24).toFixed(1)} hours
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 3D Orbital System with Enhanced Details */}
-              <div 
-                className="absolute inset-0 flex items-center justify-center"
-                style={{
-                  transform: 'rotateX(20deg) rotateY(8deg)',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
-                {/* Orbital Plane Grid with Measurements */}
-                <div
-                  className="absolute border border-emerald-400/40 rounded-full"
-                  style={{
-                    width: `${orbitalRadius * 2}px`,
-                    height: `${orbitalRadius * 2}px`,
-                    transform: 'rotateX(78deg)',
-                    background: 'conic-gradient(from 0deg, transparent, rgba(34, 197, 94, 0.05), transparent)',
-                    animation: 'orbitRotate 25s linear infinite'
-                  }}
-                />
-
-                {/* Orbital Distance Markers */}
-                {Array.from({length: 8}, (_, i) => (
-                  <div
-                    key={i}
-                    className="absolute w-1 h-1 bg-emerald-400/60 rounded-full"
-                    style={{
-                      transform: `rotateX(78deg) rotateZ(${i * 45}deg) translateX(${orbitalRadius}px)`,
-                    }}
-                  />
-                ))}
-
-                {/* Enhanced Host Star with Stellar Classification */}
-                <div className="relative">
-                  {/* Stellar Photosphere */}
-                  <div
-                    className="absolute rounded-full shadow-2xl"
-                    style={{
-                      width: `${starRadius * 2}px`,
-                      height: `${starRadius * 2}px`,
-                      background: `radial-gradient(circle at 25% 25%, 
-                        ${systemData.stellarTemp > 6000 ? '#E6F3FF' : '#FFF8DC'}, 
-                        ${systemData.stellarTemp > 6000 ? '#B3D9FF' : '#FFE4B5'} 40%,
-                        ${systemData.stellarTemp > 6000 ? '#87CEEB' : '#DEB887'} 70%,
-                        ${systemData.stellarTemp > 6000 ? '#4682B4' : '#CD853F'} 100%)`,
-                      boxShadow: `
-                        0 0 ${starRadius * 1.5}px ${systemData.stellarTemp > 6000 ? '#4682B4' : '#FF8C00'}60,
-                        inset -${starRadius * 0.3}px -${starRadius * 0.3}px ${starRadius * 0.8}px rgba(0,0,0,0.4),
-                        inset ${starRadius * 0.2}px ${starRadius * 0.2}px ${starRadius * 0.4}px rgba(255,255,255,0.3)
-                      `,
-                      filter: 'brightness(1.3) contrast(1.1)',
-                      animation: 'stellarPulse 5s ease-in-out infinite'
-                    }}
-                  />
-
-                  {/* Stellar Corona and Magnetic Field Lines */}
-                  <div
-                    className="absolute rounded-full opacity-30"
-                    style={{
-                      width: `${starRadius * 3}px`,
-                      height: `${starRadius * 3}px`,
-                      background: `radial-gradient(ellipse, 
-                        transparent 30%, 
-                        ${systemData.stellarTemp > 6000 ? '#4682B4' : '#FF8C00'}15 50%, 
-                        transparent 80%)`,
-                      animation: 'coronaRotate 15s linear infinite'
-                    }}
-                  />
-
-                  {/* Stellar Wind Visualization */}
-                  {Array.from({length: 12}, (_, i) => (
-                    <div
-                      key={i}
-                      className="absolute w-px h-8 bg-gradient-to-r from-yellow-200/40 to-transparent"
-                      style={{
-                        transform: `rotate(${i * 30}deg)`,
-                        transformOrigin: `0 ${starRadius + 10}px`,
-                        left: '50%',
-                        top: '50%',
-                        animation: `stellarWind 3s ease-out infinite ${i * 0.2}s`
-                      }}
-                    />
-                  ))}
-
-                  {/* Stellar Labels */}
-                  <div 
-                    className="absolute -bottom-8 left-1/2 transform -translate-x-1/2"
-                    style={{ fontSize: '10px' }}
-                  >
-                    <div className="bg-black/70 text-white px-2 py-1 rounded text-center">
-                      <div className="text-yellow-300 font-mono">
-                        {candidate?.host_star || candidate?.name?.split(' ')[0] || 'Host Star'}
-                      </div>
-                      <div className="text-gray-300">
-                        {systemData.stellarTemp}K • {systemData.stellarRadius.toFixed(2)}R☉
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Detailed Planet with Surface Features */}
-                <div
-                  className="absolute"
-                  style={{
-                    transform: `translate(${orbitalRadius}px, 0px) rotateX(78deg)`,
-                    animation: `planetOrbit ${Math.max(systemData.orbitalPeriod / 8, 15)}s linear infinite`
-                  }}
-                >
-                  {/* Planet Surface with Terrain */}
-                  <div
-                    className="relative rounded-full"
-                    style={{
-                      width: `${planetRadius * 2}px`,
-                      height: `${planetRadius * 2}px`,
-                      background: `radial-gradient(ellipse at 20% 20%, 
-                        ${systemData.planetColor}FF, 
-                        ${systemData.planetColor}E6 30%,
-                        ${systemData.planetColor}CC 60%, 
-                        ${systemData.planetColor}80 85%,
-                        ${systemData.planetColor}40 100%)`,
-                      boxShadow: `
-                        inset -${planetRadius * 0.5}px -${planetRadius * 0.5}px ${planetRadius}px rgba(0,0,0,0.7),
-                        inset ${planetRadius * 0.3}px ${planetRadius * 0.3}px ${planetRadius * 0.5}px rgba(255,255,255,0.2),
-                        0 0 ${planetRadius}px ${systemData.planetColor}40
-                      `,
-                      filter: 'brightness(1.1)',
-                      animation: 'planetRotation 8s linear infinite'
-                    }}
-                  >
-                    {/* Surface Features */}
-                    {systemData.planetType === 'Rocky' && (
-                      <>
-                        <div className="absolute w-1 h-1 bg-gray-600/60 rounded-full" style={{top: '30%', left: '25%'}} />
-                        <div className="absolute w-2 h-1 bg-gray-700/40 rounded-full" style={{top: '60%', left: '40%'}} />
-                        <div className="absolute w-1 h-2 bg-gray-500/50 rounded-full" style={{top: '45%', left: '65%'}} />
-                      </>
-                    )}
-                  </div>
-
-                  {/* Planetary Atmosphere Layers */}
-                  {systemData.atmosphereThickness > 0.2 && (
-                    <>
-                      {/* Troposphere */}
-                      <div
-                        className="absolute rounded-full opacity-40"
-                        style={{
-                          width: `${planetRadius * 2 * (1 + systemData.atmosphereThickness * 0.3)}px`,
-                          height: `${planetRadius * 2 * (1 + systemData.atmosphereThickness * 0.3)}px`,
-                          background: `radial-gradient(circle, transparent 60%, rgba(135, 206, 235, 0.4) 80%, transparent 100%)`,
-                          animation: 'atmosphereShimmer 4s ease-in-out infinite'
-                        }}
-                      />
-                      
-                      {/* Exosphere */}
-                      {systemData.atmosphereThickness > 0.5 && (
-                        <div
-                          className="absolute rounded-full opacity-20"
-                          style={{
-                            width: `${planetRadius * 2 * (1 + systemData.atmosphereThickness * 0.7)}px`,
-                            height: `${planetRadius * 2 * (1 + systemData.atmosphereThickness * 0.7)}px`,
-                            background: `radial-gradient(circle, transparent 70%, rgba(173, 216, 230, 0.3) 90%, transparent 100%)`,
-                          }}
-                        />
-                      )}
-                    </>
-                  )}
-
-                  {/* Planet Labels */}
-                  <div 
-                    className="absolute -bottom-12 left-1/2 transform -translate-x-1/2"
-                    style={{ fontSize: '9px' }}
-                  >
-                    <div className="bg-black/80 text-white px-2 py-1 rounded text-center whitespace-nowrap">
-                      <div className="text-cyan-300 font-mono">
-                        {candidate?.name}
-                      </div>
-                      <div className="text-gray-300">
-                        {systemData.planetRadius.toFixed(2)}R⊕ • {Math.round(systemData.equilibriumTemp)}K
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Comprehensive Line of Sight Analysis */}
-                <div className="absolute inset-0">
-                  {/* Primary Transit Ray (Earth's Line of Sight) */}
-                  <div
-                    className="absolute h-px bg-gradient-to-r from-red-500/80 via-orange-400/90 to-yellow-300/80"
-                    style={{
-                      width: '120%',
-                      top: '50%',
-                      left: '-10%',
-                      boxShadow: '0 0 8px rgba(255, 165, 0, 0.6)',
-                      animation: 'transitPulse 4s ease-in-out infinite'
-                    }}
-                  />
-
-                  {/* Line of Sight Label */}
-                  <div className="absolute left-2 top-1/2 transform -translate-y-1/2">
-                    <div className="bg-orange-900/70 text-orange-200 px-2 py-1 rounded text-xs font-mono border border-orange-500/30">
-                      Line of Sight to Earth
-                    </div>
-                  </div>
-
-                  {/* Transit Chord Indicators */}
-                  <div
-                    className="absolute"
-                    style={{
-                      width: `${starRadius * 2}px`,
-                      height: '2px',
-                      background: 'linear-gradient(90deg, transparent, red, orange, yellow, orange, red, transparent)',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -1px)',
-                      animation: 'chordPulse 3s ease-in-out infinite'
-                    }}
-                  />
-
-                  {/* Impact Parameter Visualization */}
-                  <div className="absolute left-1/2 top-1/2">
-                    <div
-                      className="absolute border-l-2 border-dashed border-cyan-400/60"
-                      style={{
-                        height: `${starRadius * 0.4}px`,
-                        transform: 'translateY(-50%)',
-                        left: `-${starRadius}px`
-                      }}
-                    />
-                    <div className="absolute -left-20 -top-2 text-xs text-cyan-300 font-mono bg-black/60 px-1 py-0.5 rounded">
-                      b = {(0.1 + Math.random() * 0.5).toFixed(2)}
-                    </div>
-                  </div>
-
-                  {/* Angular Size Indicators */}
-                  <div className="absolute top-8 left-1/2">
-                    <div className="text-xs text-purple-300 font-mono bg-black/60 px-2 py-1 rounded border border-purple-500/30">
-                      Angular Size: {(systemData.stellarRadius * 0.00464 / systemData.semiMajorAxis * 3600).toFixed(1)}"
-                    </div>
-                  </div>
-                </div>
-
-                {/* Orbital Mechanics Vectors */}
-                <div className="absolute inset-0">
-                  {/* Velocity Vector */}
-                  <div
-                    className="absolute"
-                    style={{
-                      transform: `translate(${orbitalRadius + 15}px, -10px) rotateX(78deg)`,
-                      animation: `planetOrbit ${Math.max(systemData.orbitalPeriod / 8, 15)}s linear infinite`
-                    }}
-                  >
-                    <div className="w-8 h-px bg-green-400 relative">
-                      <div className="absolute -right-1 -top-0.5 w-0 h-0 border-l-2 border-green-400 border-y-transparent border-y-2"></div>
-                    </div>
-                    <div className="text-xs text-green-300 mt-1 whitespace-nowrap">
-                      v = {(2 * Math.PI * systemData.semiMajorAxis * 149.6e6 / (systemData.orbitalPeriod * 24 * 3600) / 1000).toFixed(1)} km/s
-                    </div>
-                  </div>
-
-                  {/* Gravitational Force Indicator */}
-                  <div
-                    className="absolute"
-                    style={{
-                      transform: `translate(${orbitalRadius}px, 0px) rotateX(78deg)`,
-                      animation: `planetOrbit ${Math.max(systemData.orbitalPeriod / 8, 15)}s linear infinite`
-                    }}
-                  >
-                    <div className="absolute -left-4 -top-0.5 w-8 h-px bg-red-400"></div>
-                    <div className="absolute -left-1 -top-1 w-0 h-0 border-r-2 border-red-400 border-y-transparent border-y-2"></div>
-                    <div className="absolute -left-12 -top-6 text-xs text-red-300 whitespace-nowrap">F_g</div>
-                  </div>
-                </div>
-
-                {/* Transit Photometry Simulation */}
-                <div className="absolute bottom-8 right-8">
-                  <div className="bg-black/80 border border-cyan-400/30 rounded-lg p-2">
-                    <div className="text-xs text-cyan-300 mb-1 font-mono">Live Light Curve:</div>
-                    <div className="w-24 h-12 relative">
-                      {/* Mini light curve */}
-                      <svg viewBox="0 0 100 50" className="w-full h-full">
-                        <path
-                          d="M0,10 L20,10 L25,20 L35,20 L40,10 L100,10"
-                          fill="none"
-                          stroke="cyan"
-                          strokeWidth="1"
-                          opacity="0.8"
-                        />
-                        <circle
-                          cx="30"
-                          cy="15"
-                          r="2"
-                          fill="orange"
-                          opacity="0.8"
-                        >
-                          <animateMotion dur="8s" repeatCount="indefinite">
-                            <path d="M0,0 L70,0 L0,0"/>
-                          </animateMotion>
-                        </circle>
-                      </svg>
-                    </div>
-                    <div className="text-xs text-gray-300">
-                      Δm = {(2.5 * Math.log10(1 + systemData.transitDepth)).toFixed(3)} mag
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Comprehensive Information Display */}
-              <div className="absolute bottom-4 left-4 right-4">
-                <div className="bg-black/60 backdrop-blur-sm rounded-lg px-4 py-2 border border-cyan-400/30">
-                  <div className="grid grid-cols-3 gap-4 text-xs">
-                    <div>
-                      <span className="text-cyan-300 font-mono">Orbital:</span>
-                      <div className="text-white">P = {systemData.orbitalPeriod.toFixed(3)}d</div>
-                      <div className="text-gray-300">a = {systemData.semiMajorAxis.toFixed(4)} AU</div>
-                    </div>
-                    <div>
-                      <span className="text-orange-300 font-mono">Detection:</span>
-                      <div className="text-white">δ = {(systemData.transitDepth * 1000000).toFixed(0)} ppm</div>
-                      <div className="text-gray-300">SNR = {(10 + Math.random() * 20).toFixed(1)}</div>
-                    </div>
-                    <div>
-                      <span className="text-purple-300 font-mono">Physical:</span>
-                      <div className="text-white">T_eq = {Math.round(systemData.equilibriumTemp)}K</div>
-                      <div className="text-gray-300">R_p = {systemData.planetRadius.toFixed(2)} R⊕</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Detection Method Indicator */}
-              <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
-                <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-1 border border-emerald-400/30">
-                  <div className="text-xs text-emerald-300 font-mono text-center">
-                    🛰️ Transit Photometry Detection Method
-                  </div>
-                </div>
+        {show3D && mode === 'scientist' ? (
+          <Suspense fallback={
+            <div className="flex items-center justify-center h-96 bg-slate-900 rounded-lg">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500 mx-auto mb-4"></div>
+                <p className="text-gray-400">Loading 3D Viewer...</p>
               </div>
             </div>
-
-            {/* CSS Animations */}
-            <style jsx>{`
-              @keyframes twinkle {
-                0%, 100% { opacity: 0.3; transform: scale(1); }
-                50% { opacity: 1; transform: scale(1.2); }
-              }
-              
-              @keyframes stellarPulse {
-                0%, 100% { transform: scale(1) rotate(0deg); filter: brightness(1.2); }
-                50% { transform: scale(1.05) rotate(180deg); filter: brightness(1.4); }
-              }
-              
-              @keyframes coronaPulse {
-                0%, 100% { opacity: 0.3; transform: scale(1); }
-                50% { opacity: 0.6; transform: scale(1.1); }
-              }
-              
-              @keyframes planetOrbit {
-                from { transform: translate(${orbitalRadius}px, 0px) rotateX(75deg) rotateZ(0deg); }
-                to { transform: translate(${orbitalRadius}px, 0px) rotateX(75deg) rotateZ(360deg); }
-              }
-              
-              @keyframes orbitRotate {
-                from { transform: rotateX(75deg) rotateZ(0deg); }
-                to { transform: rotateX(75deg) rotateZ(360deg); }
-              }
-              
-              @keyframes transitPulse {
-                0%, 100% { opacity: 0.4; }
-                50% { opacity: 0.8; box-shadow: 0 0 10px rgba(255, 165, 0, 0.5); }
-              }
-            `}</style>
-          </div>
-
-          {/* System Parameters */}
-          <div className="space-y-4">
-            <div>
-              <h4 className="text-sm font-medium text-white mb-3 flex items-center gap-2">
+          }>
+            <ThreeDViewer systemData={systemData} candidate={candidate} />
+          </Suspense>
+        ) : (
+          <Tabs value={activeView} onValueChange={setActiveView} className="w-full">
+            <TabsList className="grid w-full grid-cols-3 mb-6">
+              <TabsTrigger value="line-of-sight" className="flex items-center gap-2">
+                <Crosshair className="w-4 h-4" />
+                Line-of-Sight
+              </TabsTrigger>
+              <TabsTrigger value="orbital-plane" className="flex items-center gap-2">
+                <Orbit className="w-4 h-4" />
+                Orbital Plane
+              </TabsTrigger>
+              <TabsTrigger value="side-view" className="flex items-center gap-2">
                 <Eye className="w-4 h-4" />
-                Derived System Properties
-              </h4>
-              
-              <div className="space-y-3">
-                {/* Planet Classification */}
-                <div className="bg-slate-800/50 p-3 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-gray-300">Planet Classification</span>
-                    <Badge className="bg-purple-600">
-                      {systemData.planetType}
-                    </Badge>
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    Radius: {systemData.planetRadius.toFixed(2)} R⊕ ({systemData.planetRadiusKm.toFixed(0)} km)
+                Side View
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="line-of-sight" className="space-y-4">
+              <LineOfSightView />
+            </TabsContent>
+
+            <TabsContent value="orbital-plane" className="space-y-4">
+              <OrbitalPlaneView />
+            </TabsContent>
+
+            <TabsContent value="side-view" className="space-y-4">
+              <SideView />
+            </TabsContent>
+          </Tabs>
+        )}
+
+        {/* Focused element details panel */}
+        {focusedElement && (
+          <div className="mt-6 p-4 bg-slate-800/50 rounded-lg border border-cyan-500/30">
+            <div className="flex items-center justify-between mb-3">
+              <h5 className="text-cyan-300 font-mono">
+                {focusedElement === 'star' ? 'Host Star Details' : 'Planet Details'}
+              </h5>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setFocusedElement(null)}
+                className="text-gray-400 hover:text-white"
+              >
+                ×
+              </Button>
+            </div>
+            
+            {focusedElement === 'star' ? (
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <div className="text-gray-300 mb-1">Stellar Classification</div>
+                  <div className="text-white">{systemData.stellarTemp > 6000 ? 'F-type' : systemData.stellarTemp > 5000 ? 'G-type' : 'K-type'}</div>
+                </div>
+                <div>
+                  <div className="text-gray-300 mb-1">Limb Darkening</div>
+                  <div className="text-white">u₁={systemData.limbDarkening.u1.toFixed(3)}, u₂={systemData.limbDarkening.u2.toFixed(3)}</div>
+                </div>
+                <div>
+                  <div className="text-gray-300 mb-1">Spectral Features</div>
+                  <div className="text-white">{systemData.stellarTemp > 6000 ? 'Metal lines, shallow convection' : 'Deep convection zone'}</div>
+                </div>
+                <div>
+                  <div className="text-gray-300 mb-1">Stellar Wind</div>
+                  <div className="text-white">{(systemData.stellarLuminosity * 2e-14).toFixed(2)} M☉/yr</div>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <div className="text-gray-300 mb-1">Composition Hint</div>
+                  <div className="text-white">
+                    {systemData.planetType === 'Rocky' ? 'Silicate/Iron' : 
+                     systemData.planetType === 'Super Earth' ? 'Rock + Volatiles' :
+                     systemData.planetType === 'Sub-Neptune' ? 'H/He Envelope' : 'Gas Giant'}
                   </div>
                 </div>
-
-                {/* Temperature Analysis */}
-                <div className="bg-slate-800/50 p-3 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-gray-300 flex items-center gap-1">
-                      <Thermometer className="w-3 h-3" />
-                      Equilibrium Temperature
-                    </span>
-                    <Badge className="bg-orange-600">
-                      {Math.round(systemData.equilibriumTemp)} K
-                    </Badge>
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    {systemData.equilibriumTemp > 1000 ? 'Hot' : 
-                     systemData.equilibriumTemp > 200 ? 'Temperate' : 'Cold'} planet
-                    ({Math.round(systemData.equilibriumTemp - 273.15)}°C)
+                <div>
+                  <div className="text-gray-300 mb-1">Atmospheric Retention</div>
+                  <div className="text-white">
+                    {systemData.escapeParameter < 0.1 ? 'Stable' : 'Escaping'}
                   </div>
                 </div>
-
-                {/* Orbital Characteristics */}
-                <div className="bg-slate-800/50 p-3 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-gray-300">Orbital Distance</span>
-                    <Badge className="bg-blue-600">
-                      {systemData.semiMajorAxis.toFixed(3)} AU
-                    </Badge>
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    Period: {systemData.orbitalPeriod.toFixed(2)} days
-                    ({(systemData.orbitalPeriod / 365.25).toFixed(2)} Earth years)
-                  </div>
+                <div>
+                  <div className="text-gray-300 mb-1">Transit Signal</div>
+                  <div className="text-white">{(systemData.transitDepth * 1000000).toFixed(0)} ppm</div>
                 </div>
-
-                {/* Atmosphere Indicator */}
-                <div className="bg-slate-800/50 p-3 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-gray-300">Atmosphere Estimate</span>
-                    <Badge className={systemData.atmosphereThickness > 0.5 ? "bg-cyan-600" : "bg-gray-600"}>
-                      {systemData.atmosphereThickness > 0.5 ? 'Thick' : 'Thin/None'}
-                    </Badge>
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    Based on radius-density relationship
-                  </div>
-                </div>
-
-                {/* Transit Geometry */}
-                <div className="bg-slate-800/50 p-3 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-gray-300">Transit Depth</span>
-                    <Badge className="bg-emerald-600">
-                      {(systemData.transitDepth * 100).toFixed(4)}%
-                    </Badge>
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    Radius ratio: {Math.sqrt(systemData.transitDepth).toFixed(6)}
+                <div>
+                  <div className="text-gray-300 mb-1">Follow-up Priority</div>
+                  <div className="text-white">
+                    {systemData.transitDepth > 0.001 ? 'High' : systemData.transitDepth > 0.0001 ? 'Medium' : 'Low'}
                   </div>
                 </div>
               </div>
-            </div>
+            )}
+          </div>
+        )}
 
-            {/* Data Sources */}
-            <div className="border-t border-gray-700 pt-4">
-              <h5 className="text-xs font-medium text-gray-400 mb-2 flex items-center gap-1">
-                <Info className="w-3 h-3" />
-                Data Sources & Accuracy
-              </h5>
-              <ul className="text-xs text-gray-500 space-y-1">
-                <li>• Orbital period: Direct photometric measurement</li>
-                <li>• Planet radius: Transit depth + stellar radius</li>
-                <li>• Orbital distance: Kepler's 3rd law + stellar mass</li>
-                <li>• Temperature: Stellar flux + orbital distance</li>
-                <li>• Atmosphere: Radius-mass relationship proxy</li>
-                <li>• Colors: Blackbody temperature approximation</li>
-              </ul>
+        {/* Export buttons */}
+        <div className="mt-6 flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(systemData, null, 2))}`;
+              const link = document.createElement('a');
+              link.href = dataUri;
+              link.download = `${candidate?.name || 'system'}_parameters.json`;
+              link.click();
+            }}
+          >
+            Export JSON
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              canvas.width = 800;
+              canvas.height = 600;
+              ctx.fillStyle = '#0f172a';
+              ctx.fillRect(0, 0, 800, 600);
+              ctx.fillStyle = '#ffffff';
+              ctx.font = '16px monospace';
+              ctx.fillText(`System Diagram: ${candidate?.name || 'Unknown'}`, 20, 40);
+              
+              const link = document.createElement('a');
+              link.download = `${candidate?.name || 'system'}_diagram.png`;
+              link.href = canvas.toDataURL();
+              link.click();
+            }}
+          >
+            Export PNG
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const svg = document.querySelector('svg');
+              if (svg) {
+                const svgData = new XMLSerializer().serializeToString(svg);
+                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+                const url = URL.createObjectURL(svgBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${candidate?.name || 'system'}_diagram.svg`;
+                link.click();
+                URL.revokeObjectURL(url);
+              }
+            }}
+          >
+            Export SVG
+          </Button>
+        </div>
+
+        {/* Data provenance */}
+        <div className="mt-6 pt-4 border-t border-gray-700">
+          <h5 className="text-xs font-medium text-gray-400 mb-2 flex items-center gap-1">
+            <Info className="w-3 h-3" />
+            Data Provenance & Traceability
+          </h5>
+          <div className="grid grid-cols-2 gap-4 text-xs text-gray-500">
+            <div>
+              <div>Source: {systemData.provenance.source}</div>
+              <div>Dataset: {systemData.provenance.datasetId}</div>
+            </div>
+            <div>
+              <div>Model Hash: {systemData.provenance.modelHash}</div>
+              <div>Calculation: Real-time derived</div>
             </div>
           </div>
         </div>
