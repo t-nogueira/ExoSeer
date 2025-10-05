@@ -99,116 +99,201 @@ const DataInformedDiagram = ({ candidate, analysisResult }) => {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* System Visualization */}
+          {/* Enhanced 3D System Visualization */}
           <div className="relative">
             <h4 className="text-sm font-medium text-white mb-3 flex items-center gap-2">
               <Orbit className="w-4 h-4" />
-              System Architecture & Transit Geometry
+              3D System Architecture & Transit Geometry
             </h4>
             
-            <svg
-              viewBox="0 0 400 400"
-              className="w-full h-96 bg-slate-900/50 rounded-lg border border-gray-700"
+            {/* 3D Scene Container */}
+            <div 
+              className="relative w-full h-96 bg-gradient-to-b from-slate-900 via-slate-800 to-black rounded-lg border border-gray-700 overflow-hidden"
+              style={{
+                perspective: '1000px',
+                transformStyle: 'preserve-3d'
+              }}
             >
-              {/* Background stars */}
-              {Array.from({length: 20}, (_, i) => (
-                <circle
-                  key={i}
-                  cx={Math.random() * 400}
-                  cy={Math.random() * 400}
-                  r="0.5"
-                  fill="white"
-                  opacity="0.6"
+              {/* Animated starfield background */}
+              <div className="absolute inset-0 overflow-hidden">
+                {Array.from({length: 100}, (_, i) => {
+                  const x = Math.random() * 100;
+                  const y = Math.random() * 100;
+                  const delay = Math.random() * 4;
+                  const duration = 2 + Math.random() * 3;
+                  return (
+                    <div
+                      key={i}
+                      className="absolute w-px h-px bg-white rounded-full opacity-60"
+                      style={{
+                        left: `${x}%`,
+                        top: `${y}%`,
+                        animation: `twinkle ${duration}s ease-in-out ${delay}s infinite alternate`
+                      }}
+                    />
+                  );
+                })}
+              </div>
+
+              {/* 3D Orbital System */}
+              <div 
+                className="absolute inset-0 flex items-center justify-center"
+                style={{
+                  transform: 'rotateX(15deg) rotateY(5deg)',
+                  transformStyle: 'preserve-3d'
+                }}
+              >
+                {/* Orbital Plane */}
+                <div
+                  className="absolute border border-emerald-400/30 rounded-full"
+                  style={{
+                    width: `${orbitalRadius * 2}px`,
+                    height: `${orbitalRadius * 2}px`,
+                    transform: 'rotateX(75deg)',
+                    animation: 'orbitRotate 20s linear infinite'
+                  }}
                 />
-              ))}
 
-              {/* Orbital path */}
-              <circle
-                cx="200"
-                cy="200"
-                r={orbitalRadius}
-                fill="none"
-                stroke="rgba(34, 197, 94, 0.3)"
-                strokeWidth="1"
-                strokeDasharray="4,4"
-              />
-
-              {/* Host Star */}
-              <defs>
-                <radialGradient id="starGradient" cx="50%" cy="30%" r="70%">
-                  <stop offset="0%" stopColor="#FFF4E6" />
-                  <stop offset="70%" stopColor={systemData.stellarTemp > 6000 ? '#E6F3FF' : '#FFE4B5'} />
-                  <stop offset="100%" stopColor={systemData.stellarTemp > 6000 ? '#B3D9FF' : '#FFAB40'} />
-                </radialGradient>
-              </defs>
-              
-              <circle
-                cx="200"
-                cy="200"
-                r={starRadius}
-                fill="url(#starGradient)"
-                stroke="rgba(255, 255, 255, 0.3)"
-                strokeWidth="1"
-              />
-
-              {/* Planet with atmosphere */}
-              <defs>
-                <radialGradient id="planetGradient" cx="40%" cy="30%" r="80%">
-                  <stop offset="0%" stopColor={systemData.planetColor} opacity="0.9" />
-                  <stop offset="70%" stopColor={systemData.planetColor} opacity="0.7" />
-                  <stop offset="100%" stopColor={systemData.planetColor} opacity="0.5" />
-                </radialGradient>
-                
-                {/* Atmosphere gradient */}
-                <radialGradient id="atmosphereGradient" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="transparent" />
-                  <stop offset="80%" stopColor="rgba(135, 206, 235, 0.2)" />
-                  <stop offset="100%" stopColor="rgba(135, 206, 235, 0.4)" />
-                </radialGradient>
-              </defs>
-
-              {/* Planet atmosphere (if significant) */}
-              {systemData.atmosphereThickness > 0.3 && (
-                <circle
-                  cx={200 + orbitalRadius}
-                  cy="200"
-                  r={planetRadius * (1 + systemData.atmosphereThickness)}
-                  fill="url(#atmosphereGradient)"
-                  opacity="0.6"
+                {/* Enhanced Host Star with 3D effects */}
+                <div
+                  className="absolute rounded-full shadow-2xl"
+                  style={{
+                    width: `${starRadius * 2}px`,
+                    height: `${starRadius * 2}px`,
+                    background: `radial-gradient(circle at 30% 30%, 
+                      ${systemData.stellarTemp > 6000 ? '#E6F3FF' : '#FFF4E6'}, 
+                      ${systemData.stellarTemp > 6000 ? '#B3D9FF' : '#FFE4B5'} 60%, 
+                      ${systemData.stellarTemp > 6000 ? '#4A90E2' : '#FF8C00'} 100%)`,
+                    boxShadow: `
+                      0 0 ${starRadius}px ${systemData.stellarTemp > 6000 ? '#4A90E2' : '#FFB347'}40,
+                      inset -${starRadius * 0.3}px -${starRadius * 0.3}px ${starRadius * 0.5}px rgba(0,0,0,0.3)
+                    `,
+                    filter: 'brightness(1.2)',
+                    animation: 'stellarPulse 4s ease-in-out infinite'
+                  }}
                 />
-              )}
 
-              {/* Planet core */}
-              <circle
-                cx={200 + orbitalRadius}
-                cy="200"
-                r={planetRadius}
-                fill="url(#planetGradient)"
-                stroke="rgba(255, 255, 255, 0.2)"
-                strokeWidth="0.5"
-              />
+                {/* Stellar Corona Effect */}
+                <div
+                  className="absolute rounded-full opacity-40"
+                  style={{
+                    width: `${starRadius * 2.4}px`,
+                    height: `${starRadius * 2.4}px`,
+                    background: `radial-gradient(circle, transparent 50%, ${systemData.stellarTemp > 6000 ? '#4A90E2' : '#FFB347'}10 70%, transparent 100%)`,
+                    animation: 'coronaPulse 6s ease-in-out infinite'
+                  }}
+                />
 
-              {/* Transit line of sight */}
-              <line
-                x1="0"
-                y1="200"
-                x2="400"
-                y2="200"
-                stroke="rgba(139, 69, 19, 0.4)"
-                strokeWidth="2"
-                strokeDasharray="6,3"
-              />
+                {/* Orbiting Planet with 3D shading */}
+                <div
+                  className="absolute rounded-full"
+                  style={{
+                    width: `${planetRadius * 2}px`,
+                    height: `${planetRadius * 2}px`,
+                    background: `radial-gradient(circle at 25% 25%, 
+                      ${systemData.planetColor}FF, 
+                      ${systemData.planetColor}CC 50%, 
+                      ${systemData.planetColor}80 80%,
+                      ${systemData.planetColor}40 100%)`,
+                    boxShadow: `
+                      inset -${planetRadius * 0.4}px -${planetRadius * 0.4}px ${planetRadius * 0.6}px rgba(0,0,0,0.6),
+                      0 0 ${planetRadius * 0.8}px ${systemData.planetColor}30
+                    `,
+                    transform: `translate(${orbitalRadius}px, 0px) rotateX(75deg)`,
+                    animation: `planetOrbit ${systemData.orbitalPeriod / 10}s linear infinite`
+                  }}
+                />
+
+                {/* Planet Atmosphere Glow (if applicable) */}
+                {systemData.atmosphereThickness > 0.3 && (
+                  <div
+                    className="absolute rounded-full opacity-50"
+                    style={{
+                      width: `${planetRadius * 2 * (1 + systemData.atmosphereThickness * 0.5)}px`,
+                      height: `${planetRadius * 2 * (1 + systemData.atmosphereThickness * 0.5)}px`,
+                      background: `radial-gradient(circle, transparent 40%, rgba(135, 206, 235, 0.3) 70%, transparent 100%)`,
+                      transform: `translate(${orbitalRadius}px, 0px) rotateX(75deg)`,
+                      animation: `planetOrbit ${systemData.orbitalPeriod / 10}s linear infinite`
+                    }}
+                  />
+                )}
+
+                {/* Transit Detection Ray */}
+                <div
+                  className="absolute h-px bg-gradient-to-r from-transparent via-orange-400 to-transparent opacity-60"
+                  style={{
+                    width: '100%',
+                    top: '50%',
+                    left: '0%',
+                    animation: 'transitPulse 3s ease-in-out infinite'
+                  }}
+                />
+
+                {/* 3D Orbital Motion Trail */}
+                <div
+                  className="absolute border border-cyan-400/20 rounded-full animate-pulse"
+                  style={{
+                    width: `${orbitalRadius * 1.02}px`,
+                    height: `${orbitalRadius * 1.02}px`,
+                    transform: 'rotateX(75deg)',
+                    left: `${(400 - orbitalRadius * 1.02) / 2}px`,
+                    top: `${(400 - orbitalRadius * 1.02) / 2}px`
+                  }}
+                />
+              </div>
+
+              {/* Information Overlay */}
+              <div className="absolute bottom-4 left-4 right-4 text-center">
+                <div className="bg-black/40 backdrop-blur-sm rounded-lg px-3 py-2 border border-cyan-400/20">
+                  <p className="text-xs text-cyan-300 font-mono">
+                    Real-time orbital mechanics • Period: {systemData.orbitalPeriod.toFixed(1)}d • Distance: {systemData.semiMajorAxis.toFixed(3)} AU
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    {systemData.planetType} planet • {Math.round(systemData.equilibriumTemp)}K equilibrium temperature
+                  </p>
+                </div>
+              </div>
+
+              {/* View Controls */}
+              <div className="absolute top-4 right-4">
+                <div className="bg-black/40 backdrop-blur-sm rounded-lg px-2 py-1 border border-gray-600">
+                  <p className="text-xs text-gray-300">3D View</p>
+                </div>
+              </div>
+            </div>
+
+            {/* CSS Animations */}
+            <style jsx>{`
+              @keyframes twinkle {
+                0%, 100% { opacity: 0.3; transform: scale(1); }
+                50% { opacity: 1; transform: scale(1.2); }
+              }
               
-              {/* Transit indicator */}
-              <text x="10" y="195" fill="rgba(139, 69, 19, 0.8)" fontSize="10" className="font-mono">
-                Line of Sight → Transit Detection
-              </text>
-
-              {/* Scale indicators */}
-              <text x="200" y="390" textAnchor="middle" fill="white" fontSize="10" opacity="0.7">
-                Orbital Distance: {systemData.semiMajorAxis.toFixed(3)} AU
-              </text>
-            </svg>
+              @keyframes stellarPulse {
+                0%, 100% { transform: scale(1) rotate(0deg); filter: brightness(1.2); }
+                50% { transform: scale(1.05) rotate(180deg); filter: brightness(1.4); }
+              }
+              
+              @keyframes coronaPulse {
+                0%, 100% { opacity: 0.3; transform: scale(1); }
+                50% { opacity: 0.6; transform: scale(1.1); }
+              }
+              
+              @keyframes planetOrbit {
+                from { transform: translate(${orbitalRadius}px, 0px) rotateX(75deg) rotateZ(0deg); }
+                to { transform: translate(${orbitalRadius}px, 0px) rotateX(75deg) rotateZ(360deg); }
+              }
+              
+              @keyframes orbitRotate {
+                from { transform: rotateX(75deg) rotateZ(0deg); }
+                to { transform: rotateX(75deg) rotateZ(360deg); }
+              }
+              
+              @keyframes transitPulse {
+                0%, 100% { opacity: 0.4; }
+                50% { opacity: 0.8; box-shadow: 0 0 10px rgba(255, 165, 0, 0.5); }
+              }
+            `}</style>
           </div>
 
           {/* System Parameters */}
