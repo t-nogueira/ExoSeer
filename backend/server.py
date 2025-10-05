@@ -474,6 +474,205 @@ async def get_analysis_stats():
         logger.error(f"Failed to get stats: {e}")
         raise HTTPException(status_code=500, detail="Failed to retrieve statistics")
 
+@api_router.post("/ai-chat")
+async def ai_physics_chat(request: Dict[str, Any]):
+    """NASA-level Physics AI Assistant for exoplanet analysis"""
+    
+    try:
+        message = request.get("message", "").strip()
+        context = request.get("context")  # Candidate data context
+        conversation_history = request.get("conversation_history", [])
+        
+        if not message:
+            raise HTTPException(status_code=400, detail="Message is required")
+        
+        # If AI analyzer is available, use it for sophisticated responses
+        if ai_analyzer:
+            try:
+                # Create enhanced context for AI
+                enhanced_context = {
+                    "user_question": message,
+                    "candidate_context": context,
+                    "conversation_history": conversation_history[-3:],  # Last 3 messages
+                    "domain": "exoplanet_physics"
+                }
+                
+                # Use AI analyzer for physics-informed responses
+                response = await ai_analyzer.generate_physics_explanation(enhanced_context)
+                
+                return {
+                    "response": response.get("explanation", "I apologize, but I couldn't generate a response at this time."),
+                    "confidence": response.get("confidence", 0.7),
+                    "references": response.get("references", []),
+                    "timestamp": datetime.utcnow().isoformat()
+                }
+                
+            except Exception as e:
+                logger.warning(f"AI analyzer failed for chat: {e}")
+                # Fall back to rule-based responses
+                pass
+        
+        # Rule-based physics responses for when AI is unavailable
+        response_data = generate_physics_response(message, context)
+        
+        return {
+            "response": response_data["response"],
+            "confidence": response_data["confidence"],
+            "references": response_data.get("references", []),
+            "timestamp": datetime.utcnow().isoformat(),
+            "mode": "rule_based"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"AI chat failed: {e}")
+        raise HTTPException(status_code=500, detail="AI chat service failed")
+
+def generate_physics_response(message: str, context: Optional[Dict] = None) -> Dict[str, Any]:
+    """Generate rule-based physics responses for exoplanet questions"""
+    
+    msg_lower = message.lower()
+    
+    # Enhanced physics responses based on keywords
+    physics_responses = {
+        "transit depth": {
+            "response": """Transit depth (δ) is fundamentally related to the planet-to-star radius ratio by δ = (Rp/R*)². 
+
+For a complete transit (impact parameter b < 1-Rp/R*):
+- Earth-like planet (Rp = 1 R⊕) around Sun-like star: δ ≈ 84 ppm
+- Jupiter-like planet (Rp = 11 R⊕) around Sun-like star: δ ≈ 1%
+
+The measured depth can be affected by:
+1. Limb darkening (reduces depth by ~10-20%)
+2. Impact parameter (grazing transits appear shallower)
+3. Instrumental noise and systematic effects""",
+            "confidence": 0.95,
+            "references": ["Seager & Mallén-Ornelas 2003", "Mandel & Agol 2002"]
+        },
+        
+        "impact parameter": {
+            "response": """Impact parameter (b) quantifies how centrally a planet transits the stellar disk:
+
+b = (a/R*) × cos(i) × [(1-e²)/(1+e sin(ω))]
+
+Where:
+- a = semi-major axis, R* = stellar radius, i = inclination
+- e = eccentricity, ω = argument of periastron
+
+Physical significance:
+- b = 0: Central transit (maximum depth, longest duration)
+- b = 1: Grazing transit (shallower, shorter)
+- b > 1+Rp/R*: No transit occurs
+
+Impact on observables:
+- Transit duration ∝ √(1-b²) for small planets
+- Ingress/egress duration depends on b and Rp/R*""",
+            "confidence": 0.93,
+            "references": ["Winn 2010", "Seager & Mallén-Ornelas 2003"]
+        },
+        
+        "limb darkening": {
+            "response": """Stellar limb darkening causes flux variations across the stellar disk, critically affecting transit photometry:
+
+Quadratic law: I(μ)/I(0) = 1 - u₁(1-μ) - u₂(1-μ)²
+Where μ = cos(θ), θ = angle from disk center
+
+Physical effects on transits:
+1. Reduces apparent transit depth by ~10-20%
+2. Creates curved ingress/egress (not sharp edges)
+3. Affects determination of Rp/R* if not properly modeled
+
+Coefficient dependencies:
+- u₁, u₂ depend on Teff, log g, [Fe/H], and wavelength
+- Typically obtained from stellar atmosphere models (Claret, Phoenix)
+- Can be fitted as free parameters with sufficient SNR""",
+            "confidence": 0.92,
+            "references": ["Claret & Bloemen 2011", "Sing 2010"]
+        },
+        
+        "chi-squared": {
+            "response": """Reduced chi-squared (χ²ᵣ = χ²/DoF) is the primary goodness-of-fit metric in exoplanet analysis:
+
+Interpretation:
+- χ²ᵣ ≈ 1.0: Good fit (model matches data within uncertainties)
+- χ²ᵣ >> 1: Poor fit (systematic residuals, underestimated errors, wrong model)
+- χ²ᵣ << 1: Potential overestimated uncertainties or over-fitting
+
+For exoplanet transits:
+- Target χ²ᵣ = 1.0 ± 0.1 for quality fits
+- Systematic trends in residuals more concerning than high χ²ᵣ
+- Use with BIC/AIC for model comparison
+
+Common causes of high χ²ᵣ:
+- Stellar activity (spots, flares)
+- Instrumental systematics
+- Incorrect limb darkening treatment""",
+            "confidence": 0.94,
+            "references": ["Andrae et al. 2010", "Gregory 2005"]
+        },
+        
+        "false positive": {
+            "response": """Exoplanet false positives are astrophysical phenomena mimicking planetary signals:
+
+Primary scenarios:
+1. **Eclipsing Binaries (EBs)**:
+   - Background/hierarchical systems
+   - Detection: Secondary eclipses, ellipsoidal variations, RV analysis
+
+2. **Stellar Activity**:
+   - Star spots rotating across visible hemisphere
+   - Detection: Correlation with stellar rotation period
+
+3. **Instrumental/Systematic Effects**:
+   - Detector artifacts, thermal variations
+   - Detection: Comparison across instruments/sectors
+
+Validation techniques:
+- Centroid motion analysis (background EB detection)
+- Statistical validation (Morton 2012, Rowe et al. 2014)
+- Ground-based photometry and spectroscopy
+- Spitzer/JWST validation observations""",
+            "confidence": 0.91,
+            "references": ["Brown 2003", "Morton 2012", "Santerne et al. 2016"]
+        }
+    }
+    
+    # Check for keyword matches
+    for keyword, response_data in physics_responses.items():
+        if keyword in msg_lower or any(word in msg_lower for word in keyword.split()):
+            # Add candidate context if available
+            if context:
+                candidate_context = f"\n\nFor your current candidate {context.get('candidate_name', 'N/A')}:\n"
+                if context.get('period'):
+                    candidate_context += f"- Period: {context['period']:.3f} days\n"
+                if context.get('radius'):
+                    candidate_context += f"- Radius: {context['radius']:.2f} R⊕\n"
+                if context.get('transit_depth'):
+                    candidate_context += f"- Transit depth: {context['transit_depth']*100:.4f}%\n"
+                response_data["response"] += candidate_context
+                
+            return response_data
+    
+    # General physics topics
+    if any(word in msg_lower for word in ["habitable", "goldilocks", "zone"]):
+        return {
+            "response": "The habitable zone (HZ) is the orbital distance where liquid water could exist on a planet's surface. For main-sequence stars: HZ ∝ √(L*/L☉), where L* is stellar luminosity. Key factors include atmospheric greenhouse effects, planetary composition, and tidal locking for M-dwarf planets.",
+            "confidence": 0.87
+        }
+    
+    if "radial velocity" in msg_lower or "rv" in msg_lower:
+        return {
+            "response": "Radial velocity (RV) method detects planetary companions through stellar reflex motion: K = (2πG/P)^(1/3) × (Mp sin i)/(Ms + Mp)^(2/3). Typical precisions: ~1 m/s (HIRES/HARPS), ~10 cm/s (ESPRESSO). RV confirms transiting planets and measures true masses.",
+            "confidence": 0.89
+        }
+    
+    # Default response for unmatched questions
+    return {
+        "response": f"I can help explain exoplanet physics concepts including transit photometry, detection methods, statistical validation, and data analysis techniques. Could you ask about a specific topic like 'transit depth', 'impact parameter', 'limb darkening', or 'false positives'?",
+        "confidence": 0.6
+    }
+
 # Include the router in the main app
 app.include_router(api_router)
 
