@@ -142,7 +142,7 @@ class AIExoplanetAnalyzer:
             # Parse AI response
             try:
                 ai_result = json.loads(response)
-            except:
+            except (json.JSONDecodeError, ValueError):
                 ai_result = self._get_default_uncertainty_analysis()
             
             # Enhance with additional validation
