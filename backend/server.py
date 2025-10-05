@@ -100,7 +100,20 @@ async def search_targets(request: TargetSearchRequest):
     
     try:
         async with NASAExoplanetClient(settings) as client:
-            # Search exoplanets
+            # Special handling for mission-wide searches
+            if request.target_name.upper() in ['KEPLER', 'TESS', 'K2']:
+                mission_candidates = await client.search_by_mission(request.target_name.upper())
+                
+                return {
+                    "target_name": request.target_name,
+                    "candidates": mission_candidates[:50],  # Show first 50 for performance
+                    "total_found": len(mission_candidates),
+                    "search_type": f"{request.target_name.upper()}_MISSION",
+                    "timestamp": datetime.utcnow().isoformat(),
+                    "note": f"Showing first 50 of {len(mission_candidates)} {request.target_name.upper()} discoveries"
+                }
+            
+            # Regular target search
             exoplanet_candidates = await client.search_exoplanets(request.target_name)
             
             # Also search TESS candidates if looks like TIC ID
@@ -116,7 +129,7 @@ async def search_targets(request: TargetSearchRequest):
             unique_candidates = []
             for candidate in all_candidates:
                 if candidate['name'] not in seen_names:
-                    seen_names.add(candidate['name'])
+                    seen_names.add(candidate['name']);
                     unique_candidates.append(candidate)
             
             return {
