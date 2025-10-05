@@ -234,7 +234,8 @@ const InteractivePanel = ({ data, candidate, onParametersChange }) => {
       fitMetrics,
       lightCurveData: chartData,
       timestamp: new Date().toISOString(),
-      software: "ExoSeer v1.0"
+      software: "ExoSeer v1.0",
+      candidate_context: candidate
     };
     
     if (format === 'json') {
@@ -242,11 +243,23 @@ const InteractivePanel = ({ data, candidate, onParametersChange }) => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `exoseer-analysis-${Date.now()}.json`;
+      a.download = `exoseer-analysis-${candidate?.name || 'data'}-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } else if (format === 'csv') {
+      const csvData = chartData.map(d => 
+        `${d.phase},${d.flux},${d.model},${d.residual}`
+      ).join('\n');
+      const csvContent = 'phase,flux,model,residual\n' + csvData;
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `exoseer-lightcurve-${candidate?.name || 'data'}-${Date.now()}.csv`;
       a.click();
       URL.revokeObjectURL(url);
     }
-  }, [params, fitMetrics, chartData]);
+  }, [params, fitMetrics, chartData, candidate]);
 
   // Derived parameters calculation
   const derivedParams = useMemo(() => {
