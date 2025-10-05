@@ -78,6 +78,21 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
+    setLoadingProgress(0);
+    
+    // Estimate time based on message complexity
+    const wordCount = messageText.split(' ').length;
+    const hasCandidate = !!selectedCandidate;
+    const estimatedSeconds = Math.min(Math.max(wordCount * 0.5 + (hasCandidate ? 2 : 1), 3), 15);
+    setEstimatedTime(estimatedSeconds);
+
+    // Simulate loading progress
+    const progressInterval = setInterval(() => {
+      setLoadingProgress(prev => {
+        if (prev >= 90) return prev;
+        return prev + Math.random() * 15;
+      });
+    }, 200);
 
     try {
       // Include candidate context if available
@@ -98,31 +113,44 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
         message: messageText,
         context: context,
         conversation_history: messages.slice(-5) // Last 5 messages for context
+      }, {
+        timeout: estimatedSeconds * 1000 + 5000 // Add 5 seconds buffer
       });
 
-      // Always use fallback responses for now since backend returns JSON
-      let cleanResponse = generateFallbackResponse(messageText);
+      clearInterval(progressInterval);
+      setLoadingProgress(100);
+
+      // Enhanced response processing
+      let cleanResponse = '';
+      let confidence = 0.8;
+      let references = [];
       
-      // If we have a backend response, try to extract clean text
-      if (response.data && response.data.response) {
-        let backendResponse = response.data.response;
-        
-        // If it's JSON, extract the explanation
-        if (typeof backendResponse === 'string' && backendResponse.trim().startsWith('{')) {
-          try {
-            const jsonResponse = JSON.parse(backendResponse);
-            if (jsonResponse.explanation && typeof jsonResponse.explanation === 'string') {
-              cleanResponse = jsonResponse.explanation;
-            } else if (jsonResponse.message && typeof jsonResponse.message === 'string') {
-              cleanResponse = jsonResponse.message;
-            }
-          } catch (e) {
-            // Keep fallback response
-          }
-        } else if (typeof backendResponse === 'string' && backendResponse.length > 10) {
-          // Use backend response if it's clean text
-          cleanResponse = backendResponse;
+      if (response.data) {
+        // Handle direct string response
+        if (typeof response.data.response === 'string') {
+          cleanResponse = response.data.response;
         }
+        // Handle object response with explanation
+        else if (response.data.explanation) {
+          cleanResponse = response.data.explanation;
+        }
+        // Handle nested response structure
+        else if (response.data.response && typeof response.data.response === 'object') {
+          if (response.data.response.explanation) {
+            cleanResponse = response.data.response.explanation;
+          } else if (response.data.response.message) {
+            cleanResponse = response.data.response.message;
+          }
+        }
+        
+        confidence = response.data.confidence || 0.8;
+        references = response.data.references || [];
+      }
+
+      // If no clean response found, use fallback
+      if (!cleanResponse || cleanResponse.length < 10) {
+        cleanResponse = generateFallbackResponse(messageText);
+        confidence = 0.6;
       }
 
       const assistantMessage = {
@@ -130,16 +158,18 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
         type: 'assistant',
         content: cleanResponse,
         timestamp: new Date(),
-        confidence: response.data.confidence || 0.8,
-        references: response.data.references || []
+        confidence: confidence,
+        references: references,
+        processingTime: estimatedSeconds
       };
 
       setMessages(prev => [...prev, assistantMessage]);
 
     } catch (error) {
+      clearInterval(progressInterval);
       console.error('AI Chat error:', error);
       
-      // Fallback intelligent responses based on keywords
+      // Enhanced fallback responses
       let fallbackResponse = generateFallbackResponse(messageText);
       
       const errorMessage = {
@@ -148,12 +178,15 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
         content: fallbackResponse,
         timestamp: new Date(),
         confidence: 0.6,
-        isOffline: true
+        isOffline: true,
+        error: error.message
       };
 
       setMessages(prev => [...prev, errorMessage]);
     } finally {
+      clearInterval(progressInterval);
       setIsLoading(false);
+      setLoadingProgress(0);
     }
   };
 
