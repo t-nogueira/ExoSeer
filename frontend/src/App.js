@@ -555,11 +555,6 @@ function App() {
                   <p className="text-xs text-emerald-200">
                     Found {searchResults.total_found.toLocaleString()} candidates for "{searchResults.target_name}"
                   </p>
-                  {searchResults.note && (
-                    <p className="text-xs text-yellow-300 mt-1">
-                      {searchResults.note}
-                    </p>
-                  )}
                 </div>
               )}
               
