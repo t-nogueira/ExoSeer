@@ -44,6 +44,16 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate, userMode = 'scient
     scrollToBottom();
   }, [messages]);
 
+  // Update initial message when mode changes
+  useEffect(() => {
+    setMessages([{
+      id: 1,
+      type: 'assistant',
+      content: getInitialMessage(),
+      timestamp: new Date()
+    }]);
+  }, [userMode]);
+
   // Different questions based on user mode
   const getQuickQuestions = () => {
     if (userMode === 'novice') {
