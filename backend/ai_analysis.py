@@ -503,3 +503,82 @@ class AIExoplanetAnalyzer:
             'concerns': ['Requires additional validation'],
             'follow_up_recommendations': ['Obtain additional observations']
         }
+    
+    async def generate_physics_explanation(self, context: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate physics-informed explanations for user questions"""
+        
+        try:
+            user_question = context.get('user_question', '')
+            candidate_context = context.get('candidate_context', {})
+            conversation_history = context.get('conversation_history', [])
+            
+            # Build comprehensive prompt for physics explanation
+            physics_prompt = f"""
+            You are a NASA-level exoplanet physics expert. Answer this question with scientific rigor:
+            
+            Question: {user_question}
+            
+            Context Information:
+            - Candidate: {candidate_context.get('candidate_name', 'N/A')}
+            - Period: {candidate_context.get('period', 'N/A')} days
+            - Radius: {candidate_context.get('radius', 'N/A')} R⊕
+            - Transit Depth: {candidate_context.get('transit_depth', 'N/A')}
+            
+            Recent Conversation:
+            {json.dumps(conversation_history, indent=2)}
+            
+            Provide a comprehensive, scientifically accurate explanation that includes:
+            1. Core physics concepts
+            2. Mathematical relationships where relevant
+            3. Observational implications
+            4. Uncertainty considerations
+            5. References to key papers/methods
+            
+            Format your response as JSON with:
+            {{
+                "explanation": "detailed scientific explanation",
+                "confidence": 0.0-1.0,
+                "references": ["list of relevant references"],
+                "key_equations": ["relevant equations if applicable"],
+                "observational_notes": "practical observational considerations"
+            }}
+            """
+            
+            response = self.ai_client.chat(
+                messages=[{"role": "user", "content": physics_prompt}],
+                model="gpt-4",
+                temperature=0.3
+            )
+            
+            try:
+                ai_result = json.loads(response.choices[0].message.content)
+                
+                # Ensure all required fields are present
+                return {
+                    'explanation': ai_result.get('explanation', 'I apologize, but I could not generate a complete explanation at this time.'),
+                    'confidence': ai_result.get('confidence', 0.7),
+                    'references': ai_result.get('references', []),
+                    'key_equations': ai_result.get('key_equations', []),
+                    'observational_notes': ai_result.get('observational_notes', '')
+                }
+                
+            except json.JSONDecodeError:
+                # If JSON parsing fails, extract text response
+                explanation_text = response.choices[0].message.content
+                return {
+                    'explanation': explanation_text,
+                    'confidence': 0.8,
+                    'references': [],
+                    'key_equations': [],
+                    'observational_notes': ''
+                }
+                
+        except Exception as e:
+            logger.error(f"Physics explanation generation failed: {e}")
+            return {
+                'explanation': 'I apologize, but I encountered an error generating the physics explanation. Please try rephrasing your question.',
+                'confidence': 0.3,
+                'references': [],
+                'key_equations': [],
+                'observational_notes': ''
+            }
