@@ -16,6 +16,7 @@ import InteractivePanel from './AdvancedAnalysis/InteractivePanel';
 import ParametersPanel from './AdvancedAnalysis/ParametersPanel';
 import ModelFitPanel from './AdvancedAnalysis/ModelFitPanel';
 import TransitDataSubmissionTool from './AdvancedAnalysis/TransitDataSubmissionTool';
+import DataInformedDiagram from './AdvancedAnalysis/DataInformedDiagram';
 
 // Helper functions for generating chart data
 const generateCandidateSpecificLightCurve = (candidate, data) => {
