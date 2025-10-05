@@ -385,35 +385,10 @@ const PhysicsAnalysisPanel = ({ data, candidate }) => {
             </TabsContent>
 
             <TabsContent value="model">
-              <div className="exoseer-chart-container">
-                <div className="h-64 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={Array.from({length: 50}, (_, i) => ({
-                      phase: (i - 25) / 25,
-                      flux: 1 - (Math.abs(i - 25) < 5 ? 0.00027 * Math.exp(-Math.pow((i - 25) / 3, 2)) : 0)
-                    }))}>
-                      <CartesianGrid strokeDasharray="2 2" stroke="rgba(0, 212, 255, 0.1)" />
-                      <XAxis 
-                        dataKey="phase" 
-                        stroke="#9CA3AF"
-                        fontSize={10}
-                      />
-                      <YAxis 
-                        stroke="#9CA3AF"
-                        fontSize={10}
-                        domain={[0.9997, 1.0003]}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="flux" 
-                        stroke="#00d4ff" 
-                        strokeWidth={2}
-                        dot={false}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
+              <ModelFitPanel 
+                data={data} 
+                candidate={candidate}
+              />
             </TabsContent>
 
             <TabsContent value="interactive">
