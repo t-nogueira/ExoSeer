@@ -406,6 +406,29 @@ function App() {
     setIsProcessingCandidate(false);
   };
 
+  const loadMoreCandidates = async () => {
+    if (!searchResults || candidates.length >= searchResults.total_found) return;
+    
+    try {
+      const nextPage = currentPage + 1;
+      const response = await axios.post(`${BACKEND_URL}/api/targets/search`, {
+        target_name: searchResults.target_name,
+        search_type: searchResults.search_type,
+        page: nextPage,
+        limit: 50
+      });
+
+      if (response.data && response.data.candidates) {
+        const newCandidates = [...candidates, ...response.data.candidates];
+        setCandidates(newCandidates);
+        setAllCandidates(newCandidates);
+        setCurrentPage(nextPage);
+      }
+    } catch (error) {
+      console.error('Failed to load more candidates:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900" data-testid="exoseer-app">
       {/* Sophisticated Header */}
