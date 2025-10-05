@@ -322,22 +322,37 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult, userMode = '
           </CardTitle>
         </CardHeader>
         <CardContent>
+          {/* Embedded novice explanation */}
+          {userMode === 'novice' && (
+            <div className="mb-4 p-3 bg-blue-900/20 border border-blue-500/30 rounded-lg">
+              <p className="text-sm text-blue-200">
+                🌟 <strong>You're looking at {candidate?.name}!</strong> This analysis shows how we detected this planet by watching its star get slightly dimmer when the planet passes in front of it - like a mini solar eclipse! 
+                {candidate?.radius_earth && ` The planet is ${candidate.radius_earth.toFixed(1)} times bigger than Earth`}
+                {candidate?.orbital_period && ` and takes ${candidate.orbital_period.toFixed(0)} days to orbit its star (Earth takes 365 days)`}.
+              </p>
+            </div>
+          )}
+          
           <div className="mb-4">
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <p className="text-sm exoseer-subtitle mb-1">
                   Target: <span className="text-white font-medium">{candidate?.name || 'Unknown'}</span>
+                  {userMode === 'novice' && <span className="text-blue-300 text-xs ml-2">(the planet we found!)</span>}
                 </p>
                 <p className="text-sm exoseer-subtitle mb-1">
                   Period: <span className="text-cyan-400 font-medium">{candidate?.orbital_period?.toFixed(4) || 'N/A'} days</span>
+                  {userMode === 'novice' && <span className="text-blue-300 text-xs ml-2">(how long one "year" is for this planet)</span>}
                 </p>
               </div>
               <div>
                 <p className="text-sm exoseer-subtitle mb-1">
                   TESS Sector: <span className="text-white font-medium">{data?.light_curve?.sector || 'N/A'}</span>
+                  {userMode === 'novice' && <span className="text-blue-300 text-xs ml-2">(which space telescope found it)</span>}
                 </p>
                 <p className="text-sm exoseer-subtitle mb-1">
                   Transit Depth: <span className="text-purple-400 font-medium">{((candidate?.transit_depth || 0) * 100).toFixed(4)}%</span>
+                  {userMode === 'novice' && <span className="text-blue-300 text-xs ml-2">(how much the star dims when planet passes)</span>}
                 </p>
               </div>
             </div>
