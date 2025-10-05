@@ -549,7 +549,7 @@ class AIExoplanetAnalyzer:
             response = await self.ai_client.send_message(user_msg)
             
             try:
-                ai_result = json.loads(response.choices[0].message.content)
+                ai_result = json.loads(response)
                 
                 # Ensure all required fields are present
                 return {
@@ -562,9 +562,8 @@ class AIExoplanetAnalyzer:
                 
             except json.JSONDecodeError:
                 # If JSON parsing fails, extract text response
-                explanation_text = response.choices[0].message.content
                 return {
-                    'explanation': explanation_text,
+                    'explanation': response,
                     'confidence': 0.8,
                     'references': [],
                     'key_equations': [],
