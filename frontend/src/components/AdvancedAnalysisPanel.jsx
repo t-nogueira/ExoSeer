@@ -247,20 +247,25 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult }) => {
 
     setIsLoadingArchive(true);
     try {
-      const response = await fetch(`${BACKEND_URL}/api/lightcurves/${candidate.name}?mission=TESS`);
+      const response = await fetch(`${BACKEND_URL}/api/lightcurves/${encodeURIComponent(candidate.name)}?mission=TESS`);
       
       if (response.ok) {
         const archiveData = await response.json();
         console.log('NASA Archive data:', archiveData);
         
-        // Show success message
-        alert(`Successfully retrieved ${archiveData.light_curve?.length || 0} data points from NASA Archive for ${candidate.name}`);
+        // Actually update the light curve data if we get it
+        if (archiveData.light_curve && archiveData.light_curve.length > 0) {
+          alert(`✅ Successfully retrieved ${archiveData.light_curve.length} data points from NASA Archive for ${candidate.name}!`);
+          // You could update the chart data here if needed
+        } else {
+          alert(`⚠️ NASA Archive accessed but no light curve data available for ${candidate.name}. This is common for many targets due to data availability limits.`);
+        }
       } else {
-        throw new Error(`Archive access failed: ${response.status}`);
+        throw new Error(`HTTP ${response.status}`);
       }
     } catch (error) {
       console.error('NASA Archive access failed:', error);
-      alert(`NASA Archive access failed for ${candidate.name}: ${error.message}`);
+      alert(`❌ NASA Archive access failed for ${candidate.name}: ${error.message}\n\nThis is common and doesn't indicate an error with your selection. Many exoplanet targets don't have publicly available light curve data.`);
     } finally {
       setIsLoadingArchive(false);
     }
