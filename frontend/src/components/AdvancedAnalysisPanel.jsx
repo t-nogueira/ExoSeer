@@ -12,6 +12,7 @@ import {
   TrendingUp, Zap, Settings
 } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
+import InteractivePanel from './AdvancedAnalysis/InteractivePanel';
 
 const LightCurveAnalysisPanel = ({ data, candidate }) => {
   const [uploadMode, setUploadMode] = useState(false);
