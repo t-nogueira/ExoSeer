@@ -285,7 +285,12 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult, userMode = '
             <span className="text-sm exoseer-subtitle">Custom Data Upload</span>
           </div>
           <div className="flex gap-2">
-            <Button variant="ghost" size="sm" className="text-xs">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-xs"
+              onClick={() => handleCSVUpload()}
+            >
               <Upload className="w-3 h-3 mr-1" />
               CSV
             </Button>
