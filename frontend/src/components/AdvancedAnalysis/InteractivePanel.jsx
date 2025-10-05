@@ -327,6 +327,13 @@ const InteractivePanel = ({ data, candidate, onParametersChange }) => {
 
   // Export functions with progress tracking
   const exportData = useCallback(async (format) => {
+    console.log('Export button clicked:', format); // Debug log
+    
+    if (!chartData || chartData.length === 0) {
+      alert('No data available for export. Please wait for analysis to complete.');
+      return;
+    }
+    
     const exportObj = {
       analysis_target: candidate?.name || 'Unknown',
       parameters: params,
