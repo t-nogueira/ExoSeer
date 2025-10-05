@@ -214,9 +214,8 @@ function App() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState(null);
   const [demoData, setDemoData] = useState(null);
-  const [activeTab, setActiveTab] = useState("analysis");
+  const [activeTab, setActiveTab] = useState("lightcurve");
   const [aiChatOpen, setAiChatOpen] = useState(false);
-  const [analysisTab, setAnalysisTab] = useState("lightcurve");
   const [isProcessingCandidate, setIsProcessingCandidate] = useState(false);
 
   // Initialize with sophisticated demo data
