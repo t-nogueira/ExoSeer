@@ -795,14 +795,26 @@ function App() {
               <p className="text-xs exoseer-subtitle">Generate candidate passport and export analysis results</p>
             </div>
             <div className="flex items-center gap-3">
-              <Button variant="exoseer" size="sm">
+              <Button 
+                variant="exoseer" 
+                size="sm"
+                onClick={() => generatePassportPDF(selectedCandidate, analysisResult)}
+              >
                 <Download className="w-4 h-4 mr-2" />
                 Generate Passport PDF
               </Button>
-              <Button variant="exoseer_outline" size="sm">
+              <Button 
+                variant="exoseer_outline" 
+                size="sm"
+                onClick={() => exportAnalysisData(selectedCandidate, analysisResult)}
+              >
                 Export Data (CSV)
               </Button>
-              <Button variant="exoseer_outline" size="sm">
+              <Button 
+                variant="exoseer_outline" 
+                size="sm"
+                onClick={() => shareAnalysis(selectedCandidate, analysisResult)}
+              >
                 Share Analysis
               </Button>
             </div>
