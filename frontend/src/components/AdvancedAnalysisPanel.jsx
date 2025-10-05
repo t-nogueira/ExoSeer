@@ -363,6 +363,34 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult, userMode = '
                   [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4
                   [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cyan-400" />
             </div>
+            
+            {/* Novice Mode: Simple Report Button */}
+            {userMode === 'novice' && (
+              <div className="mt-3">
+                <Button 
+                  className="w-full bg-green-600 hover:bg-green-700 text-white"
+                  onClick={() => {
+                    const report = `Simple Report for ${candidate?.name}:\n\n` +
+                      `This is an exciting planet discovery! ${candidate?.name} is ${candidate?.radius_earth?.toFixed(1)} times bigger than Earth and orbits its star every ${candidate?.orbital_period?.toFixed(0)} days (Earth takes 365 days to orbit the Sun).\n\n` +
+                      `When this planet passes in front of its star, the star appears ${(candidate?.transit_depth * 100)?.toFixed(3)}% dimmer - this is how we know the planet is there! The star ${candidate?.host_star} is about ${candidate?.star_temperature || 5778}K hot.\n\n` +
+                      `This planet was discovered in ${candidate?.discovery_year || 'recent years'} using the ${candidate?.discovery_method || 'transit'} method and is currently classified as ${candidate?.status || 'a candidate planet'}.\n\n` +
+                      `What makes this special: Planets like this help us understand how common Earth-like worlds might be in our galaxy!`;
+                    
+                    const blob = new Blob([report], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${candidate?.name?.replace(/\s/g, '_') || 'exoplanet'}_simple_report.txt`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                  }}
+                >
+                  📄 Generate Simple Report
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Chart Tabs */}
