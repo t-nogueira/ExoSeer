@@ -311,7 +311,7 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult, userMode = '
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Activity className="w-5 h-5 text-cyan-400" />
-              Physics-Informed Transit Analysis
+              {userMode === 'novice' ? 'Planet Discovery Analysis' : 'Physics-Informed Transit Analysis'}
             </div>
             <div className="flex items-center gap-2">
               <Badge className="exoseer-badge exoseer-badge-confirmed">Compare</Badge>
