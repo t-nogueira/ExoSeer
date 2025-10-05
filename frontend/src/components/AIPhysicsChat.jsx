@@ -219,16 +219,35 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
   const generateFallbackResponse = (question) => {
     const q = question.toLowerCase();
     
+    // Generate context-aware responses when candidate is selected
+    let contextInfo = '';
+    if (selectedCandidate) {
+      contextInfo = `\n\nFor ${selectedCandidate.name}: This ${selectedCandidate.status || 'candidate'} has a period of ${selectedCandidate.orbital_period?.toFixed(3)} days, radius of ${selectedCandidate.radius_earth?.toFixed(2)} R⊕, and transit depth of ${(selectedCandidate.transit_depth * 100)?.toFixed(4)}% around ${selectedCandidate.host_star || 'its host star'}.`;
+    }
+    
     if (q.includes('transit') && q.includes('depth')) {
-      return 'Transit depth is directly related to the planet-to-star radius ratio: δ = (Rp/R*)². For example, if Rp/R* = 0.1, the transit depth would be 1%. This assumes the planet completely transits the stellar disk (impact parameter b < 1-Rp/R*). The actual measured depth may be shallower due to limb darkening effects and instrumental noise.';
+      let response = 'Transit depth is directly related to the planet-to-star radius ratio: δ = (Rp/R*)². For example, if Rp/R* = 0.1, the transit depth would be 1%. This assumes the planet completely transits the stellar disk (impact parameter b < 1-Rp/R*). The actual measured depth may be shallower due to limb darkening effects and instrumental noise.';
+      if (selectedCandidate) {
+        const calculatedRatio = Math.sqrt(selectedCandidate.transit_depth);
+        response += `${contextInfo} The radius ratio (Rp/R*) for this system is approximately ${calculatedRatio.toFixed(4)}.`;
+      }
+      return response;
     }
     
     if (q.includes('impact parameter') || q.includes('impact')) {
-      return 'Impact parameter (b) describes how centrally the planet transits across the stellar disk. b = 0 is a central transit, while b = 1 grazes the stellar limb. It\'s related to orbital inclination: b = (a/R*) × cos(i) × [(1-e²)/(1+e×sin(ω))]. Higher impact parameters result in shorter, shallower transits and can make detection more challenging.';
+      let response = 'Impact parameter (b) describes how centrally the planet transits across the stellar disk. b = 0 is a central transit, while b = 1 grazes the stellar limb. It\'s related to orbital inclination: b = (a/R*) × cos(i) × [(1-e²)/(1+e×sin(ω))]. Higher impact parameters result in shorter, shallower transits and can make detection more challenging.';
+      if (selectedCandidate) {
+        response += `${contextInfo} The transit duration of ${selectedCandidate.duration?.toFixed(1)} hours can help estimate the impact parameter for this system.`;
+      }
+      return response;
     }
     
     if (q.includes('limb darkening')) {
-      return 'Stellar limb darkening causes the star to appear dimmer toward its edges. This affects transit light curves by making the ingress/egress appear more gradual and can reduce the apparent transit depth by ~10-20%. We model this using quadratic laws: I(μ)/I(0) = 1 - u₁(1-μ) - u₂(1-μ)², where μ = cos(θ) and θ is the angle from disk center.';
+      let response = 'Stellar limb darkening causes the star to appear dimmer toward its edges. This affects transit light curves by making the ingress/egress appear more gradual and can reduce the apparent transit depth by ~10-20%. We model this using quadratic laws: I(μ)/I(0) = 1 - u₁(1-μ) - u₂(1-μ)², where μ = cos(θ) and θ is the angle from disk center.';
+      if (selectedCandidate) {
+        response += `${contextInfo} For a ${selectedCandidate.star_temperature || 5778}K star like ${selectedCandidate.host_star}, limb darkening coefficients typically range from u₁~0.4-0.7 and u₂~0.1-0.3.`;
+      }
+      return response;
     }
     
     if (q.includes('chi') || q.includes('fit') || q.includes('residual')) {
