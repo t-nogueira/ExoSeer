@@ -12,7 +12,7 @@ import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
+const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate, userMode = 'scientist' }) => {
   const [messages, setMessages] = useState([
     {
       id: 1,
