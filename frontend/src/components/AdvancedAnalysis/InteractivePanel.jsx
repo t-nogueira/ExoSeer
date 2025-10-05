@@ -375,19 +375,19 @@ const InteractivePanel = ({ data, candidate, onParametersChange }) => {
         alert(`✅ CSV export successful!\n${chartData.length} data points exported`);
         
       } else if (format === 'pdf') {
-        // Generate comprehensive PDF report
+        // Generate comprehensive text report (PDF functionality would require additional libraries)
         const reportContent = generatePDFReport(exportObj);
-        const blob = new Blob([reportContent], { type: 'application/pdf' });
+        const blob = new Blob([reportContent], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `exoseer-report-${candidate?.name?.replace(/\s/g, '_') || 'data'}-${Date.now()}.pdf`;
+        a.download = `exoseer-report-${candidate?.name?.replace(/\s/g, '_') || 'data'}-${Date.now()}.txt`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
         
-        alert(`✅ PDF report generated!\nComprehensive analysis report exported`);
+        alert(`✅ Analysis report generated!\nComprehensive text report exported`);
       }
       
     } catch (error) {
