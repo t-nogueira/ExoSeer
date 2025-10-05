@@ -389,7 +389,14 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate, userMode = 'scient
     }
 
     if (selectedCandidate) {
+      if (isNovice) {
+        return `🌟 You're looking at ${selectedCandidate.name}! This planet is ${selectedCandidate.radius_earth?.toFixed(1)} times bigger than Earth and takes ${selectedCandidate.orbital_period?.toFixed(0)} days to go around its star (compared to Earth's 365 days). What would you like to know about this exciting world?`;
+      }
       return `For ${selectedCandidate.name}: I don't have a specific answer to your question, but I can tell you this candidate has a period of ${selectedCandidate.orbital_period?.toFixed(3)} days, radius of ${selectedCandidate.radius_earth?.toFixed(2)} R⊕, and transit depth of ${(selectedCandidate.transit_depth * 100)?.toFixed(4)}%. What specific aspect would you like me to explain?`;
+    }
+    
+    if (isNovice) {
+      return '🚀 I\'m here to help you explore the amazing world of exoplanets! You can ask me about: How we find planets, what makes them special, understanding the data, space missions like Kepler and TESS, or anything else about planets beyond our solar system. What catches your curiosity?';
     }
     
     return 'I can help with exoplanet analysis questions! Try asking about: transit physics, detection methods, data analysis, validation techniques, or how to use specific ExoSeer features. What would you like to know?';
