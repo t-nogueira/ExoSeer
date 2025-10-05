@@ -98,10 +98,24 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
         conversation_history: messages.slice(-5) // Last 5 messages for context
       });
 
+      // Parse response properly - handle JSON responses
+      let cleanResponse = response.data.response || "I apologize, but I couldn't process that request. Could you please rephrase your question about exoplanet physics?";
+      
+      // If response looks like JSON, try to extract the explanation
+      if (typeof cleanResponse === 'string' && cleanResponse.trim().startsWith('{')) {
+        try {
+          const jsonResponse = JSON.parse(cleanResponse);
+          cleanResponse = jsonResponse.explanation || jsonResponse.message || jsonResponse.content || cleanResponse;
+        } catch (e) {
+          // If JSON parsing fails, use fallback
+          cleanResponse = generateFallbackResponse(messageText);
+        }
+      }
+
       const assistantMessage = {
         id: Date.now() + 1,
         type: 'assistant',
-        content: response.data.response || "I apologize, but I couldn't process that request. Could you please rephrase your question about exoplanet physics?",
+        content: cleanResponse,
         timestamp: new Date(),
         confidence: response.data.confidence || 0.8,
         references: response.data.references || []
