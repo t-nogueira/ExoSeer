@@ -228,11 +228,16 @@ const InteractivePanel = ({ data, candidate, onParametersChange }) => {
     return newParams;
   }, [coupledMode]);
 
-  // Handle parameter changes with validation and coupling
+  // Handle parameter changes with immediate visual feedback
   const handleParamChange = useCallback((paramName, value) => {
     if (lockedParams.has(paramName)) return;
     
     const newParams = validateAndCoupleParams(paramName, value, params);
+    
+    // Immediate update for responsive UI
+    setParams(newParams);
+    
+    // Also trigger debounced update for external handlers
     debouncedUpdateParams(newParams);
   }, [params, lockedParams, validateAndCoupleParams, debouncedUpdateParams]);
 
