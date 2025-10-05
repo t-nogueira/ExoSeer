@@ -136,25 +136,38 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
       if (response.data) {
         let responseText = response.data.response || response.data.explanation || '';
         
-        // If the response is a JSON string, parse it
-        if (typeof responseText === 'string' && responseText.trim().startsWith('{')) {
-          try {
-            const parsedJson = JSON.parse(responseText);
-            // Extract explanation from JSON
-            if (parsedJson.explanation) {
-              cleanResponse = parsedJson.explanation;
-              confidence = parsedJson.confidence || 0.8;
-              references = parsedJson.references || [];
-            } else if (parsedJson.message) {
-              cleanResponse = parsedJson.message;
-            } else {
-              // If JSON doesn't have expected fields, convert to readable text
-              cleanResponse = Object.entries(parsedJson)
-                .map(([key, value]) => `${key}: ${value}`)
-                .join('\n');
+        // Handle JSON responses (with or without backticks)
+        if (typeof responseText === 'string') {
+          // Remove markdown code block formatting if present
+          let jsonText = responseText.trim();
+          if (jsonText.startsWith('```json') || jsonText.startsWith('```')) {
+            jsonText = jsonText.replace(/^```json\s*/, '').replace(/^```\s*/, '').replace(/```\s*$/, '').trim();
+          }
+          
+          // Try to parse as JSON
+          if (jsonText.startsWith('{') && jsonText.endsWith('}')) {
+            try {
+              const parsedJson = JSON.parse(jsonText);
+              // Extract explanation from JSON
+              if (parsedJson.explanation) {
+                cleanResponse = parsedJson.explanation;
+                confidence = parsedJson.confidence || 0.8;
+                references = parsedJson.references || [];
+              } else if (parsedJson.message) {
+                cleanResponse = parsedJson.message;
+              } else {
+                // If JSON doesn't have expected fields, convert to readable text
+                cleanResponse = Object.entries(parsedJson)
+                  .map(([key, value]) => `${key}: ${value}`)
+                  .join('\n');
+              }
+            } catch (e) {
+              // If JSON parsing fails, treat as plain text
+              console.log('JSON parsing failed, using raw text:', responseText);
+              cleanResponse = responseText;
             }
-          } catch (e) {
-            // If JSON parsing fails, treat as plain text
+          } else {
+            // Not JSON, use as plain text
             cleanResponse = responseText;
           }
         } else if (typeof responseText === 'string') {
