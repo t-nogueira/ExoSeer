@@ -135,15 +135,13 @@ class AIExoplanetAnalyzer:
             Focus on astrophysical realism and detection reliability.
             """
             
-            response = self.ai_client.chat(
-                messages=[{"role": "user", "content": uncertainty_prompt}],
-                model="gpt-4",
-                temperature=0.3
-            )
+            from emergentintegrations.llm.chat import UserMessage
+            user_msg = UserMessage(content=uncertainty_prompt)
+            response = await self.ai_client.send_message(user_msg)
             
             # Parse AI response
             try:
-                ai_result = json.loads(response.choices[0].message.content)
+                ai_result = json.loads(response)
             except:
                 ai_result = self._get_default_uncertainty_analysis()
             
