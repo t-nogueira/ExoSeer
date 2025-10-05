@@ -656,6 +656,21 @@ function App() {
         onToggle={() => setAiChatOpen(!aiChatOpen)}
         selectedCandidate={selectedCandidate}
       />
+      
+      {/* AI Chat Toggle Button - Make it more visible */}
+      {!aiChatOpen && (
+        <div className="fixed bottom-6 right-6 z-50">
+          <Button
+            onClick={() => setAiChatOpen(true)}
+            className="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 shadow-2xl border-2 border-cyan-300/50"
+          >
+            <div className="text-center">
+              <Database className="w-6 h-6 text-white mb-1 mx-auto" />
+              <div className="text-xs text-white font-medium">AI</div>
+            </div>
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
