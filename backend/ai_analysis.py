@@ -322,14 +322,12 @@ class AIExoplanetAnalyzer:
             Use standard astrophysical relationships and realistic uncertainties.
             """
             
-            response = self.ai_client.chat(
-                messages=[{"role": "user", "content": estimation_prompt}],
-                model="gpt-4",
-                temperature=0.3
-            )
+            from emergentintegrations.llm.chat import UserMessage
+            user_msg = UserMessage(content=estimation_prompt)
+            response = await self.ai_client.send_message(user_msg)
             
             try:
-                return json.loads(response.choices[0].message.content)
+                return json.loads(response)
             except:
                 return self._get_default_parameter_estimates()
                 
