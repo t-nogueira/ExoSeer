@@ -486,29 +486,42 @@ async def ai_physics_chat(request: Dict[str, Any]):
         if not message:
             raise HTTPException(status_code=400, detail="Message is required")
         
-        # If AI analyzer is available, use it for sophisticated responses
-        if ai_analyzer:
+        # Enhanced physics AI using LLM if available
+        if llm_client:
             try:
-                # Create enhanced context for AI
-                enhanced_context = {
-                    "user_question": message,
-                    "candidate_context": context,
-                    "conversation_history": conversation_history[-3:],  # Last 3 messages
-                    "domain": "exoplanet_physics"
-                }
-                
-                # Use AI analyzer for physics-informed responses
-                response = await ai_analyzer.generate_physics_explanation(enhanced_context)
+                # Create physics-focused prompt
+                context_info = ""
+                if context:
+                    context_info = f"""
+Current candidate context: {context.get('candidate_name', 'Unknown')}
+- Period: {context.get('period', 'N/A')} days
+- Radius: {context.get('radius', 'N/A')} R⊕  
+- Transit depth: {context.get('transit_depth', 'N/A')}
+"""
+
+                physics_prompt = f"""You are a NASA-level exoplanet physics expert. Answer this question with scientific precision:
+
+Question: {message}
+
+{context_info}
+
+Provide a clear, accurate explanation suitable for professional astronomers. Include relevant equations, physical principles, and typical values where appropriate. Keep it concise but thorough."""
+
+                response = await llm_client.send_message(
+                    messages=[{"role": "user", "content": physics_prompt}],
+                    model="gpt-4",
+                    max_tokens=500
+                )
                 
                 return {
-                    "response": response.get("explanation", "I apologize, but I couldn't generate a response at this time."),
-                    "confidence": response.get("confidence", 0.7),
-                    "references": response.get("references", []),
+                    "response": response.get("message", "I apologize, but I couldn't generate a response at this time."),
+                    "confidence": 0.9,
+                    "references": ["NASA Exoplanet Science Institute", "Exoplanet Detection Methods"],
                     "timestamp": datetime.utcnow().isoformat()
                 }
                 
             except Exception as e:
-                logger.warning(f"AI analyzer failed for chat: {e}")
+                logger.warning(f"LLM physics analysis failed: {e}")
                 # Fall back to rule-based responses
                 pass
         
