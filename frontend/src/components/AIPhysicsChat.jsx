@@ -347,17 +347,62 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
                       </div>
                     )}
                     <p className="text-sm text-white whitespace-pre-wrap">{message.content}</p>
+                    
+                    {/* Quick Actions for AI responses */}
+                    {message.type === 'assistant' && !message.isOffline && (
+                      <div className="mt-2 flex gap-1 flex-wrap">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => navigator.clipboard?.writeText(message.content)}
+                          className="text-xs h-6 px-2 text-gray-400 hover:text-white"
+                        >
+                          Copy
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setInput(`Can you explain more about: "${message.content.slice(0, 50)}..."`)}
+                          className="text-xs h-6 px-2 text-gray-400 hover:text-white"
+                        >
+                          More Details
+                        </Button>
+                        {selectedCandidate && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setInput(`How does this relate to ${selectedCandidate.name}?`)}
+                            className="text-xs h-6 px-2 text-gray-400 hover:text-white"
+                          >
+                            Apply to {selectedCandidate.name}
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                    
                     {message.references && message.references.length > 0 && (
                       <div className="mt-2 pt-2 border-t border-gray-600">
-                        <p className="text-xs text-gray-400 mb-1">References:</p>
+                        <p className="text-xs text-gray-400 mb-1 flex items-center gap-1">
+                          <BookOpen className="w-3 h-3" />
+                          References:
+                        </p>
                         {message.references.map((ref, idx) => (
-                          <p key={idx} className="text-xs text-blue-400">{ref}</p>
+                          <p key={idx} className="text-xs text-blue-400 hover:text-blue-300 cursor-pointer">{ref}</p>
                         ))}
                       </div>
                     )}
-                    <p className="text-xs text-gray-400 mt-1">
-                      {message.timestamp.toLocaleTimeString()}
-                    </p>
+                    
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="text-xs text-gray-400">
+                        {message.timestamp.toLocaleTimeString()}
+                      </p>
+                      {message.error && (
+                        <p className="text-xs text-red-400 flex items-center gap-1">
+                          <AlertTriangle className="w-3 h-3" />
+                          Network Error
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
