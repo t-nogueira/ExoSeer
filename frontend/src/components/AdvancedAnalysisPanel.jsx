@@ -245,27 +245,53 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult }) => {
             <TabsContent value="full">
               <div className="exoseer-chart-container mb-4">
                 <div className="h-80 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={data?.lightCurveData?.slice(0, 500) || []}>
-                      <CartesianGrid strokeDasharray="2 2" stroke="rgba(0, 212, 255, 0.1)" />
-                      <XAxis 
-                        dataKey="time" 
-                        stroke="#9CA3AF"
-                        fontSize={10}
-                      />
-                      <YAxis 
-                        stroke="#9CA3AF"
-                        fontSize={10}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="flux" 
-                        stroke="#00d4ff" 
-                        strokeWidth={0.5}
-                        dot={false}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  {data?.light_curve?.time_series?.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={generateFullTimeSeries(candidate, data)}>
+                        <CartesianGrid strokeDasharray="2 2" stroke="rgba(0, 212, 255, 0.1)" />
+                        <XAxis 
+                          dataKey="time" 
+                          stroke="#9CA3AF"
+                          fontSize={10}
+                          tickFormatter={(value) => `Day ${value.toFixed(0)}`}
+                        />
+                        <YAxis 
+                          stroke="#9CA3AF"
+                          fontSize={10}
+                          domain={['dataMin - 0.001', 'dataMax + 0.001']}
+                          tickFormatter={(value) => value.toFixed(5)}
+                        />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: 'rgba(0, 0, 0, 0.9)', 
+                            border: '1px solid #00d4ff',
+                            borderRadius: '6px'
+                          }}
+                          formatter={(value, name) => [
+                            value.toFixed(6), 
+                            'Normalized Flux'
+                          ]}
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="flux" 
+                          stroke="#00d4ff" 
+                          strokeWidth={0.5}
+                          dot={false}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      <div className="text-center">
+                        <Activity className="w-12 h-12 text-gray-500 mx-auto mb-3" />
+                        <div className="text-gray-400 mb-2">No Time Series Data Available</div>
+                        <div className="text-sm text-gray-500">
+                          Real NASA data for {candidate?.name} not found
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </TabsContent>
