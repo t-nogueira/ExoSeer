@@ -62,8 +62,13 @@ async def startup_event():
     global nasa_client, ai_analyzer
     logger.info("Initializing ExoSeer application...")
     
-    # Initialize AI analyzer (don't need to create instance for each request)
-    ai_analyzer = AIExoplanetAnalyzer(settings)
+    try:
+        # Initialize AI analyzer (don't need to create instance for each request)
+        ai_analyzer = AIExoplanetAnalyzer(settings)
+        logger.info("AI Analyzer initialized successfully")
+    except Exception as e:
+        logger.error(f"Failed to initialize AI Analyzer: {e}")
+        ai_analyzer = None
     
     logger.info("ExoSeer application initialized successfully")
 
