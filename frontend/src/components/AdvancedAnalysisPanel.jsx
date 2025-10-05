@@ -1063,8 +1063,10 @@ const PhysicsAnalysisPanel = ({ data, candidate, analysisResult, userMode = 'sci
 
             <TabsContent value="diagram">
               <DataInformedDiagram 
+                mode={userMode}
                 candidate={candidate}
                 analysisResult={analysisResult}
+                onParamChange={handleParamChange}
               />
             </TabsContent>
           </Tabs>
