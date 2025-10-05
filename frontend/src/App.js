@@ -310,19 +310,21 @@ function App() {
         target_name: candidate.name,
         analysis_id: `exoseer-${candidate.id}`,
         candidate: candidate,
-        analyses: {
-          light_curve: {
-            time: demoData.lightCurveData.map(d => d.time),
-            flux: demoData.lightCurveData.map(d => d.flux),
-            mission: 'TESS',
-            target_name: candidate.name,
-            length: demoData.lightCurveData.length,
-            sector: 26
-          },
-          lightCurveData: demoData.lightCurveData
-        }
-      });
-    }
+          analyses: {
+            light_curve: {
+              time: demoData.lightCurveData.map(d => d.time),
+              flux: demoData.lightCurveData.map(d => d.flux),
+              mission: 'TESS',
+              target_name: candidate.name,
+              length: demoData.lightCurveData.length,
+              sector: 26
+            },
+            lightCurveData: demoData.lightCurveData
+          }
+        });
+      }
+      setIsProcessingCandidate(false);
+    }, 1200); // NASA-level processing simulation
   };
 
   return (
