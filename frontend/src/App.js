@@ -623,6 +623,13 @@ function App() {
           ExoSeer v1.2.3 | {candidates.length} candidates loaded | Model trained on {(342147).toLocaleString()} light curves
         </div>
       </div>
+
+      {/* NASA-Level Physics AI Assistant */}
+      <AIPhysicsChat 
+        isOpen={aiChatOpen} 
+        onToggle={() => setAiChatOpen(!aiChatOpen)}
+        selectedCandidate={selectedCandidate}
+      />
     </div>
   );
 }
