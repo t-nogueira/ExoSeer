@@ -22,33 +22,24 @@ const LightCurveAnalysisPanel = ({ data, candidate }) => {
 
   return (
     <div className="space-y-6">
-      {/* Upload Section */}
-      <Card>
-        <CardHeader className="pb-4">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Upload className="w-5 h-5 text-cyan-400" />
-            Optional: Upload Your Own Light Curve Data
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 gap-4">
-            <Button variant="exoseer" className="h-12">
-              <Upload className="w-4 h-4 mr-2" />
-              Upload CSV
+      {/* Optional Data Upload */}
+      <div className="p-4 rounded-lg bg-slate-800/30 border border-gray-600/50">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Upload className="w-4 h-4 text-gray-400" />
+            <span className="text-sm exoseer-subtitle">Optional: Custom Data Upload</span>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="ghost" size="sm" className="text-xs">
+              <Upload className="w-3 h-3 mr-1" />
+              CSV
             </Button>
-            <Button variant="exoseer_outline" className="h-12">
-              NASA Archive
+            <Button variant="ghost" size="sm" className="text-xs">
+              Archive
             </Button>
           </div>
-          <div className="mt-4 p-4 rounded-lg bg-slate-800/50 border border-cyan-400/20">
-            <p className="text-sm exoseer-subtitle mb-2">Upload Light Curve CSV</p>
-            <p className="text-xs text-gray-400">Format: time, flux, error (optional)</p>
-            <div className="mt-3 p-3 rounded bg-slate-700/50">
-              <div className="text-xs text-cyan-400">ExcelFilter Activated: Neptuna Acteres selectedande</div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Physics-Informed Transit Analysis */}
       <Card>
