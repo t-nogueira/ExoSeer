@@ -218,6 +218,8 @@ function App() {
   const [aiChatOpen, setAiChatOpen] = useState(false);
   const [isProcessingCandidate, setIsProcessingCandidate] = useState(false);
   const [showSystemInfo, setShowSystemInfo] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [allCandidates, setAllCandidates] = useState([]);
 
   // Initialize with sophisticated demo data
   useEffect(() => {
