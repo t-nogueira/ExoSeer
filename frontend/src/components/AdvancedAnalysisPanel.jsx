@@ -98,20 +98,20 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult }) => {
               <div className="exoseer-chart-container mb-4">
                 <div className="h-80 w-full">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={data?.lightCurveData?.slice(0, 200) || []}>
+                    <LineChart data={generateCandidateSpecificLightCurve(candidate, data) || []}>
                       <CartesianGrid strokeDasharray="2 2" stroke="rgba(0, 212, 255, 0.1)" />
                       <XAxis 
                         dataKey="phase" 
                         stroke="#9CA3AF"
                         fontSize={10}
-                        domain={[0.9, 1.1]}
+                        domain={[-0.05, 0.05]}
                         tickFormatter={(value) => value.toFixed(3)}
                       />
                       <YAxis 
                         stroke="#9CA3AF"
                         fontSize={10}
-                        domain={[0.997, 1.003]}
-                        tickFormatter={(value) => value.toFixed(4)}
+                        domain={['dataMin - 0.0001', 'dataMax + 0.0001']}
+                        tickFormatter={(value) => value.toFixed(5)}
                       />
                       <Tooltip 
                         contentStyle={{ 
@@ -119,16 +119,52 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult }) => {
                           border: '1px solid #00d4ff',
                           borderRadius: '6px'
                         }}
+                        formatter={(value, name) => [
+                          value.toFixed(6), 
+                          name === 'flux' ? 'Observed Flux' : name
+                        ]}
                       />
                       <Line 
                         type="monotone" 
                         dataKey="flux" 
                         stroke="#00d4ff" 
-                        strokeWidth={1}
+                        strokeWidth={1.5}
                         dot={false}
                       />
+                      {candidate && (
+                        <Line 
+                          type="monotone" 
+                          dataKey="model" 
+                          stroke="#ff6b6b" 
+                          strokeWidth={2}
+                          strokeDasharray="4 4"
+                          dot={false}
+                        />
+                      )}
                     </LineChart>
                   </ResponsiveContainer>
+                </div>
+              </div>
+              
+              {/* Transit Info */}
+              <div className="grid grid-cols-3 gap-4 mt-4">
+                <div className="exoseer-metric-card">
+                  <div className="text-lg font-bold text-cyan-400">
+                    {data?.light_curve?.data_points || 0}
+                  </div>
+                  <div className="exoseer-label">Data Points</div>
+                </div>
+                <div className="exoseer-metric-card">
+                  <div className="text-lg font-bold text-purple-400">
+                    {data?.light_curve?.snr?.toFixed(1) || 'N/A'}
+                  </div>
+                  <div className="exoseer-label">Transit SNR</div>
+                </div>
+                <div className="exoseer-metric-card">
+                  <div className="text-lg font-bold text-emerald-400">
+                    {data?.light_curve?.duration_hours?.toFixed(2) || 'N/A'}h
+                  </div>
+                  <div className="exoseer-label">Duration</div>
                 </div>
               </div>
             </TabsContent>
