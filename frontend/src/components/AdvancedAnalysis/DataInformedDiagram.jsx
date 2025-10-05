@@ -159,12 +159,6 @@ const DataInformedDiagram = ({
     );
   }
 
-  // Calculate scaling for visualization
-  const maxDimension = 400; // SVG viewport
-  const starRadius = Math.min(maxDimension * 0.15, maxDimension * systemData.stellarRadius * 0.1);
-  const planetRadius = Math.max(3, starRadius * Math.sqrt(systemData.transitDepth));
-  const orbitalRadius = Math.min(maxDimension * 0.4, starRadius + 30 + (systemData.semiMajorAxis * 50));
-
   return (
     <Card className="border-cyan-500/30 bg-cyan-900/5">
       <CardHeader>
