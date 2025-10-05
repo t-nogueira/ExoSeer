@@ -120,34 +120,52 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
       clearInterval(progressInterval);
       setLoadingProgress(100);
 
-      // Enhanced response processing
+      // Enhanced response processing - handle JSON responses properly
       let cleanResponse = '';
       let confidence = 0.8;
       let references = [];
       
       if (response.data) {
-        // Handle direct string response
-        if (typeof response.data.response === 'string') {
-          cleanResponse = response.data.response;
-        }
-        // Handle object response with explanation
-        else if (response.data.explanation) {
-          cleanResponse = response.data.explanation;
-        }
-        // Handle nested response structure
-        else if (response.data.response && typeof response.data.response === 'object') {
-          if (response.data.response.explanation) {
-            cleanResponse = response.data.response.explanation;
-          } else if (response.data.response.message) {
-            cleanResponse = response.data.response.message;
+        let responseText = response.data.response || response.data.explanation || '';
+        
+        // If the response is a JSON string, parse it
+        if (typeof responseText === 'string' && responseText.trim().startsWith('{')) {
+          try {
+            const parsedJson = JSON.parse(responseText);
+            // Extract explanation from JSON
+            if (parsedJson.explanation) {
+              cleanResponse = parsedJson.explanation;
+              confidence = parsedJson.confidence || 0.8;
+              references = parsedJson.references || [];
+            } else if (parsedJson.message) {
+              cleanResponse = parsedJson.message;
+            } else {
+              // If JSON doesn't have expected fields, convert to readable text
+              cleanResponse = Object.entries(parsedJson)
+                .map(([key, value]) => `${key}: ${value}`)
+                .join('\n');
+            }
+          } catch (e) {
+            // If JSON parsing fails, treat as plain text
+            cleanResponse = responseText;
+          }
+        } else if (typeof responseText === 'string') {
+          // Direct string response
+          cleanResponse = responseText;
+        } else if (typeof response.data === 'object') {
+          // Direct object response
+          if (response.data.explanation) {
+            cleanResponse = response.data.explanation;
+          } else if (response.data.message) {
+            cleanResponse = response.data.message;
           }
         }
         
-        confidence = response.data.confidence || 0.8;
-        references = response.data.references || [];
+        confidence = response.data.confidence || confidence;
+        references = response.data.references || references;
       }
 
-      // If no clean response found, use fallback
+      // If no clean response found, use fallback with context
       if (!cleanResponse || cleanResponse.length < 10) {
         cleanResponse = generateFallbackResponse(messageText);
         confidence = 0.6;
