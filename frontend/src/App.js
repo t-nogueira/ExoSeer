@@ -674,7 +674,11 @@ function App() {
             {showSystemInfo ? (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <ArchitecturePanel />
-                <MissionsPanel />
+                <MissionsPanel onMissionSearch={(mission) => {
+                  setShowSystemInfo(false); // Close system info
+                  setTargetName(mission);
+                  searchTargets(mission);
+                }} />
               </div>
             ) : (
               <AdvancedAnalysisPanel
