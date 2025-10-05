@@ -464,8 +464,8 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate, userMode = 'scient
 
       {!isMinimized && (
         <>
-          <CardContent className="flex-1 p-4 overflow-y-auto">
-            <div className="space-y-4">
+          <CardContent className="flex-1 p-4 overflow-y-auto overflow-x-hidden min-h-0">
+            <div className="space-y-4 h-full">
               {/* Quick Questions - Always show but collapsible */}
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-3">
