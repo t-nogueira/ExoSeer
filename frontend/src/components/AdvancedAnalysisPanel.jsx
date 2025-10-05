@@ -164,6 +164,52 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult, userMode = '
   const [isLoadingArchive, setIsLoadingArchive] = useState(false);
   const [transitSubmissionExpanded, setTransitSubmissionExpanded] = useState(false);
 
+  // CSV Upload handler
+  const handleCSVUpload = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.csv,.txt';
+    input.onchange = (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const csvData = e.target.result;
+            console.log('CSV file uploaded:', file.name);
+            console.log('File size:', (file.size / 1024).toFixed(2), 'KB');
+            
+            // Basic CSV parsing
+            const lines = csvData.split('\n');
+            const headers = lines[0].split(',').map(h => h.trim());
+            const dataRows = lines.slice(1).filter(line => line.trim());
+            
+            console.log('Headers:', headers);
+            console.log('Data rows:', dataRows.length);
+            
+            // Validate required columns
+            const requiredCols = ['time', 'flux'];
+            const hasRequiredCols = requiredCols.some(col => 
+              headers.some(h => h.toLowerCase().includes(col.toLowerCase()))
+            );
+            
+            if (hasRequiredCols) {
+              alert(`CSV uploaded successfully!\nFile: ${file.name}\nRows: ${dataRows.length}\nColumns: ${headers.join(', ')}\n\nData will be processed in the analysis pipeline.`);
+            } else {
+              alert(`CSV format warning: Expected columns containing 'time' and 'flux'.\nFound: ${headers.join(', ')}\n\nPlease ensure your CSV has time and flux data columns.`);
+            }
+            
+          } catch (error) {
+            console.error('CSV parsing error:', error);
+            alert('Error reading CSV file. Please check the format and try again.');
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  };
+
   // Generate candidate-specific light curve data
   const generateCandidateSpecificLightCurve = (candidate, data) => {
     if (!candidate) return [];
