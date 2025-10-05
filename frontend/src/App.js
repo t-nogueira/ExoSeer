@@ -268,17 +268,20 @@ function App() {
       });
       
       let foundCandidates = response.data.candidates || [];
+      const totalFound = response.data.total_found || foundCandidates.length;
       
+      // If no NASA data found, fall back to demo data
       if (foundCandidates.length === 0 && demoData) {
         foundCandidates = demoData.candidates;
       }
       
       setSearchResults({
-        target_name: targetName,
+        target_name: response.data.target_name || targetName,
         candidates: foundCandidates,
-        total_found: foundCandidates.length,
-        search_type: 'auto',
-        timestamp: new Date().toISOString()
+        total_found: totalFound,
+        search_type: response.data.search_type || 'auto',
+        timestamp: response.data.timestamp || new Date().toISOString(),
+        note: response.data.note
       });
       setCandidates(foundCandidates);
       
