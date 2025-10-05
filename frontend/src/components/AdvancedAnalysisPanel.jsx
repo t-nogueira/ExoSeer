@@ -9,7 +9,7 @@ import { Switch } from './ui/switch';
 import { 
   Activity, Eye, Atom, Shield, AlertTriangle, CheckCircle2, 
   Upload, Download, Sliders, BarChart3, Target, Info,
-  TrendingUp, Zap, Settings
+  TrendingUp, Zap, Settings, Clock
 } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 import InteractivePanel from './AdvancedAnalysis/InteractivePanel';
