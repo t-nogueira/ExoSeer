@@ -328,7 +328,7 @@ class AIExoplanetAnalyzer:
             
             try:
                 return json.loads(response)
-            except:
+            except (json.JSONDecodeError, ValueError):
                 return self._get_default_parameter_estimates()
                 
         except Exception as e:
