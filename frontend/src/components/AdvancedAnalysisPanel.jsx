@@ -448,76 +448,14 @@ const PhysicsAnalysisPanel = ({ data, candidate }) => {
             </TabsContent>
 
             <TabsContent value="interactive">
-              <div className="space-y-6">
-                {/* Period Slider */}
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <label className="text-sm font-medium text-white">Period: {period.toFixed(4)} days</label>
-                  </div>
-                  <input 
-                    type="range" 
-                    min="125" 
-                    max="135" 
-                    step="0.0001"
-                    value={period}
-                    onChange={(e) => setPeriod(parseFloat(e.target.value))}
-                    className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer
-                      [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4
-                      [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cyan-400" 
-                  />
-                  <p className="text-xs text-gray-400 mt-1">Adjust period to see transit model update</p>
-                </div>
-
-                {/* Planet Radius Slider */}
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <label className="text-sm font-medium text-white">Planet Radius: {planetRadius.toFixed(2)} Re</label>
-                  </div>
-                  <input 
-                    type="range" 
-                    min="0.5" 
-                    max="3.0" 
-                    step="0.01"
-                    value={planetRadius}
-                    onChange={(e) => setPlanetRadius(parseFloat(e.target.value))}
-                    className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer
-                      [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4
-                      [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cyan-400" 
-                  />
-                  <p className="text-xs text-gray-400 mt-1">See how radius affects transit depth</p>
-                </div>
-
-                {/* Interactive Chart */}
-                <div className="exoseer-chart-container">
-                  <div className="h-64 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={Array.from({length: 50}, (_, i) => ({
-                        phase: (i - 25) / 25,
-                        flux: 1 - (Math.abs(i - 25) < 5 ? (planetRadius / 1.5) * 0.00027 * Math.exp(-Math.pow((i - 25) / 3, 2)) : 0)
-                      }))}>
-                        <CartesianGrid strokeDasharray="2 2" stroke="rgba(0, 212, 255, 0.1)" />
-                        <XAxis 
-                          dataKey="phase" 
-                          stroke="#9CA3AF"
-                          fontSize={10}
-                        />
-                        <YAxis 
-                          stroke="#9CA3AF"
-                          fontSize={10}
-                          domain={[0.9995, 1.0005]}
-                        />
-                        <Line 
-                          type="monotone" 
-                          dataKey="flux" 
-                          stroke="#00d4ff" 
-                          strokeWidth={2}
-                          dot={false}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </div>
+              <InteractivePanel 
+                data={data} 
+                candidate={candidate}
+                onParametersChange={(params) => {
+                  // Handle parameter changes if needed
+                  console.log('Parameters updated:', params);
+                }}
+              />
             </TabsContent>
           </Tabs>
         </CardContent>
