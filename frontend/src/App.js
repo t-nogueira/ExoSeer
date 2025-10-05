@@ -286,6 +286,8 @@ function App() {
         note: response.data.note
       });
       setCandidates(foundCandidates);
+      setAllCandidates(foundCandidates); // Store for pagination
+      setCurrentPage(1);
       
     } catch (err) {
       console.error('Search failed:', err);
