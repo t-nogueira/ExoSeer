@@ -296,9 +296,36 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate, userMode = 'scient
       contextInfo = `\n\nFor ${selectedCandidate.name}: This ${selectedCandidate.status || 'candidate'} has a period of ${selectedCandidate.orbital_period?.toFixed(3)} days, radius of ${selectedCandidate.radius_earth?.toFixed(2)} R⊕, and transit depth of ${(selectedCandidate.transit_depth * 100)?.toFixed(4)}% around ${selectedCandidate.host_star || 'its host star'}.`;
     }
     
+    // Novice mode: simplified responses
+    if (isNovice) {
+      if (q.includes('exoplanet') || q.includes('planet')) {
+        return `🌟 Exoplanets are planets that orbit stars other than our Sun! We've discovered over 5,000 of them so far. They come in many sizes - some are rocky like Earth, others are gas giants like Jupiter. The exciting part is that some might have conditions suitable for life! ${selectedCandidate ? `\n\nThe planet you're looking at, ${selectedCandidate.name}, is ${selectedCandidate.radius_earth?.toFixed(1)} times the size of Earth and takes ${selectedCandidate.orbital_period?.toFixed(0)} days to orbit its star.` : ''}`;
+      }
+      
+      if (q.includes('find') || q.includes('detect') || q.includes('discover')) {
+        return '🔍 We find exoplanets mainly by watching for tiny dips in starlight when a planet passes in front of its star - like a mini solar eclipse! This is called the "transit method." The amount the star dims tells us how big the planet is, and how often it happens tells us how long the planet takes to orbit its star.';
+      }
+      
+      if (q.includes('graph') || q.includes('chart') || q.includes('data')) {
+        return '📊 The graphs you see show how bright a star appears over time. When a planet crosses in front of the star, the light dips slightly. Scientists look for these repeating dips to find planets. The deeper the dip, the bigger the planet relative to its star!';
+      }
+      
+      if (q.includes('habitable') || q.includes('life')) {
+        return '🌍 A planet might be habitable if it\'s not too hot or too cold for liquid water to exist - we call this the "Goldilocks Zone" or "habitable zone." It needs to be just right! Scientists also look at the planet\'s size, atmosphere, and what kind of star it orbits.';
+      }
+      
+      if (q.includes('kepler') || q.includes('tess') || q.includes('telescope')) {
+        return '🚀 Space telescopes like Kepler and TESS are planet hunters! They watch thousands of stars at once, looking for the tiny brightness changes that happen when planets pass in front. Kepler found over 2,600 confirmed planets, and TESS is still discovering new ones every month!';
+      }
+    }
+    
+    // Regular technical responses for scientist mode
     if (q.includes('transit') && q.includes('depth')) {
-      let response = 'Transit depth is directly related to the planet-to-star radius ratio: δ = (Rp/R*)². For example, if Rp/R* = 0.1, the transit depth would be 1%. This assumes the planet completely transits the stellar disk (impact parameter b < 1-Rp/R*). The actual measured depth may be shallower due to limb darkening effects and instrumental noise.';
-      if (selectedCandidate) {
+      let response = isNovice 
+        ? '🔍 Transit depth is how much dimmer a star gets when a planet passes in front of it. A bigger planet blocks more light, so the star appears dimmer. It\'s like holding a coin vs. a dinner plate in front of a flashlight - the dinner plate blocks more light!'
+        : 'Transit depth is directly related to the planet-to-star radius ratio: δ = (Rp/R*)². For example, if Rp/R* = 0.1, the transit depth would be 1%. This assumes the planet completely transits the stellar disk (impact parameter b < 1-Rp/R*). The actual measured depth may be shallower due to limb darkening effects and instrumental noise.';
+      
+      if (selectedCandidate && !isNovice) {
         const calculatedRatio = Math.sqrt(selectedCandidate.transit_depth);
         response += `${contextInfo} The radius ratio (Rp/R*) for this system is approximately ${calculatedRatio.toFixed(4)}.`;
       }
