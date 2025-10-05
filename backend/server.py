@@ -96,21 +96,31 @@ async def health_check():
 # Target search endpoints
 @api_router.post("/targets/search", response_model=Dict[str, Any])
 async def search_targets(request: TargetSearchRequest):
-    """Search for exoplanet targets using NASA APIs"""
+    """Search for exoplanet targets using NASA APIs with pagination support"""
     
     try:
+        # Extract pagination parameters from request
+        page = getattr(request, 'page', 1)
+        limit = getattr(request, 'limit', 50) 
+        offset = (page - 1) * limit
+        
         async with NASAExoplanetClient(settings) as client:
             # Special handling for mission-wide searches
             if request.target_name.upper() in ['KEPLER', 'TESS', 'K2']:
                 mission_candidates = await client.search_by_mission(request.target_name.upper())
                 
+                # Apply pagination
+                paginated_candidates = mission_candidates[offset:offset + limit]
+                
                 return {
                     "target_name": request.target_name,
-                    "candidates": mission_candidates[:50],  # Show first 50 for performance
+                    "candidates": paginated_candidates,
                     "total_found": len(mission_candidates),
                     "search_type": f"{request.target_name.upper()}_MISSION",
-                    "timestamp": datetime.utcnow().isoformat(),
-                    "note": f"Showing first 50 of {len(mission_candidates)} {request.target_name.upper()} discoveries"
+                    "page": page,
+                    "limit": limit,
+                    "has_more": offset + limit < len(mission_candidates),
+                    "timestamp": datetime.utcnow().isoformat()
                 }
             
             # Regular target search
