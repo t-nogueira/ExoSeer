@@ -305,6 +305,24 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult, userMode = '
         </div>
       </div>
 
+      {/* Scientist-Only: Transit Data Submission Tool */}
+      {userMode === 'scientist' && (
+        <Card className="border-orange-500/30 bg-orange-900/10">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-orange-400">
+              <Shield className="w-5 h-5" />
+              Transit Data Submission & Validation
+            </CardTitle>
+            <p className="text-sm text-gray-300">
+              Submit your transit observations for validation and potential integration into the core model training set.
+            </p>
+          </CardHeader>
+          <CardContent>
+            <TransitDataSubmissionTool candidate={candidate} />
+          </CardContent>
+        </Card>
+      )}
+
       {/* Physics-Informed Transit Analysis */}
       <Card>
         <CardHeader>
