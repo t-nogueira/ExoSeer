@@ -623,8 +623,49 @@ function App() {
                   size="sm" 
                   className="text-xs h-6 px-2"
                   onClick={() => loadMoreCandidates()}
+                  disabled={isSearching}
                 >
-                  Load More
+                  {isSearching ? (
+                    <div className="animate-spin w-3 h-3 border border-cyan-400 border-t-transparent rounded-full mr-1" />
+                  ) : null}
+                  {isSearching ? 'Loading...' : 'Load More'}
+                </Button>
+              </div>
+            )}
+            
+            {/* Show "View All" option for large datasets */}
+            {searchResults && searchResults.total_found > 200 && candidates.length < 100 && (
+              <div className="mt-2 p-2 rounded bg-slate-800/50 border border-cyan-400/20">
+                <div className="text-xs text-cyan-400 mb-1">Large Dataset Detected</div>
+                <div className="text-xs text-gray-400 mb-2">
+                  {searchResults.total_found.toLocaleString()} total candidates available
+                </div>
+                <Button 
+                  variant="exoseer" 
+                  size="sm" 
+                  className="w-full text-xs"
+                  onClick={() => {
+                    // Load first 200 candidates at once for browsing
+                    setIsSearching(true);
+                    axios.post(`${BACKEND_URL}/api/targets/search`, {
+                      target_name: searchResults.target_name,
+                      search_type: searchResults.search_type,
+                      page: 1,
+                      limit: 200
+                    }).then(response => {
+                      if (response.data && response.data.candidates) {
+                        setCandidates(response.data.candidates);
+                        setCurrentPage(1);
+                        setSearchResults(prev => ({
+                          ...prev,
+                          candidates: response.data.candidates
+                        }));
+                      }
+                    }).finally(() => setIsSearching(false));
+                  }}
+                  disabled={isSearching}
+                >
+                  Load First 200 for Browsing
                 </Button>
               </div>
             )}
