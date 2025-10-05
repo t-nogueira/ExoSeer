@@ -7,6 +7,8 @@ import uuid
 class TargetSearchRequest(BaseModel):
     target_name: str = Field(..., description="Planet name, TIC ID, or star name")
     search_type: str = Field(default="auto", description="Search type: planet, star, or auto")
+    page: int = Field(default=1, description="Page number for pagination")
+    limit: int = Field(default=50, description="Number of results per page")
 
 class ExoplanetCandidate(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
