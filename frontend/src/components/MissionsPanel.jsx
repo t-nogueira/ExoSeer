@@ -7,7 +7,7 @@ import {
   Target, CheckCircle2, Eye, TrendingUp, Search
 } from "lucide-react";
 
-const MissionsPanel = () => {
+const MissionsPanel = ({ onMissionSearch }) => {
   const missionsData = [
     {
       id: 'kepler',
