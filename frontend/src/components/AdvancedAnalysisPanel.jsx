@@ -1184,7 +1184,45 @@ const AdvancedAnalysisPanel = ({
         <CardContent className="p-8 text-center">
           <div className="animate-spin w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full mx-auto mb-4"></div>
           <div className="text-white font-medium mb-2">Running Advanced Analysis...</div>
-          <div className="exoseer-subtitle">Physics-informed modeling in progress</div>
+          <div className="exoseer-subtitle mb-4">
+            {userMode === 'novice' ? 'Analyzing your planet discovery...' : 'Physics-informed modeling in progress'}
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="max-w-md mx-auto mb-4">
+            <div className="flex items-center justify-between text-sm mb-2">
+              <span className="text-cyan-400">Progress</span>
+              <span className="text-white font-medium">{Math.round(analysisProgress)}%</span>
+            </div>
+            <div className="w-full bg-gray-700 rounded-full h-3">
+              <div 
+                className="bg-gradient-to-r from-cyan-400 to-blue-500 h-3 rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${Math.min(analysisProgress, 100)}%` }}
+              ></div>
+            </div>
+          </div>
+          
+          {/* Time Estimation */}
+          {analysisTimeRemaining > 0 && (
+            <div className="flex items-center justify-center gap-2 text-sm">
+              <Clock className="w-4 h-4 text-cyan-400" />
+              <span className="text-gray-300">
+                Estimated time remaining: 
+                <span className="text-white font-medium ml-1">
+                  {analysisTimeRemaining >= 60 
+                    ? `${Math.floor(analysisTimeRemaining / 60)}m ${Math.round(analysisTimeRemaining % 60)}s`
+                    : `${Math.round(analysisTimeRemaining)}s`
+                  }
+                </span>
+              </span>
+            </div>
+          )}
+          
+          {analysisProgress > 75 && (
+            <div className="mt-4 text-xs text-cyan-300">
+              Finalizing analysis results...
+            </div>
+          )}
         </CardContent>
       </Card>
     );
