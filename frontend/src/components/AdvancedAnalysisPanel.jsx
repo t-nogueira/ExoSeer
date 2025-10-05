@@ -461,11 +461,16 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult }) => {
                     </ResponsiveContainer>
                   ) : (
                     <div className="flex items-center justify-center h-full">
-                      <div className="text-center">
+                      <div className="text-center max-w-md">
                         <Activity className="w-12 h-12 text-gray-500 mx-auto mb-3" />
                         <div className="text-gray-400 mb-2">No Time Series Data Available</div>
-                        <div className="text-sm text-gray-500">
-                          Real NASA data for {candidate?.name} not found
+                        <div className="text-sm text-gray-500 mb-3">
+                          NASA light curve data for <span className="text-white font-medium">{candidate?.name}</span> is not accessible through the current API connection.
+                        </div>
+                        <div className="text-xs text-cyan-400">
+                          • Try the "NASA Archive" button to attempt direct retrieval<br/>
+                          • Some targets may require TESS/Kepler mission-specific queries<br/>
+                          • Older Kepler targets may have limited public availability
                         </div>
                       </div>
                     </div>
