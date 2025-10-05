@@ -544,11 +544,9 @@ class AIExoplanetAnalyzer:
             }}
             """
             
-            response = self.ai_client.chat(
-                messages=[{"role": "user", "content": physics_prompt}],
-                model="gpt-4",
-                temperature=0.3
-            )
+            from emergentintegrations.llm.chat import UserMessage
+            user_msg = UserMessage(content=physics_prompt)
+            response = await self.ai_client.send_message(user_msg)
             
             try:
                 ai_result = json.loads(response.choices[0].message.content)
