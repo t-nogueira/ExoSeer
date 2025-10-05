@@ -506,41 +506,32 @@ class AIExoplanetAnalyzer:
             candidate_context = context.get('candidate_context', {})
             conversation_history = context.get('conversation_history', [])
             
-            # Build comprehensive prompt for physics explanation
-            physics_prompt = f"""
-            You are a NASA-level exoplanet physics expert. Answer this question with scientific rigor:
+            # Create a fresh LlmChat client for each request to avoid context window issues
+            from emergentintegrations.llm.chat import LlmChat, UserMessage
+            import uuid
             
-            Question: {user_question}
+            fresh_client = LlmChat(
+                api_key=self.emergent_key,
+                session_id=f"physics_chat_{uuid.uuid4().hex[:8]}",
+                system_message="You are a NASA-level exoplanet physics expert. Provide concise, scientifically accurate explanations."
+            )
             
-            Context Information:
-            - Candidate: {candidate_context.get('candidate_name', 'N/A')}
-            - Period: {candidate_context.get('period', 'N/A')} days
-            - Radius: {candidate_context.get('radius', 'N/A')} R⊕
-            - Transit Depth: {candidate_context.get('transit_depth', 'N/A')}
+            # Build concise prompt for physics explanation (avoid long context)
+            physics_prompt = f"""Question: {user_question}
+
+Context: {candidate_context.get('candidate_name', 'N/A')} - Period: {candidate_context.get('period', 'N/A')} days, Radius: {candidate_context.get('radius', 'N/A')} R⊕
+
+Provide a clear, scientific explanation in JSON format:
+{{
+    "explanation": "concise scientific explanation with key physics concepts",
+    "confidence": 0.0-1.0,
+    "references": ["relevant references"],
+    "key_equations": ["equations if applicable"],
+    "observational_notes": "practical considerations"
+}}"""
             
-            Recent Conversation:
-            {json.dumps(conversation_history, indent=2)}
-            
-            Provide a comprehensive, scientifically accurate explanation that includes:
-            1. Core physics concepts
-            2. Mathematical relationships where relevant
-            3. Observational implications
-            4. Uncertainty considerations
-            5. References to key papers/methods
-            
-            Format your response as JSON with:
-            {{
-                "explanation": "detailed scientific explanation",
-                "confidence": 0.0-1.0,
-                "references": ["list of relevant references"],
-                "key_equations": ["relevant equations if applicable"],
-                "observational_notes": "practical observational considerations"
-            }}
-            """
-            
-            from emergentintegrations.llm.chat import UserMessage
             user_msg = UserMessage(text=physics_prompt)
-            response = await self.ai_client.send_message(user_msg)
+            response = await fresh_client.send_message(user_msg)
             
             try:
                 ai_result = json.loads(response)
