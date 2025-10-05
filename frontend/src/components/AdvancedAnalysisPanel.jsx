@@ -348,7 +348,7 @@ const CentroidMotionAnalysisPanel = ({ data, candidate }) => {
   );
 };
 
-const PhysicsAnalysisPanel = ({ data, candidate }) => {
+const PhysicsAnalysisPanel = ({ data, candidate, analysisResult }) => {
   const [activePhysicsTab, setActivePhysicsTab] = useState('parameters');
   const [period, setPeriod] = useState(129.9000);
   const [planetRadius, setPlanetRadius] = useState(1.80);
@@ -387,24 +387,24 @@ const PhysicsAnalysisPanel = ({ data, candidate }) => {
 
             <TabsContent value="parameters">
               <ParametersPanel 
-                data={analysisResult?.analyses} 
-                candidate={selectedCandidate || analysisResult?.candidate}
-                analysisData={analysisResult?.analyses?.physics_analysis}
+                data={data} 
+                candidate={candidate}
+                analysisData={data?.physics_analysis}
               />
             </TabsContent>
 
             <TabsContent value="model">
               <ModelFitPanel 
-                data={analysisResult?.analyses} 
-                candidate={selectedCandidate || analysisResult?.candidate}
-                analysisData={analysisResult?.analyses?.physics_analysis}
+                data={data} 
+                candidate={candidate}
+                analysisData={data?.physics_analysis}
               />
             </TabsContent>
 
             <TabsContent value="interactive">
               <InteractivePanel 
-                data={analysisResult?.analyses} 
-                candidate={selectedCandidate || analysisResult?.candidate}
+                data={data} 
+                candidate={candidate}
                 onParametersChange={(params) => {
                   // Handle parameter changes if needed
                   console.log('Parameters updated:', params);
