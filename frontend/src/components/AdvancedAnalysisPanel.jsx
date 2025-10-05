@@ -1172,6 +1172,8 @@ const UncertaintyQuantificationPanel = ({ data, candidate }) => {
 const AdvancedAnalysisPanel = ({ 
   analysisResult, 
   isAnalyzing = false,
+  analysisProgress = 0,
+  analysisTimeRemaining = 0,
   activeTab = "lightcurve",
   selectedCandidate,
   userMode = 'scientist'
