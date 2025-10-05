@@ -870,20 +870,7 @@ const PhysicsAnalysisPanel = ({ data, candidate, analysisResult }) => {
   const [planetRadius, setPlanetRadius] = useState(1.80);
 
   return (
-    <div className="space-y-6">
-      {/* Physics Warning Alert */}
-      <div className="p-4 rounded-lg bg-red-900/20 border border-red-500/30 flex items-start gap-3">
-        <AlertTriangle className="w-5 h-5 text-red-400 mt-0.5" />
-        <div>
-          <div className="font-medium text-red-300 mb-1">Physically Inconsistent</div>
-          <div className="text-sm text-red-200">
-            Transit duration inconsistent: 23.6σ. Observed: 4.20h, Expected: 9.19h.
-          </div>
-        </div>
-        <Badge className="exoseer-badge bg-red-600 text-white ml-auto">
-          Physically Inconsistent
-        </Badge>
-      </div>
+    <div className="space-y-6">{/* Removed duplicate physics warning - it's in ParametersPanel */}
 
       <Card>
         <CardHeader>
