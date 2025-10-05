@@ -24,6 +24,8 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [estimatedTime, setEstimatedTime] = useState(0);
   const [isMinimized, setIsMinimized] = useState(false);
   const messagesEndRef = useRef(null);
 
