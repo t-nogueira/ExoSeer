@@ -360,10 +360,26 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
               {isLoading && (
                 <div className="flex justify-start">
                   <div className="bg-slate-800 border border-gray-600 p-3 rounded-lg max-w-[85%]">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 mb-2">
                       <div className="animate-spin w-3 h-3 border border-cyan-400 border-t-transparent rounded-full"></div>
                       <span className="text-sm text-gray-400">Analyzing physics...</span>
+                      <Badge className="text-xs bg-blue-600">
+                        ~{estimatedTime}s
+                      </Badge>
                     </div>
+                    {loadingProgress > 0 && (
+                      <div className="w-full bg-gray-700 rounded-full h-1.5 mt-2">
+                        <div 
+                          className="bg-gradient-to-r from-cyan-400 to-blue-500 h-1.5 rounded-full transition-all duration-300"
+                          style={{ width: `${Math.min(loadingProgress, 100)}%` }}
+                        ></div>
+                      </div>
+                    )}
+                    {loadingProgress > 0 && (
+                      <div className="text-xs text-gray-500 mt-1">
+                        Processing: {Math.round(loadingProgress)}%
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
