@@ -485,15 +485,27 @@ const ModelFitPanel = ({ data, candidate }) => {
               <p className="text-xs exoseer-subtitle">Export fit results, parameters, and diagnostics</p>
             </div>
             <div className="flex gap-2">
-              <Button variant="exoseer_outline" size="sm">
+              <Button 
+                variant="exoseer_outline" 
+                size="sm"
+                onClick={() => exportParameters()}
+              >
                 <Download className="w-3 h-3 mr-2" />
                 Parameters
               </Button>
-              <Button variant="exoseer_outline" size="sm">
+              <Button 
+                variant="exoseer_outline" 
+                size="sm"
+                onClick={() => exportResiduals()}
+              >
                 <Download className="w-3 h-3 mr-2" />
                 Residuals
               </Button>
-              <Button variant="exoseer_outline" size="sm">
+              <Button 
+                variant="exoseer_outline" 
+                size="sm"
+                onClick={() => exportReport()}
+              >
                 <Download className="w-3 h-3 mr-2" />
                 Report
               </Button>
