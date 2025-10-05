@@ -38,8 +38,8 @@ const MissionsPanel = () => {
       iconColor: 'text-yellow-400',
       statusColor: 'exoseer-badge',
       targets: '300K+',
-      candidates: 1617,
-      confirmed: 479,
+      candidates: '1,617',
+      confirmed: '479',
       details: {
         fieldOfView: 'Multiple campaign fields',
         photometricPrecision: '30 ppm',
