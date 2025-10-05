@@ -50,63 +50,6 @@
                 opacity: 0 !important;
             }
         </style>
-        
-        <script>
-            // Function to remove watermark elements
-            function removeEmergentWatermarks() {
-                // Remove by ID
-                const badge = document.getElementById('emergent-badge');
-                if (badge) {
-                    badge.remove();
-                }
-                
-                // Remove any elements containing "Made with Emergent"
-                const allElements = document.querySelectorAll('*');
-                allElements.forEach(element => {
-                    if (element.textContent && element.textContent.includes('Made with Emergent')) {
-                        element.remove();
-                    }
-                });
-                
-                // Remove any links to emergent.sh
-                const emergentLinks = document.querySelectorAll('a[href*="emergent.sh"]');
-                emergentLinks.forEach(link => link.remove());
-            }
-            
-            // Run immediately
-            removeEmergentWatermarks();
-            
-            // Run when DOM is loaded
-            document.addEventListener('DOMContentLoaded', removeEmergentWatermarks);
-            
-            // Run continuously to catch dynamically added watermarks
-            setInterval(removeEmergentWatermarks, 1000);
-            
-            // Also use MutationObserver to catch any new elements being added
-            document.addEventListener('DOMContentLoaded', function() {
-                if (typeof MutationObserver !== 'undefined' && document.body) {
-                    const observer = new MutationObserver(function(mutations) {
-                        mutations.forEach(function(mutation) {
-                            if (mutation.type === 'childList') {
-                                mutation.addedNodes.forEach(function(node) {
-                                    if (node.nodeType === 1) { // Element node
-                                        if (node.id === 'emergent-badge' || 
-                                            (node.textContent && node.textContent.includes('Made with Emergent'))) {
-                                            node.remove();
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                    });
-                    
-                    observer.observe(document.body, {
-                        childList: true,
-                        subtree: true
-                    });
-                }
-            });
-        </script>
         <script>
             !(function (t, e) {
                 var o, n, p, r;
