@@ -217,6 +217,7 @@ function App() {
   const [activeTab, setActiveTab] = useState("lightcurve");
   const [aiChatOpen, setAiChatOpen] = useState(false);
   const [isProcessingCandidate, setIsProcessingCandidate] = useState(false);
+  const [showSystemInfo, setShowSystemInfo] = useState(false);
 
   // Initialize with sophisticated demo data
   useEffect(() => {
