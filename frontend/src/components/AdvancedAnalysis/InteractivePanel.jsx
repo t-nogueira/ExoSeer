@@ -309,14 +309,24 @@ const InteractivePanel = ({ data, candidate, onParametersChange }) => {
                 <RotateCcw className="w-3 h-3 mr-2" />
                 Revert
               </Button>
-              <Button
-                variant="exoseer_outline"
-                size="sm"
-                onClick={() => exportData('json')}
-              >
-                <Download className="w-3 h-3 mr-2" />
-                Export
-              </Button>
+              <div className="flex gap-1">
+                <Button
+                  variant="exoseer_outline"
+                  size="sm"
+                  onClick={() => exportData('json')}
+                >
+                  <Download className="w-3 h-3 mr-1" />
+                  JSON
+                </Button>
+                <Button
+                  variant="exoseer_outline"
+                  size="sm"
+                  onClick={() => exportData('csv')}
+                >
+                  <Download className="w-3 h-3 mr-1" />
+                  CSV
+                </Button>
+              </div>
             </div>
           </div>
         </CardHeader>
