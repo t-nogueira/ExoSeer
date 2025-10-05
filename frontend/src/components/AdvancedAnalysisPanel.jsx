@@ -175,8 +175,13 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult }) => {
               <Upload className="w-3 h-3 mr-1" />
               CSV
             </Button>
-            <Button variant="ghost" size="sm" className="text-xs">
-              Archive
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-xs"
+              onClick={() => handleNASAArchiveAccess()}
+            >
+              NASA Archive
             </Button>
           </div>
         </div>
