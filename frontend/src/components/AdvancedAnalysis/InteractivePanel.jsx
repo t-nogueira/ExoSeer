@@ -69,17 +69,60 @@ const calculateTransitModel = (params, phase) => {
   });
 };
 
-// Generate synthetic light curve data
+// Generate realistic, responsive light curve data
 const generateLightCurveData = (params, numPoints = 200) => {
-  const phases = Array.from({ length: numPoints }, (_, i) => (i - numPoints/2) / (numPoints/4));
-  const modelFlux = calculateTransitModel(params, phases);
+  const { period, rpOverRs, impactParam, inclination } = params;
   
-  return phases.map((phase, i) => ({
-    phase: phase,
-    flux: modelFlux[i] + (Math.random() - 0.5) * 0.0002, // Add noise
-    model: modelFlux[i],
-    residual: (modelFlux[i] + (Math.random() - 0.5) * 0.0002) - modelFlux[i]
-  }));
+  // Create realistic phase range for folded light curve
+  const phases = Array.from({ length: numPoints }, (_, i) => 
+    (i - numPoints/2) / (numPoints/2) * 0.1 // -0.1 to +0.1 phase units
+  );
+  
+  // Calculate realistic transit parameters
+  const transitDepth = rpOverRs * rpOverRs; // Actual transit depth formula
+  const transitDuration = 0.05; // Phase units
+  const limbDarkeningCoeff = 0.6; // Typical limb darkening effect
+  
+  return phases.map((phase, i) => {
+    let flux = 1.0; // Baseline flux
+    let model = 1.0; // Model flux
+    
+    // Generate transit shape if within transit window
+    if (Math.abs(phase) < transitDuration) {
+      // Realistic transit model using impact parameter
+      const z = Math.sqrt(phase * phase / (transitDuration * transitDuration) + impactParam * impactParam);
+      
+      if (z < 1 + rpOverRs) {
+        // Calculate transit depth with limb darkening
+        let transitFraction = 0;
+        
+        if (z <= 1 - rpOverRs) {
+          // Full transit
+          transitFraction = transitDepth;
+        } else if (z < 1 + rpOverRs) {
+          // Partial transit - simplified calculation
+          const overlap = (1 + rpOverRs - z) / (2 * rpOverRs);
+          transitFraction = transitDepth * overlap;
+        }
+        
+        // Apply limb darkening effect
+        transitFraction *= limbDarkeningCoeff;
+        
+        model = 1.0 - transitFraction;
+        flux = model + (Math.random() - 0.5) * 0.0001; // Add realistic noise
+      }
+    } else {
+      // Outside transit - add stellar variability noise
+      flux = 1.0 + (Math.random() - 0.5) * 0.0001;
+    }
+    
+    return {
+      phase: phase,
+      flux: flux,
+      model: model,
+      residual: flux - model
+    };
+  });
 };
 
 const InteractivePanel = ({ data, candidate, onParametersChange }) => {
