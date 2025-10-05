@@ -6,7 +6,7 @@ import { Badge } from './ui/badge';
 import { 
   MessageSquare, Send, Minimize2, Maximize2, X, 
   Brain, Zap, BookOpen, Calculator, HelpCircle,
-  Lightbulb, AlertTriangle, CheckCircle2
+  Lightbulb, AlertTriangle, CheckCircle2, Target
 } from "lucide-react";
 import axios from "axios";
 
