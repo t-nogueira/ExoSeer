@@ -195,6 +195,7 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
     } catch (error) {
       clearInterval(progressInterval);
       console.error('AI Chat error:', error);
+      console.error('Full error details:', error.response?.data || error.message);
       
       // Enhanced fallback responses
       let fallbackResponse = generateFallbackResponse(messageText);
@@ -209,6 +210,7 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
         error: error.message
       };
 
+      console.log('Fallback Response:', errorMessage); // Debug log
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       clearInterval(progressInterval);
