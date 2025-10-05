@@ -329,16 +329,28 @@ const ParametersPanel = ({ data, candidate }) => {
               <p className="text-xs exoseer-subtitle">Export parameter comparison and consistency analysis</p>
             </div>
             <div className="flex gap-2">
-              <Button variant="exoseer_outline" size="sm">
+              <Button 
+                variant="exoseer_outline" 
+                size="sm"
+                onClick={() => exportParameters('csv')}
+              >
                 <Download className="w-3 h-3 mr-2" />
                 CSV
               </Button>
-              <Button variant="exoseer_outline" size="sm">
+              <Button 
+                variant="exoseer_outline" 
+                size="sm"
+                onClick={() => exportParameters('json')}
+              >
                 <Download className="w-3 h-3 mr-2" />
                 JSON
               </Button>
-              <Button variant="exoseer_outline" size="sm">
-                <Upload className="w-3 h-3 mr-2" />
+              <Button 
+                variant="exoseer_outline" 
+                size="sm"
+                onClick={() => exportParameters('report')}
+              >
+                <Download className="w-3 h-3 mr-2" />
                 Report
               </Button>
             </div>
