@@ -207,6 +207,12 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
 
       console.log('AI Response:', assistantMessage); // Debug log
       setMessages(prev => [...prev, assistantMessage]);
+      
+      // Ensure loading state is cleared
+      setTimeout(() => {
+        setIsLoading(false);
+        setLoadingProgress(0);
+      }, 100);
 
     } catch (error) {
       clearInterval(progressInterval);
