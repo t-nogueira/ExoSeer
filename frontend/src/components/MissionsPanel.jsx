@@ -79,6 +79,11 @@ const MissionsPanel = () => {
     ]
   };
 
+  const handleMissionSearch = (missionId) => {
+    // TODO: Implement mission-specific search functionality
+    console.log(`Searching discoveries for mission: ${missionId}`);
+  };
+
   return (
     <div className="space-y-6">
       {/* Mission Coverage Header */}
