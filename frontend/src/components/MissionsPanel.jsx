@@ -156,6 +156,19 @@ const MissionsPanel = () => {
                 <div className="mt-4 p-3 rounded-lg bg-slate-800/50 border border-gray-600">
                   <p className="text-xs text-gray-300">{mission.details.primaryMission}</p>
                 </div>
+                
+                {/* Quick Search Button */}
+                <div className="mt-4">
+                  <Button 
+                    variant="exoseer" 
+                    size="sm" 
+                    className="w-full"
+                    onClick={() => handleMissionSearch(mission.id)}
+                  >
+                    <Search className="w-3 h-3 mr-2" />
+                    Search All {mission.name} Discoveries
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           );
