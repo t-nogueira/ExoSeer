@@ -513,8 +513,16 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
           <div className="p-4 border-t border-cyan-400/20">
             {selectedCandidate && (
               <div className="mb-3 p-2 rounded bg-slate-800/50 border border-cyan-400/20">
-                <p className="text-xs text-cyan-400 font-medium">Current Context:</p>
-                <p className="text-xs text-white">{selectedCandidate.name} - {selectedCandidate.radius_earth?.toFixed(2)} R⊕</p>
+                <p className="text-xs text-cyan-400 font-medium flex items-center gap-1">
+                  <Target className="w-3 h-3" />
+                  Current Context:
+                </p>
+                <p className="text-xs text-white">
+                  <span className="text-cyan-300">{selectedCandidate.name}</span> - 
+                  Period: {selectedCandidate.orbital_period?.toFixed(2)}d, 
+                  Radius: {selectedCandidate.radius_earth?.toFixed(2)} R⊕, 
+                  Depth: {(selectedCandidate.transit_depth * 100)?.toFixed(3)}%
+                </p>
               </div>
             )}
             <div className="flex gap-2">
