@@ -421,7 +421,7 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate, userMode = 'scient
   }
 
   return (
-    <Card className="fixed bottom-6 right-6 w-96 h-[600px] shadow-2xl z-50 border-cyan-400/30 bg-slate-900/95 backdrop-blur-sm">
+    <Card className="fixed bottom-6 right-6 w-96 h-[600px] shadow-2xl z-50 border-cyan-400/30 bg-slate-900/95 backdrop-blur-sm flex flex-col">
       <CardHeader className="pb-3 border-b border-cyan-400/20">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
