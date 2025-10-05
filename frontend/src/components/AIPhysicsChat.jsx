@@ -157,11 +157,24 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
       return 'Validation uses statistical methods to show a signal is likely planetary (>99% confidence), while confirmation requires independent measurements (usually radial velocity) to determine the object\'s mass. TESS candidates typically undergo validation first through vetting metrics, centroid analysis, and statistical validation.';
     }
     
+    // Handle common general questions
+    if (q.includes('how') && (q.includes('work') || q.includes('function'))) {
+      return 'ExoSeer uses multimodal AI to analyze exoplanet candidates through four main approaches: (1) Light curve analysis using 1D-CNN + Transformer, (2) Pixel/centroid analysis with 2D-CNN, (3) System context via MLP, and (4) Physics-informed priors. These are combined through attention-weighted fusion for final classification.';
+    }
+    
+    if (q.includes('what is') || q.includes('explain') || q.includes('define')) {
+      return 'I can explain various exoplanet concepts! Try asking about specific topics like "transit depth", "impact parameter", "limb darkening", "false positives", "radial velocity", "habitable zone", or any physics concept you\'re curious about.';
+    }
+    
+    if (q.includes('help') || q.includes('how to use') || q.includes('tutorial')) {
+      return 'ExoSeer Tutorial: (1) Search for targets using the search box, (2) Select candidates from the sidebar, (3) Analyze using the four modes: Transit Photometry, Centroid Vetting, Physics Analysis, and Validation & Uncertainty, (4) Use Interactive Parameter Exploration for detailed modeling, (5) Export results using JSON/CSV buttons.';
+    }
+
     if (selectedCandidate) {
       return `For ${selectedCandidate.name}: I don't have a specific answer to your question, but I can tell you this candidate has a period of ${selectedCandidate.orbital_period?.toFixed(3)} days, radius of ${selectedCandidate.radius_earth?.toFixed(2)} R⊕, and transit depth of ${(selectedCandidate.transit_depth * 100)?.toFixed(4)}%. What specific aspect would you like me to explain?`;
     }
     
-    return 'I apologize, but I don\'t have a specific answer for that question in offline mode. However, I can help explain transit physics, detection methods, data analysis techniques, and validation procedures. Could you please ask about a specific physics concept or analysis method?';
+    return 'I can help with exoplanet analysis questions! Try asking about: transit physics, detection methods, data analysis, validation techniques, or how to use specific ExoSeer features. What would you like to know?';
   };
 
   const handleQuickQuestion = (question) => {
