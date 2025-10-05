@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/ui/tabs";
 import { Badge } from "./components/ui/badge";
 import { Progress } from "./components/ui/progress";
 import AdvancedAnalysisPanel from "./components/AdvancedAnalysisPanel";
+import AIPhysicsChat from "./components/AIPhysicsChat";
 import { 
   Search, Upload, Download, BarChart3, Telescope, Target, 
   Activity, Globe as Planet, Eye, Atom, Shield, Settings,
