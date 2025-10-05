@@ -446,23 +446,54 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
               </div>
             )}
             <div className="flex gap-2">
-              <Input
-                type="text"
-                placeholder="Ask about transit physics, analysis methods..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage(input)}
-                className="flex-1 exoseer-input text-sm"
-                disabled={isLoading}
-              />
+              <div className="flex-1 relative">
+                <Input
+                  type="text"
+                  placeholder="Ask about transit physics, analysis methods... (Press Enter to send, Shift+Enter for new line)"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      sendMessage(input);
+                    }
+                  }}
+                  className="exoseer-input text-sm pr-8"
+                  disabled={isLoading}
+                />
+                {input && !isLoading && (
+                  <Button
+                    onClick={() => setInput('')}
+                    size="sm"
+                    variant="ghost"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 p-0 text-gray-400 hover:text-white"
+                  >
+                    <X className="w-3 h-3" />
+                  </Button>
+                )}
+              </div>
               <Button
                 onClick={() => sendMessage(input)}
                 disabled={isLoading || !input.trim()}
                 size="sm"
-                className="exoseer-button-primary"
+                className={`exoseer-button-primary transition-all ${
+                  input.trim() && !isLoading 
+                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500' 
+                    : ''
+                }`}
               >
-                <Send className="w-4 h-4" />
+                {isLoading ? (
+                  <div className="animate-spin w-4 h-4 border border-white border-t-transparent rounded-full"></div>
+                ) : (
+                  <Send className="w-4 h-4" />
+                )}
               </Button>
+            </div>
+            
+            {/* Character count and shortcuts info */}
+            <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
+              <span>{input.length}/500 chars</span>
+              <span>Enter: Send • Shift+Enter: New line</span>
             </div>
           </div>
         </>
