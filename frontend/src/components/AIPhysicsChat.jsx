@@ -287,6 +287,9 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate, userMode = 'scient
   const generateFallbackResponse = (question) => {
     const q = question.toLowerCase();
     
+    // Different responses based on user mode
+    const isNovice = userMode === 'novice';
+    
     // Generate context-aware responses when candidate is selected
     let contextInfo = '';
     if (selectedCandidate) {
