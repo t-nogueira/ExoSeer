@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 
 const MissionsPanel = ({ onMissionSearch }) => {
+  const [showArchitectureDetails, setShowArchitectureDetails] = useState(false);
   const missionsData = [
     {
       id: 'kepler',
