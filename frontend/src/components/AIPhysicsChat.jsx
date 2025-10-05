@@ -380,8 +380,15 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate, userMode = 'scient
               <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
             </div>
             <div>
-              <CardTitle className="text-sm text-white">Physics AI Assistant</CardTitle>
-              <p className="text-xs exoseer-subtitle">NASA-Level Exoplanet Analysis Support</p>
+              <CardTitle className="text-sm text-white">
+                {userMode === 'novice' ? 'ExoSeer AI Guide' : 'Physics AI Assistant'}
+              </CardTitle>
+              <p className="text-xs exoseer-subtitle">
+                {userMode === 'novice' 
+                  ? 'Your Friendly Exoplanet Discovery Companion' 
+                  : 'NASA-Level Exoplanet Analysis Support'
+                }
+              </p>
             </div>
           </div>
           <div className="flex gap-1">
