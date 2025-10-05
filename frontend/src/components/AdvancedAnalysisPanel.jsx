@@ -608,7 +608,8 @@ const UncertaintyQuantificationPanel = ({ data, candidate }) => {
 const AdvancedAnalysisPanel = ({ 
   analysisResult, 
   isAnalyzing = false,
-  activeTab = "lightcurve"
+  activeTab = "lightcurve",
+  onTabChange
 }) => {
   if (isAnalyzing) {
     return (
