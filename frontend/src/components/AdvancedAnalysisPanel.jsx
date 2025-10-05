@@ -1133,7 +1133,8 @@ const AdvancedAnalysisPanel = ({
   analysisResult, 
   isAnalyzing = false,
   activeTab = "lightcurve",
-  selectedCandidate
+  selectedCandidate,
+  userMode = 'scientist'
 }) => {
   if (isAnalyzing) {
     return (
