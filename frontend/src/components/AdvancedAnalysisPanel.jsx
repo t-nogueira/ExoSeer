@@ -600,7 +600,7 @@ const AdvancedAnalysisPanel = ({
   analysisResult, 
   isAnalyzing = false,
   activeTab = "lightcurve",
-  onTabChange
+  selectedCandidate
 }) => {
   if (isAnalyzing) {
     return (
