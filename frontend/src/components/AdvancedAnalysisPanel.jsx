@@ -277,12 +277,12 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult, userMode = '
     <div className="space-y-6">
       {/* Embedded novice explanations will be added to each section instead */}
       
-      {/* Optional Data Upload */}
+      {/* Enhanced Custom Data Upload */}
       <div className="p-4 rounded-lg bg-slate-800/30 border border-gray-600/50">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Upload className="w-4 h-4 text-gray-400" />
-            <span className="text-sm exoseer-subtitle">Optional: Custom Data Upload</span>
+            <span className="text-sm exoseer-subtitle">Custom Data Upload</span>
           </div>
           <div className="flex gap-2">
             <Button variant="ghost" size="sm" className="text-xs">
@@ -303,8 +303,40 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult, userMode = '
               )}
               {isLoadingArchive ? 'Loading...' : 'NASA Archive'}
             </Button>
+            
+            {/* Scientist-only Transit Data Submission */}
+            {userMode === 'scientist' && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className={`text-xs transition-all ${transitSubmissionExpanded ? 'bg-orange-600/20 text-orange-300' : 'hover:bg-orange-600/10'}`}
+                onClick={() => setTransitSubmissionExpanded(!transitSubmissionExpanded)}
+              >
+                <Shield className="w-3 h-3 mr-1" />
+                Transit Submission
+                <div className={`ml-1 transition-transform ${transitSubmissionExpanded ? 'rotate-180' : ''}`}>
+                  <ChevronDown className="w-3 h-3" />
+                </div>
+              </Button>
+            )}
           </div>
         </div>
+        
+        {/* Expandable Transit Data Submission Tool */}
+        {userMode === 'scientist' && transitSubmissionExpanded && (
+          <div className="mt-4 pt-4 border-t border-orange-500/30">
+            <div className="mb-3">
+              <div className="flex items-center gap-2 mb-2">
+                <Shield className="w-4 h-4 text-orange-400" />
+                <span className="text-sm font-medium text-orange-300">Transit Data Submission & Validation</span>
+              </div>
+              <p className="text-xs text-gray-400">
+                Submit your transit observations for validation and potential integration into the core model training set.
+              </p>
+            </div>
+            <TransitDataSubmissionTool candidate={candidate} />
+          </div>
+        )}
       </div>
 
       {/* Removed separate section - now integrated into upload area */}
