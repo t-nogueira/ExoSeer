@@ -189,6 +189,7 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
         processingTime: estimatedSeconds
       };
 
+      console.log('AI Response:', assistantMessage); // Debug log
       setMessages(prev => [...prev, assistantMessage]);
 
     } catch (error) {
