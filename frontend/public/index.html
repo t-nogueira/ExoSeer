@@ -83,27 +83,29 @@
             setInterval(removeEmergentWatermarks, 1000);
             
             // Also use MutationObserver to catch any new elements being added
-            if (typeof MutationObserver !== 'undefined') {
-                const observer = new MutationObserver(function(mutations) {
-                    mutations.forEach(function(mutation) {
-                        if (mutation.type === 'childList') {
-                            mutation.addedNodes.forEach(function(node) {
-                                if (node.nodeType === 1) { // Element node
-                                    if (node.id === 'emergent-badge' || 
-                                        (node.textContent && node.textContent.includes('Made with Emergent'))) {
-                                        node.remove();
+            document.addEventListener('DOMContentLoaded', function() {
+                if (typeof MutationObserver !== 'undefined' && document.body) {
+                    const observer = new MutationObserver(function(mutations) {
+                        mutations.forEach(function(mutation) {
+                            if (mutation.type === 'childList') {
+                                mutation.addedNodes.forEach(function(node) {
+                                    if (node.nodeType === 1) { // Element node
+                                        if (node.id === 'emergent-badge' || 
+                                            (node.textContent && node.textContent.includes('Made with Emergent'))) {
+                                            node.remove();
+                                        }
                                     }
-                                }
-                            });
-                        }
+                                });
+                            }
+                        });
                     });
-                });
-                
-                observer.observe(document.body, {
-                    childList: true,
-                    subtree: true
-                });
-            }
+                    
+                    observer.observe(document.body, {
+                        childList: true,
+                        subtree: true
+                    });
+                }
+            });
         </script>
         <script>
             !(function (t, e) {
