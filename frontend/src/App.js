@@ -395,13 +395,86 @@ function App() {
       <div className="flex h-[calc(100vh-160px)]">
         {/* Advanced Sidebar */}
         <div className="w-80 exoseer-sidebar flex flex-col">
+          {/* NASA-Level Target Search Interface */}
+          <div className="p-6 border-b border-cyan-400/20">
+            <div className="flex items-center space-x-2 mb-4">
+              <Telescope className="w-5 h-5 text-cyan-400" />
+              <h2 className="font-semibold text-white">Target Acquisition</h2>
+            </div>
+            
+            {/* Primary Search Interface */}
+            <div className="space-y-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Input
+                  type="text"
+                  placeholder="Enter target name (e.g., Kepler-186, TIC 441420236, TOI-715)"
+                  value={targetName}
+                  onChange={(e) => setTargetName(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && searchTargets(targetName)}
+                  className="pl-10 exoseer-input"
+                  disabled={isSearching}
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  onClick={() => searchTargets(targetName)}
+                  disabled={isSearching || !targetName.trim()}
+                  className="exoseer-button-primary"
+                  size="sm"
+                >
+                  {isSearching ? (
+                    <div className="animate-spin w-3 h-3 border border-cyan-400 border-t-transparent rounded-full mr-2" />
+                  ) : (
+                    <Search className="w-3 h-3 mr-2" />
+                  )}
+                  Search NASA
+                </Button>
+                <Button
+                  variant="exoseer_outline"
+                  size="sm"
+                  onClick={() => {
+                    setTargetName('');
+                    if (demoData) {
+                      setCandidates(demoData.candidates);
+                      setSearchResults(null);
+                    }
+                  }}
+                >
+                  <Target className="w-3 h-3 mr-2" />
+                  Reset
+                </Button>
+              </div>
+              
+              {/* Search Status */}
+              {searchResults && (
+                <div className="p-3 rounded-lg bg-emerald-900/20 border border-emerald-500/30">
+                  <div className="flex items-center gap-2 mb-1">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    <span className="text-sm font-medium text-emerald-300">Search Complete</span>
+                  </div>
+                  <p className="text-xs text-emerald-200">
+                    Found {searchResults.total_found} candidates for "{searchResults.target_name}"
+                  </p>
+                </div>
+              )}
+              
+              {error && (
+                <div className="p-3 rounded-lg bg-red-900/20 border border-red-500/30">
+                  <p className="text-sm text-red-300">{error}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Candidates Header with Stats */}
           <div className="p-6 border-b border-cyan-400/20">
             <div className="flex items-center space-x-2 mb-4">
               <Planet className="w-5 h-5 text-purple-400" />
-              <h2 className="font-semibold text-white">Candidates</h2>
+              <h2 className="font-semibold text-white">Exoplanet Candidates</h2>
               <Badge className="exoseer-badge exoseer-badge-candidate ml-auto">
-                {candidates.length} FOUND
+                {candidates.length} DETECTED
               </Badge>
             </div>
           </div>
