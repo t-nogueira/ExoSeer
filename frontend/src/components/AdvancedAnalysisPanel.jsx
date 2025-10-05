@@ -16,6 +16,79 @@ import InteractivePanel from './AdvancedAnalysis/InteractivePanel';
 import ParametersPanel from './AdvancedAnalysis/ParametersPanel';
 import ModelFitPanel from './AdvancedAnalysis/ModelFitPanel';
 
+// Helper functions for generating chart data
+const generateCandidateSpecificLightCurve = (candidate, data) => {
+  if (!candidate || !data?.light_curve?.folded_data) {
+    return [];
+  }
+  
+  // Generate folded light curve data based on candidate parameters
+  const points = [];
+  const numPoints = 100;
+  const transitDepth = candidate.transit_depth || 0.02;
+  const transitDuration = candidate.transit_duration || 0.1;
+  
+  for (let i = 0; i < numPoints; i++) {
+    const phase = (i / numPoints - 0.5) * 0.1; // -0.05 to 0.05
+    let flux = 1.0;
+    
+    // Add transit signal
+    if (Math.abs(phase) < transitDuration / 2) {
+      const transitShape = Math.cos(Math.PI * phase / transitDuration);
+      flux = 1.0 - transitDepth * Math.max(0, transitShape);
+    }
+    
+    // Add some noise
+    flux += (Math.random() - 0.5) * 0.0005;
+    
+    points.push({
+      phase: phase,
+      flux: flux,
+      model: Math.abs(phase) < transitDuration / 2 ? 
+        1.0 - transitDepth * Math.max(0, Math.cos(Math.PI * phase / transitDuration)) : 1.0
+    });
+  }
+  
+  return points;
+};
+
+const generateFullTimeSeries = (candidate, data) => {
+  if (!candidate || !data?.light_curve?.time_series) {
+    return [];
+  }
+  
+  // Generate full time series data
+  const points = [];
+  const numPoints = 1000;
+  const period = candidate.orbital_period || 129.9;
+  const transitDepth = candidate.transit_depth || 0.02;
+  const transitDuration = candidate.transit_duration || 0.1;
+  
+  for (let i = 0; i < numPoints; i++) {
+    const time = i * 0.1; // Time in days
+    const phase = ((time % period) / period - 0.5) * 2; // -1 to 1
+    let flux = 1.0;
+    
+    // Add transit signals at regular intervals
+    if (Math.abs(phase) < transitDuration / period) {
+      const transitPhase = phase / (transitDuration / period);
+      const transitShape = Math.cos(Math.PI * transitPhase / 2);
+      flux = 1.0 - transitDepth * Math.max(0, transitShape);
+    }
+    
+    // Add stellar variability and noise
+    flux += Math.sin(time * 0.05) * 0.001; // Long-term variability
+    flux += (Math.random() - 0.5) * 0.0008; // Noise
+    
+    points.push({
+      time: time,
+      flux: flux
+    });
+  }
+  
+  return points;
+};
+
 const LightCurveAnalysisPanel = ({ data, candidate, analysisResult }) => {
   const [uploadMode, setUploadMode] = useState(false);
   const [selectedView, setSelectedView] = useState('folded');
