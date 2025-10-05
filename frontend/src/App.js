@@ -565,7 +565,7 @@ function App() {
                   ) : (
                     <Search className="w-3 h-3 mr-2" />
                   )}
-                  Search NASA
+                  {isSearching ? 'Searching...' : 'Search NASA'}
                 </Button>
                 <Button
                   variant="exoseer_outline"
