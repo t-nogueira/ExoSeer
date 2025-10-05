@@ -4,7 +4,7 @@ import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { 
   Satellite, Telescope, Database, MapPin, Calendar,
-  Target, CheckCircle2, Eye, TrendingUp
+  Target, CheckCircle2, Eye, TrendingUp, Search
 } from "lucide-react";
 
 const MissionsPanel = () => {
