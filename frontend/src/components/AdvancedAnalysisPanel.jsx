@@ -372,9 +372,9 @@ const PhysicsAnalysisPanel = ({ data, candidate }) => {
           {/* Physics Tabs */}
           <Tabs value={activePhysicsTab} onValueChange={setActivePhysicsTab}>
             <TabsList className="mb-6">
-              <TabsTrigger value="parameters" className="exoseer-tab">Parameters</TabsTrigger>
-              <TabsTrigger value="model" className="exoseer-tab">Model Fit</TabsTrigger>
-              <TabsTrigger value="interactive" className="exoseer-tab">Interactive</TabsTrigger>
+              <TabsTrigger value="parameters" className="exoseer-tab">Orbital & Stellar Parameter Analysis</TabsTrigger>
+              <TabsTrigger value="model" className="exoseer-tab">Transit Model Fitting & Diagnostics</TabsTrigger>
+              <TabsTrigger value="interactive" className="exoseer-tab">Real-Time Parameter Exploration</TabsTrigger>
             </TabsList>
 
             <TabsContent value="parameters">
