@@ -157,7 +157,7 @@ const calculateMean = (residualsData) => {
   return sum / residualsData.length;
 };
 
-const LightCurveAnalysisPanel = ({ data, candidate, analysisResult }) => {
+const LightCurveAnalysisPanel = ({ data, candidate, analysisResult, userMode = 'scientist' }) => {
   const [uploadMode, setUploadMode] = useState(false);
   const [selectedView, setSelectedView] = useState('folded');
   const [isLoadingArchive, setIsLoadingArchive] = useState(false);
