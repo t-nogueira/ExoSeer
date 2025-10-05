@@ -233,7 +233,6 @@ async def analyze_candidate(request: Dict[str, Any]):
     try:
         target_name = request.get("target_name")
         candidate_data = request.get("candidate_data", {})
-        analysis_modes = request.get("analysis_modes", ["transit", "centroid", "physics", "validation"])
         
         if not target_name:
             raise HTTPException(status_code=400, detail="Target name is required")
