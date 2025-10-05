@@ -118,6 +118,22 @@ const InteractivePanel = ({ data, candidate, onParametersChange }) => {
     durationModelHr: 4.3
   });
 
+  // Derived parameters calculation - moved up to fix dependency issue
+  const derivedParams = useMemo(() => {
+    const { period, rpOverRs, inclination } = params;
+    const aOverRs = Math.pow(period / 365.25, 2/3) * 215; // Simplified calculation
+    const rPlanetEarth = rpOverRs * 109.2; // R_sun/R_earth ≈ 109.2
+    const transitProb = 1 / aOverRs; // Simplified
+    
+    return {
+      aOverRs: aOverRs.toFixed(2),
+      rPlanetEarth: rPlanetEarth.toFixed(2),
+      rPlanetJupiter: (rPlanetEarth / 11.2).toFixed(3),
+      transitProb: (transitProb * 100).toFixed(3),
+      teq: (5778 * Math.pow(1/aOverRs, 0.5)).toFixed(0)
+    };
+  }, [params]);
+
   // Generate chart data based on current parameters - force recalculation
   const chartData = useMemo(() => {
     const newData = generateLightCurveData(params);
