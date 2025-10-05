@@ -339,6 +339,11 @@ const AIPhysicsChat = ({ isOpen, onToggle, selectedCandidate }) => {
                             Offline Mode
                           </Badge>
                         )}
+                        {message.processingTime && (
+                          <Badge className="text-xs bg-gray-600">
+                            {message.processingTime}s
+                          </Badge>
+                        )}
                       </div>
                     )}
                     <p className="text-sm text-white whitespace-pre-wrap">{message.content}</p>
