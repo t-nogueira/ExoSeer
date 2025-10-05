@@ -59,8 +59,25 @@ const LightCurveAnalysisPanel = ({ data, candidate, analysisResult }) => {
         </CardHeader>
         <CardContent>
           <div className="mb-4">
-            <p className="text-sm exoseer-subtitle mb-2">Folding Period: 129.9000 days</p>
-            <p className="text-xs text-gray-400">Adjust the period to watch the transit changes or disappear</p>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <p className="text-sm exoseer-subtitle mb-1">
+                  Target: <span className="text-white font-medium">{candidate?.name || 'Unknown'}</span>
+                </p>
+                <p className="text-sm exoseer-subtitle mb-1">
+                  Period: <span className="text-cyan-400 font-medium">{candidate?.orbital_period?.toFixed(4) || 'N/A'} days</span>
+                </p>
+              </div>
+              <div>
+                <p className="text-sm exoseer-subtitle mb-1">
+                  TESS Sector: <span className="text-white font-medium">{data?.light_curve?.sector || 'N/A'}</span>
+                </p>
+                <p className="text-sm exoseer-subtitle mb-1">
+                  Transit Depth: <span className="text-purple-400 font-medium">{((candidate?.transit_depth || 0) * 100).toFixed(4)}%</span>
+                </p>
+              </div>
+            </div>
+            <p className="text-xs text-gray-400">Interactive period adjustment available in Physics Analysis tab</p>
             <div className="mt-2">
               <input type="range" min="120" max="140" defaultValue="129.9" 
                 className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer
