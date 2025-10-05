@@ -162,12 +162,25 @@ const DataInformedDiagram = ({
   return (
     <Card className="border-cyan-500/30 bg-cyan-900/5">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-cyan-400">
-          <Atom className="w-5 h-5" />
-          Data-Informed System Diagram
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-cyan-400">
+            <Atom className="w-5 h-5" />
+            Data-Informed System Diagram
+          </div>
+          {mode === 'scientist' && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShow3D(!show3D)}
+              className="flex items-center gap-2"
+            >
+              <Cube className="w-4 h-4" />
+              {show3D ? 'Multi-View' : '3D Mode'}
+            </Button>
+          )}
         </CardTitle>
         <p className="text-sm text-gray-300">
-          Scientifically accurate visualization based on observed and derived parameters
+          Multiple perspective views with scientifically accurate annotations
         </p>
       </CardHeader>
       <CardContent>
