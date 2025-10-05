@@ -569,7 +569,7 @@ const DataInformedDiagram = ({
               onClick={() => setShow3D(!show3D)}
               className="flex items-center gap-2"
             >
-              <Cube className="w-4 h-4" />
+              <Box className="w-4 h-4" />
               {show3D ? 'Multi-View' : '3D Mode'}
             </Button>
           )}
