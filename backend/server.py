@@ -565,7 +565,7 @@ async def ai_physics_chat(request: Dict[str, Any]):
             raise HTTPException(status_code=400, detail="Message is required")
         
         # Enhanced physics AI using LLM if available
-        if llm_client:
+        if ai_analyzer:
             try:
                 # Create physics-focused prompt
                 context_info = ""
