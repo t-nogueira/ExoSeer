@@ -123,20 +123,23 @@ const InteractivePanel = ({ data, candidate, onParametersChange }) => {
     return generateLightCurveData(params);
   }, [params]);
 
-  // Debounced parameter update
+  // Debounced parameter update with immediate visual feedback
   const debouncedUpdateParams = useCallback((newParams) => {
     if (updateTimeoutRef.current) {
       clearTimeout(updateTimeoutRef.current);
     }
     
+    // Immediate update for visual feedback
+    setParams(newParams);
     setIsUpdating(true);
+    
+    // Debounced callback for external handlers
     updateTimeoutRef.current = setTimeout(() => {
-      setParams(newParams);
       setIsUpdating(false);
       if (onParametersChange) {
         onParametersChange(newParams);
       }
-    }, 32); // 32ms debounce for smooth interaction
+    }, 100); // Longer debounce for external updates
   }, [onParametersChange]);
 
   // Parameter validation and coupling
