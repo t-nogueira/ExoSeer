@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 import InteractivePanel from './AdvancedAnalysis/InteractivePanel';
+import ParametersPanel from './AdvancedAnalysis/ParametersPanel';
+import ModelFitPanel from './AdvancedAnalysis/ModelFitPanel';
 
 const LightCurveAnalysisPanel = ({ data, candidate }) => {
   const [uploadMode, setUploadMode] = useState(false);
