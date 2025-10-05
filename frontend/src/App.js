@@ -628,7 +628,11 @@ function App() {
                   {isSearching ? (
                     <div className="animate-spin w-3 h-3 border border-cyan-400 border-t-transparent rounded-full mr-1" />
                   ) : null}
-                  {isSearching ? 'Loading...' : 'Load More'}
+                  {isSearching ? (
+                    <>Loading more... <span className="text-xs">(~3s)</span></>
+                  ) : (
+                    'Load More'
+                  )}
                 </Button>
               </div>
             )}
