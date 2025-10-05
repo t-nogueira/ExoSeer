@@ -272,7 +272,7 @@ const InteractivePanel = ({ data, candidate, onParametersChange }) => {
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
               <Sliders className="w-5 h-5 text-cyan-400" />
-              Interactive Transit Analysis
+              NASA-Level Interactive Transit Modeling Suite
             </CardTitle>
             <div className="flex items-center gap-2">
               <Button
