@@ -1,71 +1,390 @@
-/* ExoSeer Application Styles */
+/* ExoSeer Advanced Sophisticated Interface */
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-/* Global styles for ExoSeer */
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #0f172a;
-  color: #ffffff;
+/* Advanced color variables matching the reference */
+:root {
+  --exoseer-primary: #0a0f1c;
+  --exoseer-secondary: #1a1f35;
+  --exoseer-accent: #00d4ff;
+  --exoseer-accent-bright: #00ffff;
+  --exoseer-purple: #6366f1;
+  --exoseer-teal: #14b8a6;
+  --exoseer-navy: #0f172a;
+  --exoseer-slate: #1e293b;
+  --exoseer-blue-dark: #1e3a8a;
+  --exoseer-gradient-1: linear-gradient(135deg, #0a0f1c 0%, #1a1f35 50%, #0f172a 100%);
+  --exoseer-gradient-2: linear-gradient(90deg, #00d4ff 0%, #6366f1 100%);
+  --exoseer-glow: 0 0 20px rgba(0, 212, 255, 0.3);
+  --exoseer-glow-bright: 0 0 30px rgba(0, 255, 255, 0.5);
+  --exoseer-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
 
-/* Scrollbar styling for dark theme */
+/* Global sophisticated styling */
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+  background: var(--exoseer-gradient-1);
+  color: #ffffff;
+  overflow-x: hidden;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Sophisticated scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1f2937;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #4b5563;
+  background: var(--exoseer-primary);
   border-radius: 4px;
 }
 
+::-webkit-scrollbar-thumb {
+  background: var(--exoseer-accent);
+  border-radius: 4px;
+  opacity: 0.7;
+}
+
 ::-webkit-scrollbar-thumb:hover {
+  background: var(--exoseer-accent-bright);
+  opacity: 1;
+}
+
+/* Sophisticated animations */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: var(--exoseer-glow);
+  }
+  50% {
+    box-shadow: var(--exoseer-glow-bright);
+  }
+}
+
+@keyframes subtle-bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-2px);
+  }
+  60% {
+    transform: translateY(-1px);
+  }
+}
+
+@keyframes slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Sophisticated interactive classes */
+.exoseer-card {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slide-in-up 0.6s ease-out;
+}
+
+.exoseer-card:hover {
+  border-color: var(--exoseer-accent);
+  box-shadow: var(--exoseer-glow);
+  transform: translateY(-2px);
+}
+
+.exoseer-card-selected {
+  border-color: var(--exoseer-accent-bright);
+  box-shadow: var(--exoseer-glow-bright);
+  background: rgba(0, 212, 255, 0.1);
+}
+
+.exoseer-button {
+  background: var(--exoseer-gradient-2);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.exoseer-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--exoseer-glow);
+}
+
+.exoseer-button:active {
+  transform: translateY(0);
+}
+
+.exoseer-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.exoseer-button:hover::before {
+  left: 100%;
+}
+
+.exoseer-input {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 8px;
+  color: white;
+  padding: 12px 16px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.exoseer-input:focus {
+  outline: none;
+  border-color: var(--exoseer-accent);
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+}
+
+.exoseer-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.exoseer-tab {
+  background: transparent;
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.exoseer-tab:hover {
+  border-color: var(--exoseer-accent);
+  color: var(--exoseer-accent);
+}
+
+.exoseer-tab-active {
+  background: var(--exoseer-accent);
+  border-color: var(--exoseer-accent);
+  color: white;
+  box-shadow: var(--exoseer-glow);
+}
+
+.exoseer-progress {
+  background: rgba(15, 23, 42, 0.8);
+  border-radius: 8px;
+  overflow: hidden;
+  height: 8px;
+}
+
+.exoseer-progress-bar {
+  background: var(--exoseer-gradient-2);
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.exoseer-progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(90deg, transparent 40%, rgba(255, 255, 255, 0.3) 50%, transparent 60%);
+  animation: shimmer 2s infinite;
+}
+
+.exoseer-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.exoseer-badge-confirmed {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.exoseer-badge-candidate {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.exoseer-glow-text {
+  color: var(--exoseer-accent-bright);
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.exoseer-metric-card {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.exoseer-metric-card:hover {
+  border-color: var(--exoseer-accent);
+  box-shadow: var(--exoseer-glow);
+  transform: scale(1.02);
+}
+
+.exoseer-status-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.exoseer-status-active {
+  background: #22c55e;
+  animation: glow-pulse 2s infinite;
+}
+
+.exoseer-status-inactive {
   background: #6b7280;
 }
 
-/* Custom animations */
-@keyframes pulse-slow {
-  0%, 100% {
-    opacity: 1;
+.exoseer-header-gradient {
+  background: linear-gradient(135deg, rgba(10, 15, 28, 0.95) 0%, rgba(26, 31, 53, 0.95) 100%);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+.exoseer-sidebar {
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(10, 15, 28, 0.95) 100%);
+  backdrop-filter: blur(15px);
+  border-right: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+/* Chart and visualization styling */
+.exoseer-chart-container {
+  background: rgba(15, 23, 42, 0.8);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  padding: 16px;
+}
+
+.exoseer-tooltip {
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid var(--exoseer-accent);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .exoseer-card {
+    margin: 8px;
   }
-  50% {
-    opacity: 0.8;
+  
+  .exoseer-sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
   }
 }
 
-.animate-pulse-slow {
-  animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Custom backdrop blur */
-.backdrop-blur-sm {
-  backdrop-filter: blur(4px);
-}
-
-/* Container max width */
-.container {
-  max-width: 1200px;
-}
-
-/* Focus states for accessibility */
-button:focus-visible,
-input:focus-visible {
-  outline: 2px solid #3b82f6;
+/* Accessibility improvements */
+.exoseer-focus-ring:focus {
+  outline: 2px solid var(--exoseer-accent);
   outline-offset: 2px;
 }
 
-/* Dark theme text selection */
+/* Text selection styling */
 ::selection {
-  background-color: #3b82f6;
-  color: #ffffff;
+  background-color: rgba(0, 212, 255, 0.3);
+  color: white;
+}
+
+/* Loading animation */
+.exoseer-loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(0, 212, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--exoseer-accent);
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Advanced typography */
+.exoseer-title {
+  font-weight: 700;
+  background: var(--exoseer-gradient-2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.exoseer-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+}
+
+.exoseer-label {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
