@@ -1025,6 +1025,7 @@ const PhysicsAnalysisPanel = ({ data, candidate, analysisResult }) => {
               <TabsTrigger value="parameters" className="exoseer-tab">Orbital & Stellar Parameter Analysis</TabsTrigger>
               <TabsTrigger value="model" className="exoseer-tab">Transit Model Fitting & Diagnostics</TabsTrigger>
               <TabsTrigger value="interactive" className="exoseer-tab">Real-Time Parameter Exploration</TabsTrigger>
+              <TabsTrigger value="diagram" className="exoseer-tab">Data-Informed System Diagram</TabsTrigger>
             </TabsList>
 
             <TabsContent value="parameters">
